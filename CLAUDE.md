@@ -17,7 +17,7 @@ Interactive educational website about neutrons, muons, and the ISIS Neutron and 
 - All data is inline in JS; all diagrams are inline SVG in the HTML.
 - `js/synth.js` is the **only** place physics math lives. `js/plot.js` is the **only** plotting code. Don't add a second abstraction for either.
 - CSS load order: `tokens.css` (design tokens only) → `base.css` (reset/layout/nav/typography, cascade layers) → `components.css` (panels, quizzes, sliders, hotspots, step cards) → `story.css` (index scroll scenes only).
-- Pages: `index.html` (animated story) · `probes.html` (why neutrons/muons) · `facility.html` (how ISIS works) · `experiment.html` (experiment lifecycle) · `data.html` (TOF, events, reduction playground) · `techniques.html` (9 techniques) · `how.html` (meta: how the site was built — footer-linked only, served as `/how` on Pages). Each topic page ends with a quiz and cross-link cards.
+- Pages: `index.html` (animated story) · `probes.html` (why neutrons/muons) · `facility.html` (how ISIS works) · `ts1.html` (deep dive: TS1 hall particle simulation — linked from facility.html, not in the main nav) · `experiment.html` (experiment lifecycle) · `data.html` (TOF, events, reduction playground) · `techniques.html` (9 techniques) · `how.html` (meta: how the site was built — footer-linked only, served as `/how` on Pages). Each topic page ends with a quiz and cross-link cards.
 
 ## Conventions
 

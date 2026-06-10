@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside Target Station 1 — ISIS Explained</title>
+<meta name="description" content="An animated plan view of ISIS Target Station 1: proton pulses arriving down EPB1, muons peeling off at the graphite target, and eighteen neutron beamlines fed by one tungsten target.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/synth.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/ts1.js"></script>
+<style>
+  /* The synoptic display: static SVG map + transparent canvas overlay for
+     the moving particles. On narrow screens the map scrolls sideways inside
+     its frame instead of shrinking the labels into illegibility. */
+  .sim-scroll { overflow-x: auto; }
+  .sim-stage { position: relative; min-inline-size: 62rem; }
+  .sim-stage svg { display: block; width: 100%; height: auto; }
+  .sim-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #ts1-svg text { font-family: "IBM Plex Mono", monospace; }
+
+  .sim-hud {
+    display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
+    font-family: var(--font-mono); font-size: var(--fs-tiny);
+    letter-spacing: 0.08em; color: var(--text-500);
+    margin-top: var(--sp-2);
+  }
+  .sim-hud b {
+    color: var(--accent); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .sim-hud .hud-state { color: var(--peak); }
+
+  /* idle breathing of the target core (static page keeps the plain glyph) */
+  @media (prefers-reduced-motion: no-preference) {
+    .ts1-core { animation: ts1-core-breathe 2.5s ease-in-out infinite; }
+  }
+  @keyframes ts1-core-breathe { 50% { opacity: 0.55; } }
+
+  .roster-card .instruments { font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--neutron); letter-spacing: 0.06em; }
+  .roster-card.mu .instruments { color: var(--muon); }
+  .roster-card p { font-size: var(--fs-small); margin-top: var(--sp-1); }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="techniques.html">TECHNIQUES</a>
+      <a href="data.html">DATA</a>
+      <a href="experiment.html">EXPERIMENT</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="page-intro">
+    <span class="kicker">Deep dive / Target Station 1</span>
+    <h1>Inside Target Station 1</h1>
+    <p class="lede">Four of every five proton pulses end their 150-metre sprint here, in a stack of tungsten plates about the size of a shoebox. This page is the hall in slow motion: watch pulses arrive, muons peel away, and eighteen beamlines drink from one target — then step through what really happens, microsecond by microsecond.</p>
+  </div>
+
+  <!-- S1: the live hall -->
+  <section id="hall" aria-labelledby="hall-h">
+    <span class="kicker">TS1 · 1 — The hall, live</span>
+    <h2 id="hall-h">A working plan view</h2>
+    <div style="margin-top: var(--sp-3)">
+      <figure class="figure-frame">
+        <div class="sim-scroll" role="region" aria-label="Plan view of Target Station 1 — scrolls sideways on small screens" tabindex="0">
+          <div class="sim-stage">
+            <svg id="ts1-svg" viewBox="0 0 1200 660" role="group" aria-label="Schematic plan of Target Station 1: the EPB1 proton beamline enters from the left, passes a thin graphite muon target feeding muon instruments above and below, then hits the tungsten target at the centre of a shielded monolith, where four moderators and a beryllium reflector feed eighteen neutron beam ports. Click each highlighted part for details.">
+              <defs>
+                <pattern id="ts1grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M40,0 H0 V40" fill="none" stroke="#15203f" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="1200" height="660" fill="url(#ts1grid)" opacity="0.55"/>
+
+              <!-- drawing furniture -->
+              <g font-size="11" letter-spacing="2" fill="#8a96c2">
+                <text x="24" y="30">TS1 — TARGET HALL · PLAN VIEW</text>
+              </g>
+              <g font-size="9.5" fill="#8a96c2" text-anchor="end">
+                <text x="1176" y="30" letter-spacing="1.5">SCHEMATIC · NOT TO SCALE</text>
+                <text x="1176" y="52"><tspan fill="#ff5d8f">●</tspan> protons</text>
+                <text x="1176" y="70"><tspan fill="#b78aff">●</tspan> muons</text>
+                <text x="1176" y="88"><tspan fill="#4fd8eb">●</tspan> neutrons · colour = moderator</text>
+              </g>
+
+              <!-- 1 EPB1 proton beamline -->
+              <g class="hotspot" data-spot="epb1" tabindex="0" role="button" aria-label="Extracted proton beamline EPB1">
+                <g class="hotspot-shape">
+                  <line x1="20" y1="330" x2="630" y2="330" stroke="#233055" stroke-width="6"/>
+                  <line x1="76" y1="318" x2="88" y2="342" stroke="#0c1222" stroke-width="4"/>
+                  <line x1="86" y1="318" x2="98" y2="342" stroke="#0c1222" stroke-width="4"/>
+                </g>
+                <text x="24" y="296" fill="#8a96c2" font-size="10">from the synchrotron</text>
+                <text x="24" y="312" fill="#ff5d8f" font-size="10">EPB1 · 150 m · 800 MeV protons · 4 of 5 pulses</text>
+                <rect class="hit" x="15" y="300" width="270" height="60" fill="transparent"/>
+              </g>
+
+              <!-- 2 branch to TS2 -->
+              <g class="hotspot" data-spot="ts2b" tabindex="0" role="button" aria-label="Branch line to Target Station 2">
+                <path class="hotspot-shape" data-mupath="ts2" d="M150,330 C 110,380 70,460 45,545" fill="none" stroke="#233055" stroke-width="4" stroke-dasharray="6 6"/>
+                <text x="20" y="586" fill="#8a96c2" font-size="10">→ TS2 · 1 in 5 pulses</text>
+                <rect class="hit" x="18" y="362" width="120" height="240" fill="transparent"/>
+              </g>
+
+              <!-- 3 shielding monolith -->
+              <g class="hotspot" data-spot="monolith" tabindex="0" role="button" aria-label="Shielding monolith">
+                <g class="hotspot-shape">
+                  <path d="M948.9,264.2 L855.8,171.1 L724.2,171.1 L631.1,264.2 L631.1,395.8 L724.2,488.9 L855.8,488.9 L948.9,395.8 Z" fill="#101831" stroke="#3a4d85" stroke-width="2"/>
+                  <path d="M928.6,272.6 L847.4,191.4 L732.6,191.4 L651.4,272.6 L651.4,387.4 L732.6,468.6 L847.4,468.6 L928.6,387.4 Z" fill="#0a1024" stroke="#233055" stroke-width="1.5"/>
+                </g>
+                <text x="700" y="510" fill="#8a96c2" font-size="10">steel + concrete monolith</text>
+                <path class="hit" d="M948.9,264.2 L855.8,171.1 L724.2,171.1 L631.1,264.2 L631.1,395.8 L724.2,488.9 L855.8,488.9 L948.9,395.8 Z" fill="transparent"/>
+              </g>
+
+              <!-- beam channel through the shielding -->
+              <line x1="631" y1="330" x2="757" y2="330" stroke="#1f2a4f" stroke-width="3" aria-hidden="true"/>
+
+              <!-- 4 north beam ports -->
+              <g class="hotspot" data-spot="ports" tabindex="0" role="button" aria-label="North beam ports N1 to N9">
+                <g class="hotspot-shape" font-size="9.5" text-anchor="middle">
+                  <g data-port="SANDALS"><line x1="649.7" y1="249" x2="583.9" y2="211" stroke="#2c3a6b" stroke-width="2"/><rect x="561" y="196" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="570" y="190" fill="#8a96c2">SANDALS</text></g>
+                  <g data-port="MAPS"><line x1="675.4" y1="215.4" x2="621.7" y2="161.7" stroke="#2c3a6b" stroke-width="2"/><rect x="601.4" y="143.4" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="610.4" y="137.4" fill="#8a96c2">MAPS</text></g>
+                  <g data-port="MERLIN"><line x1="709" y1="189.7" x2="671" y2="123.9" stroke="#2c3a6b" stroke-width="2"/><rect x="654" y="103" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="663" y="97" fill="#8a96c2">MERLIN</text></g>
+                  <g data-port="SXD"><line x1="748.1" y1="173.5" x2="728.4" y2="100.1" stroke="#2c3a6b" stroke-width="2"/><rect x="715.3" y="77.7" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="724.3" y="71.7" fill="#8a96c2">SXD</text></g>
+                  <g data-port="GEM"><line x1="790" y1="168" x2="790" y2="92" stroke="#2c3a6b" stroke-width="2"/><rect x="781" y="69" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="790" y="63" fill="#8a96c2">GEM</text></g>
+                  <g data-port="PEARL"><line x1="831.9" y1="173.5" x2="851.6" y2="100.1" stroke="#2c3a6b" stroke-width="2"/><rect x="846.7" y="77.7" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="855.7" y="71.7" fill="#8a96c2">PEARL</text></g>
+                  <g data-port="POLARIS"><line x1="871" y1="189.7" x2="909" y2="123.9" stroke="#2c3a6b" stroke-width="2"/><rect x="908" y="103" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="917" y="97" fill="#8a96c2">POLARIS</text></g>
+                  <g data-port="TOSCA"><line x1="904.6" y1="215.4" x2="958.3" y2="161.7" stroke="#2c3a6b" stroke-width="2"/><rect x="960.6" y="143.4" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="969.6" y="137.4" fill="#8a96c2">TOSCA</text></g>
+                  <g data-port="HRPD"><line x1="930.3" y1="249" x2="996.1" y2="211" stroke="#2c3a6b" stroke-width="2"/><rect x="1001" y="196" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="1010" y="190" fill="#8a96c2">HRPD</text><line data-ext="1" x1="1019" y1="199" x2="1116" y2="143" stroke="#2c3a6b" stroke-width="1.5" stroke-dasharray="3 5"/><text x="1122" y="138" fill="#8a96c2" text-anchor="start">96 m guide →</text></g>
+                </g>
+                <rect class="hit" x="552" y="50" width="490" height="116" fill="transparent"/>
+              </g>
+
+              <!-- 5 south beam ports -->
+              <g class="hotspot" data-spot="ports" tabindex="0" role="button" aria-label="South beam ports S1 to S9">
+                <g class="hotspot-shape" font-size="9.5" text-anchor="middle">
+                  <g data-port="ALF"><line x1="649.7" y1="411" x2="583.9" y2="449" stroke="#2c3a6b" stroke-width="2"/><rect x="561" y="450" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="570" y="478" fill="#8a96c2">ALF</text></g>
+                  <g data-port="MARI"><line x1="675.4" y1="444.6" x2="621.7" y2="498.3" stroke="#2c3a6b" stroke-width="2"/><rect x="601.4" y="502.6" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="610.4" y="530.6" fill="#8a96c2">MARI</text></g>
+                  <g data-port="VESUVIO"><line x1="709" y1="470.3" x2="671" y2="536.1" stroke="#2c3a6b" stroke-width="2"/><rect x="654" y="543" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="663" y="571" fill="#8a96c2">VESUVIO</text></g>
+                  <g data-port="ENGIN-X"><line x1="748.1" y1="486.5" x2="728.4" y2="559.9" stroke="#2c3a6b" stroke-width="2"/><rect x="715.3" y="568.3" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="724.3" y="596.3" fill="#8a96c2">ENGIN-X</text></g>
+                  <g data-port="SURF"><line x1="790" y1="492" x2="790" y2="568" stroke="#2c3a6b" stroke-width="2"/><rect x="781" y="577" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="790" y="605" fill="#8a96c2">SURF</text></g>
+                  <g data-port="CRISP"><line x1="831.9" y1="486.5" x2="851.6" y2="559.9" stroke="#2c3a6b" stroke-width="2"/><rect x="846.7" y="568.3" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="855.7" y="596.3" fill="#8a96c2">CRISP</text></g>
+                  <g data-port="IRIS"><line x1="871" y1="470.3" x2="909" y2="536.1" stroke="#2c3a6b" stroke-width="2"/><rect x="908" y="543" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="917" y="571" fill="#8a96c2">IRIS</text></g>
+                  <g data-port="OSIRIS"><line x1="904.6" y1="444.6" x2="958.3" y2="498.3" stroke="#2c3a6b" stroke-width="2"/><rect x="960.6" y="502.6" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="969.6" y="530.6" fill="#8a96c2">OSIRIS</text></g>
+                  <g data-port="LOQ"><line x1="930.3" y1="411" x2="996.1" y2="449" stroke="#2c3a6b" stroke-width="2"/><rect x="1001" y="450" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="1010" y="478" fill="#8a96c2">LOQ</text></g>
+                </g>
+                <rect class="hit" x="552" y="494" width="490" height="116" fill="transparent"/>
+              </g>
+
+              <!-- 6 beryllium reflector -->
+              <g class="hotspot" data-spot="refl" tabindex="0" role="button" aria-label="Beryllium reflector">
+                <circle class="hotspot-shape" cx="790" cy="330" r="80" fill="#13203e" stroke="#2c3a6b" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <text x="790" y="444" fill="#8a96c2" font-size="9" text-anchor="middle">Be reflector</text>
+                <circle class="hit" cx="790" cy="330" r="84" fill="transparent"/>
+              </g>
+
+              <!-- 7 moderators -->
+              <g class="hotspot" data-spot="mods" tabindex="0" role="button" aria-label="Moderators">
+                <g class="hotspot-shape">
+                  <g data-mod="300" data-color="#ffc46b"><rect x="734" y="280" width="22" height="16" rx="3" fill="#13203e" stroke="#ffc46b"/></g>
+                  <g data-mod="300" data-color="#ffc46b"><rect x="824" y="280" width="22" height="16" rx="3" fill="#13203e" stroke="#ffc46b"/></g>
+                  <g data-mod="100" data-color="#5fd8c8"><rect x="734" y="364" width="22" height="16" rx="3" fill="#13203e" stroke="#5fd8c8"/></g>
+                  <g data-mod="20" data-color="#6aa8ff"><rect x="824" y="364" width="22" height="16" rx="3" fill="#13203e" stroke="#6aa8ff"/></g>
+                </g>
+                <g font-size="9">
+                  <text x="730" y="292" fill="#ffc46b" text-anchor="end">H₂O 300 K</text>
+                  <text x="850" y="292" fill="#ffc46b" text-anchor="start">H₂O 300 K</text>
+                  <text x="730" y="376" fill="#5fd8c8" text-anchor="end">CH₄ 100 K</text>
+                  <text x="850" y="376" fill="#6aa8ff" text-anchor="start">H₂ 20 K</text>
+                </g>
+                <rect class="hit" x="666" y="274" width="100" height="28" fill="transparent"/>
+                <rect class="hit" x="820" y="274" width="100" height="28" fill="transparent"/>
+                <rect class="hit" x="666" y="358" width="100" height="28" fill="transparent"/>
+                <rect class="hit" x="820" y="358" width="100" height="28" fill="transparent"/>
+              </g>
+
+              <!-- 8 tungsten target -->
+              <g class="hotspot" data-spot="target" tabindex="0" role="button" aria-label="Tungsten target">
+                <g class="hotspot-shape ts1-core">
+                  <rect x="760" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="766" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="772" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="778" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="784" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="790" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="796" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="802" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="808" y="316" width="3.4" height="28" fill="#ffb84d"/><rect x="814" y="316" width="3.4" height="28" fill="#ffb84d"/>
+                </g>
+                <text x="790" y="310" fill="#ffb84d" font-size="9" text-anchor="middle">Ta-clad W target</text>
+                <rect class="hit" x="752" y="300" width="76" height="60" fill="transparent"/>
+              </g>
+
+              <!-- 9 muon target -->
+              <g class="hotspot" data-spot="mut" tabindex="0" role="button" aria-label="Graphite muon target">
+                <rect class="hotspot-shape" x="317" y="314" width="6" height="32" fill="#151d3a" stroke="#b78aff" transform="rotate(25 320 330)"/>
+                <text x="340" y="316" fill="#b78aff" font-size="10" text-anchor="start">10 mm graphite muon target</text>
+                <rect class="hit" x="292" y="296" width="64" height="68" fill="transparent"/>
+              </g>
+
+              <!-- 10 EC muon facility (north) -->
+              <g class="hotspot" data-spot="ec" tabindex="0" role="button" aria-label="EC muon facility">
+                <g class="hotspot-shape">
+                  <path data-mupath="n" d="M320,330 C 305,255 285,210 265,175" fill="none" stroke="#3d2f63" stroke-width="3"/>
+                  <line x1="265" y1="175" x2="185" y2="130" stroke="#3d2f63" stroke-width="2"/>
+                  <line x1="265" y1="175" x2="265" y2="118" stroke="#3d2f63" stroke-width="2"/>
+                  <line x1="265" y1="175" x2="345" y2="130" stroke="#3d2f63" stroke-width="2"/>
+                  <rect data-muend="n" x="165" y="110" width="40" height="20" rx="4" fill="#151d3a" stroke="#b78aff"/>
+                  <rect data-muend="n" x="245" y="98" width="40" height="20" rx="4" fill="#151d3a" stroke="#b78aff"/>
+                  <rect data-muend="n" x="325" y="110" width="40" height="20" rx="4" fill="#151d3a" stroke="#b78aff"/>
+                </g>
+                <g font-size="9.5" text-anchor="middle" fill="#c0c9e8">
+                  <text x="185" y="102">MuSR</text>
+                  <text x="265" y="90">EMU</text>
+                  <text x="345" y="102">HiFi</text>
+                </g>
+                <text x="265" y="52" fill="#b78aff" font-size="10" text-anchor="middle" letter-spacing="1">EC MUON FACILITY · surface muons</text>
+                <rect class="hit" x="140" y="36" width="250" height="150" fill="transparent"/>
+              </g>
+
+              <!-- 11 RIKEN-RAL muon facility (south) -->
+              <g class="hotspot" data-spot="riken" tabindex="0" role="button" aria-label="RIKEN-RAL muon facility">
+                <g class="hotspot-shape">
+                  <path data-mupath="s" d="M320,330 C 305,405 285,450 265,485" fill="none" stroke="#3d2f63" stroke-width="3"/>
+                  <line x1="265" y1="485" x2="195" y2="535" stroke="#3d2f63" stroke-width="2"/>
+                  <line x1="265" y1="485" x2="335" y2="535" stroke="#3d2f63" stroke-width="2"/>
+                  <rect data-muend="s" x="175" y="535" width="40" height="20" rx="4" fill="#151d3a" stroke="#b78aff"/>
+                  <rect data-muend="s" x="315" y="535" width="40" height="20" rx="4" fill="#151d3a" stroke="#b78aff"/>
+                </g>
+                <g font-size="9.5" text-anchor="middle" fill="#c0c9e8">
+                  <text x="195" y="571">ARGUS</text>
+                  <text x="335" y="571">CHRONUS</text>
+                </g>
+                <text x="265" y="612" fill="#b78aff" font-size="10" text-anchor="middle" letter-spacing="1">RIKEN–RAL MUON FACILITY · decay muons</text>
+                <rect class="hit" x="140" y="470" width="250" height="155" fill="transparent"/>
+              </g>
+            </svg>
+            <canvas id="ts1-canvas" aria-hidden="true"></canvas>
+          </div>
+        </div>
+        <div class="control-row" role="group" aria-label="Simulation controls">
+          <button type="button" class="btn primary" id="sim-toggle">⏸ PAUSE</button>
+          <button type="button" class="btn" id="sim-step">FIRE ONE PULSE</button>
+          <span class="seg-toggle" role="group" aria-label="Simulation speed">
+            <button type="button" data-speed="0.5" aria-pressed="false">0.5×</button>
+            <button type="button" data-speed="1" aria-pressed="true">1×</button>
+            <button type="button" data-speed="2" aria-pressed="false">2×</button>
+          </span>
+        </div>
+        <div class="sim-hud" aria-hidden="true">
+          <span>PULSE <b id="hud-pulse">0</b></span>
+          <span>→ TS1 <b id="hud-ts1">0</b></span>
+          <span>→ TS2 <b id="hud-ts2">0</b></span>
+          <span>NEUTRONS MADE <b id="hud-n">0</b></span>
+          <span class="hud-state" id="hud-state">RUNNING</span>
+        </div>
+        <figcaption class="figure-caption">FIG TS1.1 — schematic plan, not to scale; port angles and the port-to-moderator pairing are illustrative. The animation slows each stage by a different amount (the proton dash by ~×1,000,000; the neutron drift by ~×100) so everything is visible at once. Counts are real ISIS figures.</figcaption>
+      </figure>
+      <div class="info-card" id="hall-info" aria-live="polite" style="margin-top: var(--sp-3)">
+        <h3>Pick a part of the hall</h3>
+        <p>Click any highlighted region — or press Tab and Enter — to see what it does. Click again or press Escape to step back out.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- S2: one pulse, on the real clock -->
+  <section id="pulse" aria-labelledby="pulse-h">
+    <span class="kicker">TS1 · 2 — One pulse, on the real clock</span>
+    <h2 id="pulse-h">25 milliseconds in the life of TS1</h2>
+    <p style="max-width: 56ch">The animation above cheats time so you can see everything at once. Here is the same story at honest timescales — click through the five beats between one pulse and the next.</p>
+    <div class="timeline" id="pulse-timeline" style="margin-top: var(--sp-3)" role="group" aria-label="Pulse timeline">
+      <button type="button" class="timeline-node" data-beat="0" aria-pressed="true">the kick</button>
+      <button type="button" class="timeline-node" data-beat="1" aria-pressed="false">impact</button>
+      <button type="button" class="timeline-node" data-beat="2" aria-pressed="false">moderation</button>
+      <button type="button" class="timeline-node" data-beat="3" aria-pressed="false">the flight</button>
+      <button type="button" class="timeline-node" data-beat="4" aria-pressed="false">again</button>
+    </div>
+    <div class="info-card" id="pulse-info" aria-live="polite" style="margin-top: var(--sp-3)"></div>
+  </section>
+
+  <!-- S3: numbers + roster -->
+  <section id="roster" aria-labelledby="roster-h">
+    <span class="kicker">TS1 · 3 — Who drinks from it</span>
+    <h2 id="roster-h">One target, twenty-odd customers</h2>
+    <div class="card-grid" style="margin-top: var(--sp-3)">
+      <div class="panel"><p class="stat"><span class="num">40 /s</span><span class="label">pulses on target — 4 of every 5</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">2.5×10¹³</span><span class="label">protons per pulse (160 µA average)</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">~20</span><span class="label">neutrons chipped off per proton</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">18</span><span class="label">beam ports — N1–N9 &amp; S1–S9</span></p></div>
+    </div>
+    <div class="card-grid" style="margin-top: var(--sp-3)">
+      <div class="panel roster-card">
+        <h3>Where the atoms are</h3>
+        <p class="instruments">SANDALS · GEM · POLARIS · HRPD · SXD · PEARL · ENGIN-X · ALF</p>
+        <p>Diffractometers — they read atomic positions from how neutrons bounce off planes of atoms: liquids and glasses, powders, single crystals, samples under pressure, and stress deep inside engineering parts.</p>
+      </div>
+      <div class="panel roster-card">
+        <h3>How the atoms move</h3>
+        <p class="instruments">MAPS · MERLIN · MARI · TOSCA · VESUVIO · IRIS · OSIRIS</p>
+        <p>Spectrometers — they measure the energy neutrons gain or lose, mapping vibrations, magnetism and chemistry in motion.</p>
+      </div>
+      <div class="panel roster-card">
+        <h3>Surfaces &amp; big structures</h3>
+        <p class="instruments">LOQ · CRISP · SURF</p>
+        <p>Small-angle scattering and reflectometry — polymers, proteins and layered films, hundreds of ångströms at a time.</p>
+      </div>
+      <div class="panel roster-card mu">
+        <h3>The muon side</h3>
+        <p class="instruments">MuSR · EMU · HiFi&ensp;|&ensp;ARGUS · CHRONUS</p>
+        <p>Two muon facilities share the same proton beam upstream of the target: the EC spectrometers use surface muons, RIKEN–RAL’s ports use higher-momentum decay muons.</p>
+      </div>
+    </div>
+    <p class="footnote">Roster simplified — some ports host more than one instrument, and a few test beamlines are not shown. See the <a href="techniques.html">techniques page</a> for what each type of instrument measures.</p>
+  </section>
+
+  <section id="quiz" aria-labelledby="quiz-h">
+    <span class="kicker">TS1 · 4 — Checkpoint</span>
+    <h2 id="quiz-h" style="margin-bottom: var(--sp-3)">Quick check</h2>
+    <div id="quiz-box"></div>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="facility.html"><span class="kicker">Back</span><h3>How ISIS works</h3><p>The whole machine, ion source to instruments.</p></a>
+    <a class="cta-card" href="data.html"><span class="kicker">Related</span><h3>Time-of-flight &amp; data →</h3><p>How those staggered arrival times become wavelengths, events and spectra.</p></a>
+    <a class="cta-card" href="techniques.html"><span class="kicker">Related</span><h3>Nine ways to use the beam →</h3><p>What the instruments around this hall actually measure.</p></a>
+  </nav>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a> · <a href="how.html">how this site was made</a></span>
+  </div>
+</footer>
+</body>
+</html>
