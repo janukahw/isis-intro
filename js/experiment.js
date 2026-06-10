@@ -5,7 +5,7 @@
   var PHASES = [
     {
       key: "Propose",
-      what: "A research team writes a short scientific case: what they want to measure, on which instrument, and why it matters. Direct Access proposals are invited twice a year (deadlines around mid-April and mid-October); Rapid Access and Xpress routes exist for urgent or simple measurements.",
+      what: "A research team writes a short scientific case: what they want to measure, on which instrument, and why it matters. There are three application routes: the main twice-a-year call (“Direct Access”, deadlines around mid-April and mid-October), plus fast-track “Rapid Access” and “Xpress” routes for urgent or simple measurements.",
       who: "Visiting researchers, with advice from ISIS instrument scientists.",
       sw: "Proposal submission system and user database."
     },
@@ -17,19 +17,19 @@
     },
     {
       key: "Schedule",
-      what: "Accepted experiments are slotted into the run cycles, typically 3–8 months after the proposal deadline. Sample-safety review happens here too: is the sample hazardous, radioactive, magnetic? Travel, training and access get arranged.",
+      what: "Accepted experiments are slotted into the run cycles (the multi-week beam-on blocks described below), typically 3–8 months after the proposal deadline. Sample-safety review happens here too: is the sample hazardous, radioactive, magnetic? Travel, training and access get arranged.",
       who: "Instrument scientists, user office, health & safety.",
       sw: "Scheduling and sample-safety systems; cycle calendars."
     },
     {
       key: "Set up",
-      what: "The team arrives. The sample goes into its environment — cryostat, furnace, magnet, pressure cell, humidity chamber — and the instrument is configured and calibrated for the measurement. Hours spent here are repaid in data quality.",
+      what: "The team arrives. The sample goes into its environment — cryostat (extreme cold), furnace, magnet, pressure cell, humidity chamber — and the instrument is configured and calibrated for the measurement. Hours spent here are repaid in data quality.",
       who: "User team + instrument scientist + sample-environment technicians.",
-      sw: "Instrument control software; motor, chopper and environment controllers."
+      sw: "Instrument control software; motor, beam-chopper (the spinning discs that gate the beam) and environment controllers."
     },
     {
       key: "Measure",
-      what: "Beam on. The data-acquisition electronics timestamp every detected neutron or muon-decay positron into event files, while slow controls log temperature, field and pressure alongside. Teams babysit dashboards, swap samples, and adapt the plan as results appear live.",
+      what: "Beam on. The data-acquisition electronics timestamp every detected neutron — or, on muon instruments, the positron (an electron’s antimatter twin) that a muon emits when it decays — into event files, while the “slow controls” (sensors sampled every few seconds rather than per-event) log temperature, magnetic field and pressure alongside. Teams babysit dashboards, swap samples, and adapt the plan as results appear live.",
       who: "User team round the clock; instrument + on-call support staff.",
       sw: "DAQ writing NeXus/HDF5 event files; live-view displays; often a first pass of automatic reduction."
     },
@@ -41,7 +41,7 @@
     },
     {
       key: "Publish",
-      what: "Back home, the team fits models, compares with simulations, and writes the paper — usually months of analysis for days of beam time. Data gets a DOI; the ISIS experiment number appears in the acknowledgements; results feed the next proposal.",
+      what: "Back home, the team fits models, compares with simulations, and writes the paper — usually months of analysis for days of beam time. Data gets a DOI (a permanent, citable identifier); the ISIS experiment number appears in the acknowledgements; results feed the next proposal.",
       who: "The research team; ~3,000 researchers a year publish on ISIS data.",
       sw: "Analysis codes (Mantid fitting and technique-specific tools), data catalogue with DOIs."
     }
@@ -96,7 +96,7 @@
         q: "What’s in a raw NeXus event file at the end of a run?",
         choices: ["Finished plots ready for the paper", "Timestamped detector events plus logged sample conditions (temperature, field…)", "Only a summary count per detector", "The user’s analysis scripts"],
         answer: 1,
-        why: "The DAQ writes every detected event — (detector ID, time of flight) — alongside slow-control logs. Everything else (histograms, curves, plots) is computed later from these."
+        why: "The DAQ (data acquisition) writes every detected event — which detector fired, and exactly when — alongside the logged sample conditions. Everything else (histograms, curves, plots) is computed later from these."
       },
       {
         q: "Roughly how long after the proposal deadline does an experiment typically run?",
@@ -106,7 +106,7 @@
       },
       {
         q: "Why does facility software being down during a cycle matter so much?",
-        choices: ["It doesn’t — runs can be repeated for free", "Beam time is scarce, scheduled months out, and over in days — lost hours are a meaningful fraction of someone’s only chance to measure", "Because the protons are wasted", "It only matters during the day shift"],
+        choices: ["It doesn’t — runs can be repeated for free", "Beam time is scarce, scheduled months out, and over in days — lost hours are a meaningful fraction of someone’s only chance to measure", "Because the instrument must be recalibrated after any outage", "It only matters during the day shift"],
         answer: 1,
         why: "An experiment might have 48–120 hours total, awarded competitively, scheduled months ago. Instrument control, DAQ and reduction software are in the critical path the whole time — it’s a production system with a queue of scientists behind it."
       }

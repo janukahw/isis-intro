@@ -24,7 +24,7 @@ To publish, enable **GitHub Pages** (Settings → Pages → deploy from branch, 
 | `facility.html` | How ISIS works: ion source, linac, synchrotron, targets, moderators | Clickable facility map, moderator spectrum picker |
 | `experiment.html` | Life of an experiment: proposal → beamtime → data → paper | 7-phase lifecycle timeline (with who/which-software per phase) |
 | `data.html` | From detector events to publishable curves | **Reduction Playground** — a mini-Mantid pipeline you drive yourself |
-| `techniques.html` | Nine techniques: diffraction (powder & single crystal), SANS, reflectometry, spectroscopy, µSR, imaging, irradiation, total scattering | Rotate-a-crystal detector view, fringe/field/lattice sliders |
+| `techniques.html` | Nine techniques: diffraction (powder & single crystal), SANS, reflectometry, spectroscopy, µSR, imaging, irradiation, total scattering — each mapped to the ISIS science group that owns it | Rotate-a-crystal detector view, fringe/field/lattice sliders |
 
 Each page ends with a short self-check quiz.
 

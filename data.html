@@ -38,7 +38,21 @@
 </style>
 </head>
 <body>
-<main>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="experiment.html">EXPERIMENT</a>
+      <a href="data.html" aria-current="page">DATA</a>
+      <a href="techniques.html">TECHNIQUES</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
   <div class="page-intro">
     <span class="kicker">05 / Data</span>
     <h1>From counts to curves</h1>
@@ -51,9 +65,9 @@
     <h2 id="tof-h">Time of flight: slow neutrons arrive late</h2>
     <div class="two-col">
       <div>
-        <p>ISIS is pulsed: every neutron in a pulse leaves the moderator at (nearly) the same moment, like runners off a starting gun. Fast, short-wavelength neutrons reach the sample first; slow, long-wavelength ones straggle in later.</p>
-        <p>That means a plain stopwatch tells you each neutron’s wavelength — no extra hardware. <span class="mono">λ ≈ 3956 × t / L</span>: arrival time <span class="mono">t</span> (seconds) over flight path <span class="mono">L</span> (metres) gives wavelength in ångströms. In software terms: <em>the timestamp is the payload</em>.</p>
-        <p class="footnote">Drag the slider (or press play) and watch five neutrons of different wavelengths race down an 11&nbsp;m flight path into the arrival histogram.</p>
+        <p>ISIS is pulsed: every neutron in a pulse leaves the moderator (the block that slows neutrons to useful speeds — see <a href="facility.html">Facility</a>) at (nearly) the same moment, like runners off a starting gun. Quantum mechanics gives every moving particle a wavelength — the slower it moves, the longer (the <a href="probes.html">Probes</a> page shows why). Fast, short-wavelength neutrons reach the detector first; slow, long-wavelength ones straggle in later.</p>
+        <p>That means a plain stopwatch tells you each neutron’s wavelength — no extra hardware. <span class="mono">λ ≈ 3956 × t / L</span>: arrival time <span class="mono">t</span> (seconds) over flight path <span class="mono">L</span> (metres) gives wavelength in ångströms (1&nbsp;Å = 0.1&nbsp;nanometres — about the size of an atom). In software terms: <em>the timestamp is the payload</em>.</p>
+        <p class="footnote">Drag the slider (or press play) and watch five neutrons of different wavelengths race down an 11&nbsp;m flight path into the arrival histogram. The 3956 is just Planck’s constant over the neutron’s mass, pre-baked into convenient units — a constant of nature, not a calibration.</p>
       </div>
       <figure class="figure-frame">
         <svg class="beamline-svg" id="tof-svg" viewBox="0 0 640 150" role="img" aria-label="Animated beamline: five neutrons of different wavelengths travel from the moderator to the detector, arriving at different times.">
@@ -75,12 +89,12 @@
           <g id="tof-neutrons"></g>
         </svg>
         <div class="control-row">
-          <button class="btn" id="tof-play" type="button">▶ play</button>
+          <button class="btn" id="tof-play" type="button" aria-label="Play animation" aria-pressed="false">▶ play</button>
           <label for="tof-time">t</label>
           <input type="range" id="tof-time" min="0" max="25" step="0.05" value="0">
           <output id="tof-time-out">0.0 ms</output>
         </div>
-        <canvas class="plot-box" id="tof-hist" style="height:170px"></canvas>
+        <canvas class="plot-box" id="tof-hist" style="height:170px" role="img" aria-label="Arrival-time histogram: a bar appears as each neutron reaches the detector, fast short wavelengths first"></canvas>
         <figcaption>FIG 5.1 — five neutrons, λ = 1–8 Å, over L = 11 m. arrival time t = L·λ / 3956.</figcaption>
       </figure>
     </div>
@@ -105,9 +119,10 @@
           <label for="ev-bins">bin width</label>
           <input type="range" id="ev-bins" min="0" max="1" step="0.01" value="0.5" disabled>
           <output id="ev-bins-out">— µs</output>
+          <small class="mono" style="font-size: var(--fs-tiny); color: var(--text-500)">50–2000 µs, log scale</small>
         </div>
-        <canvas class="plot-box tall" id="ev-plot"></canvas>
-        <figcaption>FIG 5.2 — 4,000 synthetic events from one detector bank. toggle to histogram, then play with the bin width.</figcaption>
+        <canvas class="plot-box tall" id="ev-plot" role="img" aria-label="Plot of 4,000 neutron events, as raw dots or as a histogram; updates when the view mode or bin width changes"></canvas>
+        <figcaption>FIG 5.2 — 4,000 synthetic events from one detector bank (a group of detectors mounted together at one angle). toggle to histogram, then play with the bin width.</figcaption>
       </figure>
     </div>
   </section>
@@ -119,7 +134,7 @@
     <div class="two-col flip">
       <div>
         <p>The raw event stream is honest but useless for science as-is:</p>
-        <p>① It’s in <strong>instrument coordinates</strong> (microseconds at one particular detector), not physics coordinates (wavelength, d-spacing, energy). ② The shape of the source spectrum is <strong>baked into</strong> every measurement — more neutrons arrive at some wavelengths than others. ③ Detectors have quirks: dead pixels, different efficiencies, different positions.</p>
+        <p>① It’s in <strong>instrument coordinates</strong> (microseconds at one particular detector), not physics coordinates (wavelength, energy, d-spacing — the distance between repeating layers of atoms in a crystal). ② The shape of the source spectrum is <strong>baked into</strong> every measurement — more neutrons arrive at some wavelengths than others. ③ Detectors have quirks: dead pixels, different efficiencies, different positions.</p>
         <p><strong>Reduction</strong> fixes all three, in a standard order, the same way for every run on an instrument. This is what <a href="https://www.mantidproject.org/" rel="external">Mantid</a> does. Its three core ideas map cleanly to software concepts:</p>
         <div class="etl-map panel" style="padding: var(--sp-3)">
           <p style="max-width:none"><b style="color:var(--neutron)">Workspace</b> — the data structure (data + instrument geometry + metadata)</p>
@@ -163,7 +178,7 @@
             <line x1="120" y1="148" x2="400" y2="148" stroke="#233055"/>
           </g>
         </svg>
-        <figcaption>FIG 5.3 — reduction in one line: extract (Load), transform (ConvertUnits/Rebin/Normalize), load (a result you can fit).</figcaption>
+        <figcaption>FIG 5.3 — reduction in one line: extract (Load), transform (ConvertUnits/Rebin/Normalize), load (a result you can fit). .nxs = NeXus, the standard facility file format.</figcaption>
       </figure>
     </div>
   </section>
@@ -172,7 +187,7 @@
   <section id="playground" aria-labelledby="pg-h">
     <span class="kicker">5.4 — Hands on</span>
     <h2 id="pg-h">The Reduction Playground</h2>
-    <p class="lede" style="margin-bottom: var(--sp-4)">A simulated powder-diffraction run on a toy instrument: one crystal, three detector banks at different angles, 11&nbsp;m flight path. Run the five steps in order and watch what each one earns you.</p>
+    <p class="lede" style="margin-bottom: var(--sp-4)">A simulated powder-diffraction run on a toy instrument: a powdered crystal (many tiny grains of the same material), three detector banks at different angles (2θ — just the angle the neutron is deflected through), 11&nbsp;m flight path. The crystal’s atoms sit in evenly spaced layers; neutrons whose wavelength matches a layer spacing reflect strongly, producing a sharp peak at that spacing — that’s diffraction. Run the five steps in order and watch what each one earns you.</p>
 
     <div class="pg-grid">
       <div class="steps" id="pg-steps">
@@ -191,7 +206,7 @@
         <div class="step-card" data-step="rebin" data-state="locked">
           <span class="step-no">STEP 3</span>
           <h3>Rebin</h3>
-          <p>Merge the three banks onto one common set of bins. Pick the bin width — too wide blurs the peaks, too narrow goes noisy.</p>
+          <p>Put all three banks onto one common set of bins, then sum them into a single pattern — in real Mantid that’s two algorithms, Rebin then DiffractionFocussing. Pick the bin width — too wide blurs the peaks, too narrow goes noisy.</p>
           <div class="step-actions">
             <button class="btn primary" type="button" data-apply="rebin" disabled>apply ▸</button>
             <label for="pg-binw">Δd</label>
@@ -202,14 +217,14 @@
         <div class="step-card" data-step="normalize" data-state="locked">
           <span class="step-no">STEP 4</span>
           <h3>Normalize</h3>
-          <p>Divide out the source spectrum (measured by a monitor in the beam). The sloping background flattens and peak heights finally mean something physical.</p>
+          <p>Divide out the source spectrum (measured by a monitor — a small detector sitting directly in the beam). The sloping background flattens and peak heights finally mean something physical.</p>
           <div class="step-actions"><button class="btn primary" type="button" data-apply="normalize" disabled>apply ▸</button></div>
         </div>
         <div class="step-card" data-step="fit" data-state="locked">
           <span class="step-no">STEP 5</span>
           <h3>Fit</h3>
-          <p>Click near a peak in the plot to fit a Gaussian + background. The fitted centre is an interatomic spacing, in ångströms. <em>This number goes in the paper.</em></p>
-          <div class="step-actions"><span class="mono" id="pg-fit-hint" style="font-size: var(--fs-tiny); color: var(--text-500)">apply steps 1–4 first</span></div>
+          <p>Click near a peak in the plot — or focus the plot and press Enter — to fit a Gaussian (a bell-shaped curve) + background. The fitted centre is a spacing between planes of atoms in the crystal, in ångströms. <em>This number goes in the paper.</em></p>
+          <div class="step-actions"><span class="mono" id="pg-fit-hint" aria-live="polite" style="font-size: var(--fs-tiny); color: var(--text-500)">apply steps 1–4 first</span></div>
         </div>
         <div class="step-actions">
           <button class="btn ghost" type="button" id="pg-reset">↺ reset</button>
@@ -218,18 +233,18 @@
 
       <div>
         <figure class="figure-frame">
-          <canvas class="plot-box tall" id="pg-plot" style="height:380px"></canvas>
+          <canvas class="plot-box tall" id="pg-plot" style="height:380px" role="img" tabindex="0" aria-label="Workspace plot: updates as each reduction step is applied. When steps 1–4 are done, press Enter or Space to fit the next peak." aria-describedby="pg-caption"></canvas>
           <div class="legend" id="pg-legend"></div>
           <figcaption id="pg-caption">FIG 5.4 — workspace view. apply STEP 1 to load the run.</figcaption>
         </figure>
         <div class="history-panel" style="margin-top: var(--sp-2)">
           <p class="hp-title">workspace history</p>
-          <ol id="pg-history"></ol>
+          <ol id="pg-history" aria-live="polite"></ol>
         </div>
-        <dl class="result-card" id="pg-result" hidden style="margin-top: var(--sp-2)"></dl>
+        <dl class="result-card" id="pg-result" aria-live="polite" hidden style="margin-top: var(--sp-2)"></dl>
       </div>
     </div>
-    <p class="footnote">Simplified — real Mantid reduction adds calibration, masking, absorption corrections and per-technique steps. The real algorithms: <a href="https://docs.mantidproject.org/nightly/algorithms/Load-v1.html" rel="external">Load</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/ConvertUnits-v1.html" rel="external">ConvertUnits</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/Rebin-v1.html" rel="external">Rebin</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/NormaliseByCurrent-v1.html" rel="external">NormaliseByCurrent</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/Fit-v1.html" rel="external">Fit</a>.</p>
+    <p class="footnote">Simplified — real Mantid reduction adds calibration, masking, absorption corrections and per-technique steps. The real algorithms: <a href="https://docs.mantidproject.org/nightly/algorithms/Load-v1.html" rel="external">Load</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/ConvertUnits-v1.html" rel="external">ConvertUnits</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/Rebin-v1.html" rel="external">Rebin</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/DiffractionFocussing-v2.html" rel="external">DiffractionFocussing</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/NormaliseToMonitor-v1.html" rel="external">NormaliseToMonitor</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/Fit-v1.html" rel="external">Fit</a>.</p>
   </section>
 
   <!-- S5: reduction vs analysis -->
@@ -259,5 +274,11 @@
     <a class="cta-card" href="experiment.html"><span class="kicker">Context</span><h3>Life of an experiment</h3><p>Where reduction sits in the journey from proposal to paper.</p></a>
   </nav>
 </main>
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a></span>
+  </div>
+</footer>
 </body>
 </html>

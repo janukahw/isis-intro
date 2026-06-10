@@ -72,9 +72,10 @@
       var slider = document.getElementById("zoom");
       var out = document.getElementById("zoom-out");
       var label = document.getElementById("zoom-label");
+      var svg = document.getElementById("zoom-svg");
       var captions = [
         "a £1 coin — about 2 cm across",
-        "zoom ×1,000: crystal grains, each a tiny ordered region",
+        "zoom ×1,000: crystal grains — a metal is a patchwork of tiny ordered crystals",
         "zoom ×1,000,000: molecules and chains",
         "zoom ×100,000,000: atoms — and a slow neutron’s wave fits the spacing exactly"
       ];
@@ -102,6 +103,7 @@
         });
         out.textContent = fmtSize(z);
         label.textContent = captions[nearest];
+        svg.setAttribute("aria-label", captions[nearest]);
       }
       slider.addEventListener("input", update);
       update();
@@ -147,10 +149,14 @@
       var btnX = document.getElementById("view-xray");
       var btnN = document.getElementById("view-neutron");
       var labelEl = document.getElementById("mol-label");
+      var svgEl = document.getElementById("mol-svg");
 
       function setView(v) {
         btnX.setAttribute("aria-pressed", String(v === "xray"));
         btnN.setAttribute("aria-pressed", String(v === "neutron"));
+        svgEl.setAttribute("aria-label", v === "xray"
+          ? "X-ray view: the heavy metal atom dominates the molecule; hydrogen and lithium are nearly invisible."
+          : "Neutron view: hydrogen and lithium glow brightly; the heavy metal atom no longer dominates.");
         nodes.forEach(function (n) {
           var s = STYLE[v][n.atom.elName];
           n.circle.style.r = s[0] + "px";
@@ -218,10 +224,29 @@
         out.textContent = slider.value + " G";
       });
 
-      if (reduceMotion) return;
+      var pauseBtn = document.getElementById("prec-pause");
+      if (reduceMotion) {
+        if (pauseBtn) pauseBtn.hidden = true;
+        return;
+      }
+
+      var paused = false, running = true;
+      if (pauseBtn) {
+        pauseBtn.addEventListener("click", function () {
+          paused = !paused;
+          pauseBtn.setAttribute("aria-pressed", String(paused));
+          pauseBtn.textContent = paused ? "PLAY" : "PAUSE";
+          if (!paused && !running) {
+            running = true;
+            last = null;
+            requestAnimationFrame(frame);
+          }
+        });
+      }
 
       var phase = 0, last = null, decayTimer = 0;
       function frame(ts) {
+        if (paused) { running = false; return; }
         if (last == null) last = ts;
         var dt = (ts - last) / 1000;
         last = ts;

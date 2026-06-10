@@ -70,7 +70,7 @@
 
   .scroll-cue {
     font-family: var(--font-mono);
-    font-size: var(--fs-tiny);
+    font-size: var(--fs-small);
     letter-spacing: 0.3em;
     color: var(--text-500);
     margin-top: var(--sp-4);
@@ -105,6 +105,12 @@
     @keyframes bunch-throb {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.18); opacity: 0.75; }
+    }
+    /* gentle bob on the hero scroll cue */
+    .scroll-cue { animation: cue-bob 1.5s ease-in-out infinite; }
+    @keyframes cue-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
     }
     /* moderator: fast dot in, slow dot out, looping */
     .mod-fast { animation: mod-in 3.2s linear infinite; }

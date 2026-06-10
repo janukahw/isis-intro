@@ -68,11 +68,18 @@
 
       var raf = null;
       function stopPlay() {
-        if (raf) { cancelAnimationFrame(raf); raf = null; playBtn.textContent = "▶ play"; }
+        if (raf) {
+          cancelAnimationFrame(raf); raf = null;
+          playBtn.textContent = "▶ play";
+          playBtn.setAttribute("aria-label", "Play animation");
+          playBtn.setAttribute("aria-pressed", "false");
+        }
       }
       playBtn.addEventListener("click", function () {
         if (raf) { stopPlay(); return; }
         playBtn.textContent = "❚❚ pause";
+        playBtn.setAttribute("aria-label", "Pause animation");
+        playBtn.setAttribute("aria-pressed", "true");
         var t0 = null, from = parseFloat(slider.value);
         if (from >= 24.9) from = 0;
         function frame(ts) {
@@ -112,7 +119,7 @@
 
       function render() {
         if (mode === "events") {
-          plot.opts.ylabel = "event # (jittered)";
+          plot.opts.ylabel = "event # (y = random jitter)";
           plot.opts.ymin = 0; plot.opts.ymax = 1;
           plot.setSeries([{ x: events, y: jitter, color: "#4fd8eb", type: "points", size: 1.6, alpha: 0.7 }]);
           binOut.textContent = "— µs";
@@ -177,13 +184,23 @@
           var c = card(step);
           var state = i <= stage ? "done" : (i === stage + 1 ? "ready" : "locked");
           c.dataset.state = state;
+          var h3 = c.querySelector("h3");
+          var sr = h3.querySelector(".sr-only");
+          if (state === "done" && !sr) {
+            var s = document.createElement("span");
+            s.className = "sr-only";
+            s.textContent = " completed";
+            h3.append(s);
+          } else if (state !== "done" && sr) {
+            sr.remove();
+          }
           var b = btn(step);
           if (b) b.disabled = state !== "ready";
         });
         binSlider.disabled = stage < 2;            // active once rebin is ready/done
         var fitReady = stage >= 3;
         fitHint.textContent = fitReady
-          ? (stage >= 4 ? "click another peak to re-fit" : "→ click near a peak in the plot")
+          ? (stage >= 4 ? "click another peak — or press Enter on the plot — to re-fit" : "→ click near a peak in the plot, or focus it and press Enter")
           : "apply steps 1–4 first";
         canvas.style.cursor = fitReady ? "crosshair" : "default";
       }
@@ -238,7 +255,7 @@
         plot.animateTo(banksD.map(function (b, i) {
           return { x: b.x, y: b.y, color: S.INSTRUMENT.banks[i].color, type: "line", width: 1.2 };
         }), 900);
-        caption.textContent = "FIG 5.4 — same data in d-spacing: the peaks from all three banks snap into alignment. that’s calibration.";
+        caption.textContent = "FIG 5.4 — same data in d-spacing: the peaks from all three banks snap into alignment. that’s geometry — calibration just makes these conversion constants exact.";
         pushHistory("ConvertUnits", "Target=dSpacing");
       }
 
@@ -257,7 +274,7 @@
         if (animate) plot.animateTo(series, 600);
         else { plot.setSeries(series); plot.draw(); }
         setLegend([["all banks, common bins", "#4fd8eb"]]);
-        caption.textContent = "FIG 5.4 — three banks merged onto common bins (Δd = " +
+        caption.textContent = "FIG 5.4 — three banks rebinned onto common bins, then summed (Δd = " +
           parseFloat(binSlider.value).toFixed(3) + " Å). try the slider: too wide blurs, too narrow gets noisy.";
       }
 
@@ -280,7 +297,7 @@
         plot.opts.ylabel = "normalized intensity";
         plot.animateTo([{ x: normalized.x, y: normalized.y, color: "#4fd8eb", type: "line", width: 1.8 }], 700);
         caption.textContent = "FIG 5.4 — divided by the source spectrum: the slope is gone and peak heights mean something.";
-        pushHistory("Normalize", "by=incident spectrum");
+        pushHistory("Normalize", "by=source spectrum");
       }
 
       function doFit(dClick) {
@@ -306,14 +323,14 @@
         ]);
         plot.draw();
         setLegend([["reduced data", "#4fd8eb"], ["Gaussian fit", "#ffb84d"]]);
-        caption.textContent = "FIG 5.4 — fitted. the centre is an interatomic spacing, measured to a fraction of a percent.";
+        caption.textContent = "FIG 5.4 — fitted. the centre is a spacing between planes of atoms, measured to a fraction of a percent.";
         if (stage < 4) { stage = 4; setStates(); pushHistory("Fit", "function=Gaussian+flat"); }
 
         resultEl.hidden = false;
         resultEl.textContent = "";
         [["peak centre", fit.c.toFixed(4) + " Å"],
-         ["FWHM", fit.fwhm.toFixed(4) + " Å"],
-         ["area", fit.area.toFixed(1) + " a.u."]].forEach(function (kv) {
+         ["width (FWHM)", fit.fwhm.toFixed(4) + " Å"],
+         ["area", fit.area.toFixed(1) + " (arbitrary units)"]].forEach(function (kv) {
           var dt = document.createElement("dt"); dt.textContent = kv[0];
           var dd = document.createElement("dd"); dd.textContent = kv[1];
           resultEl.append(dt, dd);
@@ -333,7 +350,7 @@
         if (idx !== stage + 1) return;
         if (step === "load") doLoad();
         else if (step === "convert") doConvert();
-        else if (step === "rebin") { doRebin(true); pushHistory("Rebin", "Δd=" + parseFloat(binSlider.value).toFixed(3) + " Å"); }
+        else if (step === "rebin") { doRebin(true); pushHistory("Rebin", "Δd=" + parseFloat(binSlider.value).toFixed(3) + " Å"); pushHistory("DiffractionFocussing", "banks 3→1"); }
         else if (step === "normalize") doNormalize();
         stage = idx;
         setStates();
@@ -344,15 +361,29 @@
         if (stage === 2) doRebin(false);                  // live re-bin before normalize
       });
 
+      function fitAt(d) {
+        if (stage < 3 || d == null) return;
+        doFit(d);
+      }
+
       canvas.addEventListener("click", function (ev) {
         if (stage < 3) return;
-        var d = plot.eventToX(ev);
-        if (d == null) return;
-        doFit(d);
+        fitAt(plot.eventToX(ev));
+      });
+
+      var kbdPeak = 0;
+      canvas.addEventListener("keydown", function (ev) {
+        if (ev.key !== "Enter" && ev.key !== " ") return;
+        if (stage < 3) return;
+        ev.preventDefault();
+        var ds = S.INSTRUMENT.dSpacings;
+        fitAt(ds[kbdPeak % ds.length]);
+        kbdPeak++;
       });
 
       function reset() {
         stage = -1;
+        kbdPeak = 0;
         banksTof = banksD = combined = normalized = fitCurve = null;
         historyEl.textContent = "";
         resultEl.hidden = true;
@@ -383,7 +414,7 @@
         q: "Why does ConvertUnits need to know the instrument geometry?",
         choices: ["It doesn’t — it’s a pure unit relabel", "Because turning a time into a wavelength or d-spacing requires the flight path and detector angle", "Because detectors drift over time", "To correct for the muon background"],
         answer: 1,
-        why: "The same arrival time means different physics at different flight paths and angles. λ needs L; d-spacing needs L and 2θ. That’s why each bank converted differently in the playground."
+        why: "The same arrival time means different physics at different flight paths and angles. λ needs L; d-spacing needs L and the detector angle 2θ. That’s why each bank converted differently in the playground."
       },
       {
         q: "What does a workspace’s history give you?",

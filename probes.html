@@ -27,7 +27,21 @@
 </style>
 </head>
 <body>
-<main>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html" aria-current="page">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="experiment.html">EXPERIMENT</a>
+      <a href="data.html">DATA</a>
+      <a href="techniques.html">TECHNIQUES</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
   <div class="page-intro">
     <span class="kicker">01 / Probes</span>
     <h1>Why neutrons and muons?</h1>
@@ -41,7 +55,7 @@
     <div class="two-col">
       <div>
         <p>Materials are built from atoms spaced a few <strong>ångströms</strong> apart (1&nbsp;Å = 0.1 nanometre = 10⁻¹⁰&nbsp;m). To measure structure at that scale you need a probe whose wavelength is also a few ångströms — a ruler with markings as fine as the thing you’re measuring.</p>
-        <p>Moderated (“slowed-down”) neutrons land <em>exactly</em> there. That’s not luck — it’s why the moderators exist.</p>
+        <p>Moderated (“slowed-down”) neutrons land <em>exactly</em> there. That’s not luck — a <strong>moderator</strong> is a small tank of material the neutrons fly through to lose speed (see <a href="facility.html">How ISIS works</a>), and tuning the ruler is its whole job.</p>
         <p class="footnote">Drag the slider to zoom from a coin to the atoms inside it.</p>
       </div>
       <figure class="figure-frame">
@@ -67,7 +81,7 @@
       <div>
         <p>Here’s the only quantum fact this site needs: every moving particle also behaves like a wave, and <strong>the slower it moves, the longer its wavelength</strong>. For neutrons the relationship is beautifully simple:</p>
         <p class="stat" style="margin-block: var(--sp-3)"><span class="num" style="font-size:1.9rem">λ × v = 3,956</span><span class="label">wavelength (Å) times speed (m/s) is a constant</span></p>
-        <p>A neutron strolling at 1,000&nbsp;m/s has a 4&nbsp;Å wavelength — atom-sized. This is why “slowing neutrons down” and “tuning the ruler” are the same job, and why arrival time reveals wavelength on a <a href="data.html#tof">pulsed source</a>.</p>
+        <p>A neutron at 1,000&nbsp;m/s — bullet-fast by everyday standards, yet tens of thousands of times slower than when it was born — has a 4&nbsp;Å wavelength: atom-sized. This is why “slowing neutrons down” and “tuning the ruler” are the same job, and why, on a <a href="data.html#tof">pulsed source</a> (neutrons leave in short, timed bursts), clocking a neutron’s arrival over a known distance gives its speed — and therefore its wavelength.</p>
       </div>
       <figure class="figure-frame">
         <svg viewBox="0 0 420 180" role="img" aria-label="Fast particle drawn with a short tight wave; slow particle drawn with a long stretched wave.">
@@ -89,8 +103,8 @@
     <h2 id="contrast-h">Neutrons see what X-rays miss</h2>
     <div class="two-col">
       <div>
-        <p>X-rays scatter off electrons, so heavy atoms (lots of electrons) dominate and hydrogen (one electron) is nearly invisible. Neutrons scatter off the <strong>nucleus</strong>, and the strength varies almost randomly across the periodic table — hydrogen and lithium show up brightly even next to heavy metals.</p>
-        <p>That makes neutrons the probe of choice for water, polymers, proteins, and the lithium chemistry inside a working battery. Bonus: swapping an isotope (hydrogen → deuterium) changes the contrast without changing the chemistry — like highlighting one variable in a debugger.</p>
+        <p>“<strong>Scatter</strong>” just means bounce: fire probes at a sample, record where and how strongly they deflect — there is no camera. X-rays scatter off electrons, so heavy atoms (lots of electrons) dominate and hydrogen (one electron) is nearly invisible. Neutrons scatter off the <strong>nucleus</strong>, and the strength varies almost randomly across the periodic table — hydrogen and lithium show up brightly even next to heavy metals.</p>
+        <p>That makes neutrons the probe of choice for water, polymers, proteins, and the lithium chemistry inside a working battery. Bonus: swapping an isotope (hydrogen → deuterium, which is hydrogen plus one extra neutron) changes the contrast without changing the chemistry — like highlighting one variable in a debugger.</p>
         <p>And because neutrons are electrically <strong>neutral</strong>, they pass deep through metal — through an engine block, a weld, a pressure cell — without damaging anything.</p>
       </div>
       <figure class="figure-frame">
@@ -115,8 +129,8 @@
     <h2 id="magnet-h">Neutrons feel magnetism</h2>
     <div class="two-col flip">
       <div>
-        <p>A neutron has no charge, but it is a tiny <strong>compass needle</strong> — it carries a magnetic moment. As it flies through a material it responds to the magnetic field of every atom it passes.</p>
-        <p>So neutrons don’t just map where atoms <em>are</em>; they map how each atom’s magnetism <em>points</em>. Much of what we know about magnetic materials — hard drives, MRI magnets, superconductors — was measured with neutrons. ISIS work includes the structures of high-temperature superconductors and the solid form of buckminsterfullerene.</p>
+        <p>A neutron has no charge, but it is a tiny <strong>compass needle</strong> — it carries a magnetic moment. In many materials each atom is itself a tiny magnet too; as the neutron flies through, it responds to the field of every atom it passes.</p>
+        <p>So neutrons don’t just map where atoms <em>are</em>; they map how each atom’s magnetism <em>points</em>. Much of what we know about magnetic materials — hard drives, MRI magnets, superconductors — was measured with neutrons. ISIS work includes the structures of high-temperature superconductors (where “high” still means about −140&nbsp;°C) and solid buckminsterfullerene — C₆₀, the football-shaped carbon molecule.</p>
       </div>
       <figure class="figure-frame">
         <svg viewBox="0 0 420 180" role="img" aria-label="A grid of atoms with alternating magnetic arrows, and a neutron with its own small compass arrow flying through.">
@@ -127,7 +141,7 @@
             <text x="52" y="118" class="atom-label">neutron — a flying compass</text>
           </g>
         </svg>
-        <figcaption class="figure-caption">FIG 1.4 — atomic magnets (violet/pink) and the probe that reads them</figcaption>
+        <figcaption class="figure-caption">FIG 1.4 — each arrow is the direction one atom’s magnetism points (alternating up/down here); the neutron’s own compass reads them in flight</figcaption>
       </figure>
     </div>
   </section>
@@ -138,20 +152,21 @@
     <h2 id="muons-h">Muons: reporters embedded in the material</h2>
     <div class="two-col">
       <div>
-        <p>A <strong style="color:var(--muon)">muon</strong> is a heavy, short-lived cousin of the electron. ISIS implants them into a sample <em>one at a time</em>. Each muon sits at an atomic site and its spin <strong>precesses</strong> — swings around like a gyroscope — at a rate set by the magnetic field <em>right there</em>, at that exact spot in the material.</p>
-        <p>After 2.2&nbsp;µs on average the muon decays and fires out a positron, <em>preferentially along its spin direction</em>. Collect a few million of those and you’ve read out the local magnetic field inside the material — a probe that texts you its orientation as it dies.</p>
-        <p>Muons excel at faint magnetism, superconductivity, and tracking lithium-ion motion in battery materials. A separate trick — the X-ray fingerprint a captured muon emits — reveals <em>elemental composition</em> without cutting a sample, gentle enough for museum pieces.</p>
+        <p>A <strong style="color:var(--muon)">muon</strong> is a heavy, short-lived cousin of the electron. ISIS implants them into a sample in short, intense bursts; the muons land far apart, so each acts as an isolated probe. Each muon parks at a well-defined spot <em>between</em> the atoms of the crystal, and — like the neutron — it’s a tiny compass needle. That needle, the muon’s <strong>spin</strong>, <strong>precesses</strong> — swings around like a gyroscope — at a rate set by the magnetic field <em>right there</em>, at that exact spot in the material.</p>
+        <p>After 2.2&nbsp;µs on average the muon decays and fires out a positron (the electron’s antimatter twin, written e⁺), <em>preferentially along its spin direction</em>. Each muon dies at a different moment, so millions of positron directions sorted by time of death trace the swinging needle frame by frame — and how fast it swings reads out the local magnetic field inside the material. A probe that texts you its orientation as it dies.</p>
+        <p>Muons excel at faint magnetism, superconductivity, and tracking lithium-ion motion in battery materials. A separate trick: a <em>negatively</em> charged muon can fall into an atom like an extra electron, and the X-rays it emits as it settles fingerprint the element — <em>elemental composition</em> without cutting a sample, gentle enough for museum pieces.</p>
       </div>
       <figure class="figure-frame">
         <svg viewBox="0 0 420 230" role="img" aria-label="A muon inside a crystal precesses like a gyroscope, then decays, emitting a positron along its spin direction." id="muon-svg">
           <g id="muon-scene"></g>
         </svg>
         <div class="control-row">
-          <label for="prec-b">local field</label>
+          <label for="prec-b">local field (gauss)</label>
           <input type="range" id="prec-b" min="2" max="30" step="1" value="8">
           <output id="prec-b-out">8 G</output>
+          <button type="button" class="btn" id="prec-pause" aria-pressed="false">PAUSE</button>
         </div>
-        <figcaption class="figure-caption">FIG 1.5 — stronger local field → faster precession of the muon’s spin arrow</figcaption>
+        <figcaption class="figure-caption">FIG 1.5 — stronger local field → faster precession of the muon’s spin arrow (gauss: Earth’s field ≈ 0.5 G, a fridge magnet ≈ 100 G)</figcaption>
       </figure>
     </div>
   </section>
@@ -167,5 +182,11 @@
     <a class="cta-card" href="techniques.html"><span class="kicker">Related</span><h3>Nine ways to use the beam</h3><p>What people do with neutrons and muons all day.</p></a>
   </nav>
 </main>
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a></span>
+  </div>
+</footer>
 </body>
 </html>

@@ -45,19 +45,44 @@
 </style>
 </head>
 <body>
-<main>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="experiment.html" aria-current="page">EXPERIMENT</a>
+      <a href="data.html">DATA</a>
+      <a href="techniques.html">TECHNIQUES</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
   <div class="page-intro">
     <span class="kicker">03 / Experiment</span>
     <h1>Life of an experiment</h1>
-    <p class="lede">Beam time is one of the scarcest resources in science: ~1,200 experiments a year, allocated by peer review, scheduled months ahead, and over in a few days. Here’s the whole journey — and where the software you build or run fits into it.</p>
+    <p class="lede">Beam time — your scheduled hours with the neutron or muon beam pointed at your sample — is one of the scarcest resources in science: ~1,200 experiments a year, allocated by peer review, scheduled months ahead, and over in a few days. Here’s the whole journey — and where the software you build or run fits into it.</p>
   </div>
 
   <!-- S1: lifecycle timeline -->
   <section id="lifecycle" aria-labelledby="lc-h">
     <span class="kicker">3.1 — Seven phases</span>
     <h2 id="lc-h">Proposal to paper</h2>
+    <p>Click each phase to see what happens, who is involved, and which software is in the critical path.</p>
     <div class="timeline" id="phase-timeline" style="margin-top: var(--sp-3)" role="group" aria-label="Experiment phases — select one for details"></div>
-    <div class="panel phase-detail" id="phase-detail" aria-live="polite"></div>
+    <div class="panel phase-detail" id="phase-detail" aria-live="polite">
+      <h3>01 — Propose</h3>
+      <p style="max-width: 70ch">A research team writes a short scientific case: what they want to measure, on which instrument, and why it matters. There are three application routes: the main twice-a-year call (“Direct Access”, deadlines around mid-April and mid-October), plus fast-track “Rapid Access” and “Xpress” routes for urgent or simple measurements.</p>
+      <dl>
+        <dt>who’s involved</dt>
+        <dd class="who">Visiting researchers, with advice from ISIS instrument scientists.</dd>
+        <dt>systems &amp; software</dt>
+        <dd class="sw">Proposal submission system and user database.</dd>
+      </dl>
+    </div>
+    <p class="footnote">The short version: proposal → panel review (~6 weeks) → beam time roughly 3–8 months after the deadline. During Measure, every detected event is timestamped and the sample conditions are logged alongside.</p>
   </section>
 
   <!-- S2: a beam day -->
@@ -66,19 +91,19 @@
     <h2 id="bd-h">A day on an instrument</h2>
     <div class="two-col">
       <div>
-        <p>ISIS runs in <strong>cycles</strong> — stretches of several weeks with beam on around the clock, separated by maintenance shutdowns. During a cycle, an instrument is handed from one user team to the next with barely a gap; experiments run through the night with support staff on call.</p>
+        <p>ISIS runs in <strong>cycles</strong> — stretches of several weeks with beam on around the clock, separated by maintenance shutdowns. During a cycle, an instrument is handed from one user team (ISIS-speak for the visiting researchers) to the next with barely a gap; experiments run through the night with support staff on call.</p>
         <p>A typical allocation is two to five days. There are no do-overs: if equipment, beam, or software loses six hours, that might be a quarter of someone’s experiment — possibly one they waited eight months for. It’s the closest science gets to a live production deployment.</p>
       </div>
       <div>
-        <div class="day-strip" aria-label="24 hours on an instrument, in 3-hour blocks">
-          <span class="slot beam">00–03 measure</span>
-          <span class="slot beam">03–06 measure</span>
-          <span class="slot beam">06–09 measure</span>
-          <span class="slot off">09–10 swap sample</span>
-          <span class="slot beam">10–15 measure</span>
-          <span class="slot off">15–16 recalibrate</span>
-          <span class="slot beam">16–21 measure</span>
-          <span class="slot beam">21–24 measure</span>
+        <div class="day-strip" aria-label="24 hours on an instrument, in blocks of one to five hours">
+          <span class="slot beam" aria-label="Beam on — 00–03 measure">00–03 measure</span>
+          <span class="slot beam" aria-label="Beam on — 03–06 measure">03–06 measure</span>
+          <span class="slot beam" aria-label="Beam on — 06–09 measure">06–09 measure</span>
+          <span class="slot off" aria-label="Off — 09–10 swap sample">09–10 swap sample</span>
+          <span class="slot beam" aria-label="Beam on — 10–15 measure">10–15 measure</span>
+          <span class="slot off" aria-label="Off — 15–16 recalibrate">15–16 recalibrate</span>
+          <span class="slot beam" aria-label="Beam on — 16–21 measure">16–21 measure</span>
+          <span class="slot beam" aria-label="Beam on — 21–24 measure">21–24 measure</span>
         </div>
         <p class="footnote">A run schedule is mostly “measure” — every other block is something the team tries to minimize.</p>
       </div>
@@ -124,13 +149,14 @@
             <line x1="595" y1="88" x2="631" y2="88"/>
           </g>
 
-          <text x="225" y="150" fill="#8a96c2" font-size="9">one run = millions to billions of events;</text>
-          <text x="225" y="164" fill="#8a96c2" font-size="9">every byte traceable to proposal + run number</text>
+          <text x="225" y="150" fill="#8a96c2" font-size="9">one run (one continuous measurement, with its own ID)</text>
+          <text x="225" y="164" fill="#8a96c2" font-size="9">= millions to billions of events;</text>
+          <text x="225" y="178" fill="#8a96c2" font-size="9">every byte traceable to proposal + run number</text>
           <text x="537" y="150" fill="#8a96c2" font-size="9">reduced data is what users actually take home —</text>
           <text x="537" y="164" fill="#8a96c2" font-size="9">small, calibrated, in physical units</text>
         </g>
       </svg>
-      <figcaption class="figure-caption">FIG 3.3 — the pipeline every experiment’s bytes travel. raw files stay; reduced data travels; conclusions get published.</figcaption>
+      <figcaption class="figure-caption">FIG 3.3 — the pipeline every experiment’s bytes travel. DAQ = data acquisition; NeXus = the neutron/muon community’s standard file format, built on HDF5. raw files stay; reduced data travels; conclusions get published.</figcaption>
     </figure>
     <p class="footnote">Want the reduction step hands-on? <a href="data.html#playground">Drive the pipeline yourself →</a></p>
   </section>
@@ -146,5 +172,11 @@
     <a class="cta-card" href="facility.html"><span class="kicker">Back</span><h3>How ISIS works</h3><p>The machine all these experiments share.</p></a>
   </nav>
 </main>
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a></span>
+  </div>
+</footer>
 </body>
 </html>

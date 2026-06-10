@@ -84,7 +84,7 @@
           ctx.fillStyle = "#8a96c2";
           ctx.font = '10px "IBM Plex Mono", monospace';
           ctx.textAlign = "center";
-          ctx.fillText("2D detector — spots flash as rotations satisfy Bragg’s condition", cx, h - 8);
+          ctx.fillText("2D detector — rotating brings new plane families into reach", cx, h - 8);
         }
       }
 
@@ -107,7 +107,7 @@
     (function sans() {
       var canvas = document.getElementById("t-sans-plot");
       if (!canvas) return;
-      var plot = P(canvas, { xlabel: "Q (1/Å) — small Q = large scale", ylabel: "I(Q)", ylog: true, ymin: 5e-5, ymax: 2 });
+      var plot = P(canvas, { xlabel: "Q (1/Å) — small Q = large scale", ylabel: "I(Q) (log scale)", ylog: true, ymin: 5e-5, ymax: 2 });
       function show(R) {
         var d = S.sphereIQ(R);
         plot.setSeries([{ x: d.x, y: d.y, color: "#5fd8c8", type: "line", width: 1.8 }]);
@@ -121,7 +121,7 @@
     (function refl() {
       var canvas = document.getElementById("t-refl-plot");
       if (!canvas) return;
-      var plot = P(canvas, { xlabel: "Q (1/Å)", ylabel: "reflectivity", ylog: true, ymin: 1e-7, ymax: 2 });
+      var plot = P(canvas, { xlabel: "Q (1/Å) — small Q = gentler skim", ylabel: "reflectivity (log scale)", ylog: true, ymin: 1e-7, ymax: 2 });
       function show(t) {
         var d = S.reflectivity(t);
         plot.setSeries([{ x: d.x, y: d.y, color: "#6aa8ff", type: "line", width: 1.8 }]);
@@ -157,19 +157,19 @@
         q: "A colleague needs the exact 3D position of hydrogen atoms in a new crystal. Which technique?",
         choices: ["SANS", "Single crystal neutron diffraction", "Irradiation testing", "Reflectometry"],
         answer: 1,
-        why: "Single crystal diffraction maps individual Bragg spots into a full 3D structure — and because these are neutrons, the hydrogens actually show up."
+        why: "Single crystal diffraction maps individual Bragg spots into a full 3D structure — and because these are neutrons, the hydrogens actually show up (X-rays barely notice hydrogen’s lone electron; neutrons feel its nucleus — see the probes page)."
       },
       {
         q: "In reflectometry, the fringes get closer together. What happened to the film?",
         choices: ["It got thinner", "It got thicker", "It heated up", "Nothing — fringes don’t relate to thickness"],
         answer: 1,
-        why: "Fringe spacing ≈ 2π/thickness: a thicker film means waves from its top and bottom surfaces interfere more rapidly as Q changes — tighter fringes. (Try doubling the slider.)"
+        why: "The thicker the film, the faster the top-bounce and bottom-bounce waves slip in and out of step as Q changes — so the fringes cycle tighter (spacing ≈ 2π/thickness). (Try doubling the slider.)"
       },
       {
         q: "A single crystal gives sharp spots on the detector. Why does a powder give rings?",
         choices: ["Powder grains absorb more neutrons", "The detector blurs at high count rates", "A powder is millions of tiny crystals in every orientation — each spot is smeared around a full circle", "Rings are an artifact of reduction"],
         answer: 2,
-        why: "Every grain satisfies Bragg’s law at the same angle but in a random direction, so the spot sweeps into a cone — a ring on the detector. (Hit “show as powder”.)"
+        why: "Every grain satisfies Bragg’s law at the same angle but in a random direction, so the spot sweeps all the way around the beam axis — a ring on the detector. (Hit “show as powder”.)"
       },
       {
         q: "Why would a car manufacturer send engine-control chips to ChipIr?",

@@ -14,27 +14,27 @@
       var SPOTS = {
         ion: {
           title: "Ion source",
-          body: "It all starts as hydrogen gas. An electric discharge (with a little caesium) turns it into H⁻ ions — protons wearing two electrons — at 35 keV, ready for acceleration. The extra electrons are stripped off later, at injection into the synchrotron.",
+          body: "It all starts as hydrogen gas. An electric discharge (with a little caesium) turns it into H⁻ ions — protons wearing two electrons — at 35 keV, ready for acceleration. (An electron-volt is the energy one electron gains crossing a 1-volt battery; MeV = a million of those.) The extra electrons are stripped off later, at injection into the synchrotron.",
           stat: "35 keV", label: "starting energy"
         },
         linac: {
           title: "Linear accelerator",
-          body: "Four radio-frequency tanks surf the ions up to 70 MeV and bunch them up. Think of it as the on-ramp before the motorway.",
-          stat: "70 MeV", label: "energy entering the synchrotron"
+          body: "Four radio-frequency tanks — an oscillating voltage timed so the ions always feel a forward push — surf them up to 70 MeV and bunch them up. Think of it as the on-ramp before the motorway.",
+          stat: "70 MeV", label: "37% of light speed · entering the synchrotron"
         },
         synch: {
           title: "Synchrotron",
-          body: "A ring 163 m around. Protons circulate about 8,000 laps, gaining ~0.1 MeV per pass from RF cavities while bending magnets hold the orbit, then two bunches are kicked out in under 0.1 µs — 50 times every second.",
+          body: "A ring 163 m around. Protons circulate about 8,000 laps, gaining ~0.1 MeV per pass from RF cavities (the same timed voltage push as the linac) while bending magnets hold the orbit, then two bunches are kicked out in under 0.1 µs — 50 times every second.",
           stat: "800 MeV", label: "84% of light speed · one lap in 0.65 µs"
         },
         muon: {
           title: "Muon target",
-          body: "In the beamline to Target Station 1, the protons pass through a 1 cm slice of graphite. Collisions make pions, which decay within tens of nanoseconds into muons that are steered to the muon instruments. The beam barely notices — most protons carry on to the tungsten target.",
+          body: "In the beamline to Target Station 1, the protons pass through a 1 cm slice of graphite. Collisions make pions — short-lived particles born in the impact — which decay within tens of nanoseconds into muons that are steered to the muon instruments. The beam barely notices — most protons carry on to the tungsten target.",
           stat: "1 cm", label: "of graphite — that’s all it takes"
         },
         ts1: {
           title: "Target Station 1",
-          body: "The original workhorse, running since 1984. Receives 4 of every 5 pulses (40 per second) onto a tantalum-clad tungsten target, surrounded by water and methane moderators feeding a ring of instruments.",
+          body: "The original workhorse, running since 1984. Receives 4 of every 5 pulses (40 per second) onto a tantalum-clad tungsten target, surrounded by water and methane moderators (small tanks that slow the neutrons — see the moderators hotspot) feeding a ring of instruments.",
           stat: "40 /s", label: "pulses received"
         },
         ts2: {
@@ -49,7 +49,7 @@
         },
         instr: {
           title: "Instruments",
-          body: "Thirty-plus beamlines radiate from the two target stations and the muon area, each a specialized experiment: diffractometers, spectrometers, reflectometers, small-angle machines, imaging stations, muon spectrometers, and a chip-irradiation line.",
+          body: "Thirty-plus beamlines radiate from the two target stations and the muon area, each a specialized experiment: diffractometers, spectrometers, reflectometers, small-angle machines, imaging stations, muon spectrometers, and a chip-irradiation line — each type is unpacked on the techniques page.",
           stat: "30+", label: "instruments, ~1,200 experiments a year"
         }
       };
@@ -75,6 +75,7 @@
         lab.textContent = d.label;
         stat.append(num, lab);
         info.append(h3, p, stat);
+        info.scrollIntoView({ block: "nearest" });
       }
 
       svg.querySelectorAll(".hotspot").forEach(function (h) {
@@ -92,13 +93,13 @@
     (function moderators() {
       var canvas = document.getElementById("mod-plot");
       if (!canvas) return;
-      var plot = P(canvas, { xlabel: "wavelength (Å)", ylabel: "relative flux", xmin: 0, xmax: 12, ymin: 0, ymax: 1.05 });
+      var plot = P(canvas, { xlabel: "wavelength (Å)", ylabel: "relative neutron count", xmin: 0, xmax: 12, ymin: 0, ymax: 1.05 });
       var label = document.getElementById("mod-label");
       var COLORS = { 300: "#ffc46b", 100: "#5fd8c8", 20: "#6aa8ff" };
       var BLURBS = {
-        300: "peak ≈ 1.8 Å — atomic-spacing territory",
-        100: "peak ≈ 3.1 Å — the middle of the menu",
-        20: "peak ≈ 6.9 Å — long wavelengths for big, soft structures"
+        300: "peak ≈ 1.1 Å — atomic-spacing territory",
+        100: "peak ≈ 1.9 Å — the middle of the menu",
+        20: "peak ≈ 4.4 Å — long wavelengths for big, soft structures"
       };
 
       function show(T, animate) {
@@ -144,7 +145,7 @@
         q: "Where do ISIS’s muons come from?",
         choices: ["A dedicated muon reactor", "The proton beam passing through a thin graphite target, making pions that decay to muons", "Cosmic rays collected on the roof", "The tungsten targets, same as neutrons"],
         answer: 1,
-        why: "A 1 cm graphite slice in the proton beam produces pions, which decay almost immediately into muons. The slightly-depleted proton beam continues on to the neutron targets — two probes from one accelerator."
+        why: "A 1 cm graphite slice in the proton beam produces pions — short-lived particles born in the impact — which decay almost immediately into muons. The slightly-depleted proton beam continues on to the neutron targets — two probes from one accelerator."
       }
     ]);
   });
