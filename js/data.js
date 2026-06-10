@@ -241,7 +241,7 @@
         }));
         plot.draw();
         setLegend(S.INSTRUMENT.banks.map(function (b) { return [b.name, b.color]; }));
-        caption.textContent = "FIG 5.4 — raw counts vs TOF. one crystal, three banks — and the peaks don’t line up.";
+        caption.textContent = "FIG 4.4 — raw counts vs TOF. one crystal, three banks — and the peaks don’t line up.";
         pushHistory("Load", "run=SYNTH000123, banks=3");
       }
 
@@ -255,7 +255,7 @@
         plot.animateTo(banksD.map(function (b, i) {
           return { x: b.x, y: b.y, color: S.INSTRUMENT.banks[i].color, type: "line", width: 1.2 };
         }), 900);
-        caption.textContent = "FIG 5.4 — same data in d-spacing: the peaks from all three banks snap into alignment. that’s geometry — calibration just makes these conversion constants exact.";
+        caption.textContent = "FIG 4.4 — same data in d-spacing: the peaks from all three banks snap into alignment. that’s geometry — calibration just makes these conversion constants exact.";
         pushHistory("ConvertUnits", "Target=dSpacing");
       }
 
@@ -274,7 +274,7 @@
         if (animate) plot.animateTo(series, 600);
         else { plot.setSeries(series); plot.draw(); }
         setLegend([["all banks, common bins", "#4fd8eb"]]);
-        caption.textContent = "FIG 5.4 — three banks rebinned onto common bins, then summed (Δd = " +
+        caption.textContent = "FIG 4.4 — three banks rebinned onto common bins, then summed (Δd = " +
           parseFloat(binSlider.value).toFixed(3) + " Å). try the slider: too wide blurs, too narrow gets noisy.";
       }
 
@@ -296,7 +296,7 @@
         };
         plot.opts.ylabel = "normalized intensity";
         plot.animateTo([{ x: normalized.x, y: normalized.y, color: "#4fd8eb", type: "line", width: 1.8 }], 700);
-        caption.textContent = "FIG 5.4 — divided by the source spectrum: the slope is gone and peak heights mean something.";
+        caption.textContent = "FIG 4.4 — divided by the source spectrum: the slope is gone and peak heights mean something.";
         pushHistory("Normalize", "by=source spectrum");
       }
 
@@ -308,7 +308,7 @@
         }
         var fit = xs.length >= 6 ? S.fitGaussian(xs, ys) : null;
         if (!fit || fit.A < (Math.max.apply(null, data.y) * 0.04)) {
-          caption.textContent = "FIG 5.4 — no clear peak there. click closer to one of the peaks.";
+          caption.textContent = "FIG 4.4 — no clear peak there. click closer to one of the peaks.";
           return;
         }
         var fx = S.linspace(xs[0], xs[xs.length - 1], 80);
@@ -323,7 +323,7 @@
         ]);
         plot.draw();
         setLegend([["reduced data", "#4fd8eb"], ["Gaussian fit", "#ffb84d"]]);
-        caption.textContent = "FIG 5.4 — fitted. the centre is a spacing between planes of atoms, measured to a fraction of a percent.";
+        caption.textContent = "FIG 4.4 — fitted. the centre is a spacing between planes of atoms, measured to a fraction of a percent.";
         if (stage < 4) { stage = 4; setStates(); pushHistory("Fit", "function=Gaussian+flat"); }
 
         resultEl.hidden = false;
@@ -394,7 +394,7 @@
         plot.setSeries([]);
         plot.draw();
         setLegend([]);
-        caption.textContent = "FIG 5.4 — workspace view. apply STEP 1 to load the run.";
+        caption.textContent = "FIG 4.4 — workspace view. apply STEP 1 to load the run.";
         setStates();
       }
       document.getElementById("pg-reset").addEventListener("click", reset);

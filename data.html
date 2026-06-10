@@ -46,27 +46,28 @@
       <a href="index.html">STORY</a>
       <a href="probes.html">PROBES</a>
       <a href="facility.html">FACILITY</a>
-      <a href="experiment.html">EXPERIMENT</a>
-      <a href="data.html" aria-current="page">DATA</a>
       <a href="techniques.html">TECHNIQUES</a>
+      <a href="data.html" aria-current="page">DATA</a>
+      <a href="experiment.html">EXPERIMENT</a>
     </nav>
   </div>
 </header>
 <main id="main">
   <div class="page-intro">
-    <span class="kicker">05 / Data</span>
+    <span class="kicker">04 / Data</span>
     <h1>From counts to curves</h1>
     <p class="lede">A detector doesn’t measure science. It measures <em>events</em> — “detector&nbsp;7041 fired at 12,330&nbsp;µs”. Turning billions of those log lines into a curve someone can publish is called <strong>data reduction</strong>, and it’s an ETL pipeline you can run with your own hands below.</p>
   </div>
 
   <!-- S1: TOF scrubber -->
   <section id="tof" aria-labelledby="tof-h">
-    <span class="kicker">5.1 — The clock is the instrument</span>
+    <span class="kicker">4.1 — The clock is the instrument</span>
     <h2 id="tof-h">Time of flight: slow neutrons arrive late</h2>
     <div class="two-col">
       <div>
         <p>ISIS is pulsed: every neutron in a pulse leaves the moderator (the block that slows neutrons to useful speeds — see <a href="facility.html">Facility</a>) at (nearly) the same moment, like runners off a starting gun. Quantum mechanics gives every moving particle a wavelength — the slower it moves, the longer (the <a href="probes.html">Probes</a> page shows why). Fast, short-wavelength neutrons reach the detector first; slow, long-wavelength ones straggle in later.</p>
-        <p>That means a plain stopwatch tells you each neutron’s wavelength — no extra hardware. <span class="mono">λ ≈ 3956 × t / L</span>: arrival time <span class="mono">t</span> (seconds) over flight path <span class="mono">L</span> (metres) gives wavelength in ångströms (1&nbsp;Å = 0.1&nbsp;nanometres — about the size of an atom). In software terms: <em>the timestamp is the payload</em>.</p>
+        <p><strong>Why is there a spread of speeds at all?</strong> The moderator. Each neutron escapes it after a different random number of bounces — some slip out after a couple of collisions still moving fast, others rattle around until they’re as slow as the molecules they’re bouncing off. So a single pulse emerges as a mixed bag of speeds: a whole spectrum of wavelengths, all launched together.</p>
+        <p><strong>And what do we get out of timing them?</strong> A plain stopwatch tells you each neutron’s wavelength — no extra hardware: <span class="mono">λ ≈ 3956 × t / L</span>, arrival time <span class="mono">t</span> (seconds) over flight path <span class="mono">L</span> (metres) gives wavelength in ångströms (1&nbsp;Å = 0.1&nbsp;nanometres — about the size of an atom). The wavelength is the “ruler marking” every later analysis step depends on — the playground’s ConvertUnits step below is exactly this equation applied millions of times. And because timing sorts the mixture instead of filtering it, <em>every</em> neutron in the pulse contributes to the measurement rather than being thrown away. In software terms: the timestamp is the payload.</p>
         <p class="footnote">Drag the slider (or press play) and watch five neutrons of different wavelengths race down an 11&nbsp;m flight path into the arrival histogram. The 3956 is just Planck’s constant over the neutron’s mass, pre-baked into convenient units — a constant of nature, not a calibration.</p>
       </div>
       <figure class="figure-frame">
@@ -95,20 +96,21 @@
           <output id="tof-time-out">0.0 ms</output>
         </div>
         <canvas class="plot-box" id="tof-hist" style="height:170px" role="img" aria-label="Arrival-time histogram: a bar appears as each neutron reaches the detector, fast short wavelengths first"></canvas>
-        <figcaption>FIG 5.1 — five neutrons, λ = 1–8 Å, over L = 11 m. arrival time t = L·λ / 3956.</figcaption>
+        <figcaption>FIG 4.1 — five neutrons, λ = 1–8 Å, over L = 11 m. arrival time t = L·λ / 3956.</figcaption>
       </figure>
     </div>
   </section>
 
   <!-- S2: events vs histograms -->
   <section id="events" aria-labelledby="events-h">
-    <span class="kicker">5.2 — The raw data is a log file</span>
+    <span class="kicker">4.2 — The raw data is a log file</span>
     <h2 id="events-h">Events vs histograms</h2>
     <div class="two-col">
       <div>
         <p>In event mode, the data file is literally a list: <span class="mono">(detector&nbsp;ID, time&nbsp;of&nbsp;flight)</span>, one line per detected neutron, millions to billions of lines per run. Nothing is summarized yet — like raw, unaggregated logs.</p>
         <p>A <strong>histogram</strong> is the aggregation you choose afterwards: chop time into bins, count events per bin. Wide bins smooth away detail; narrow bins go noisy because each bin holds only a few counts. The events are always the ground truth — you can re-bin them any way you like, any number of times.</p>
-        <p class="footnote">In Mantid these two shapes are literally two workspace types: <span class="mono">EventWorkspace</span> (the log) and <span class="mono">Workspace2D</span> (the aggregated histogram).</p>
+        <p><strong>Why keep the log instead of just the summary?</strong> Three wins. ① <em>Choose resolution later</em> — re-bin the same run coarsely for a quick look during the experiment, finely for the final fit, with no re-measuring. ② <em>Filter by time</em> — every event is timestamped, so you can keep only the events recorded while the sample was actually at temperature, or slice one long run into chunks and watch a battery charge or a protein unfold as a sequence of frames. ③ <em>Nothing is ever lost</em> — a histogram can always be rebuilt from the events, but never the other way round; an aggregation mistake costs a re-run of software, not a re-run of beam time.</p>
+        <p class="footnote">In Mantid these two shapes are literally two workspace types: <span class="mono">EventWorkspace</span> (the log) and <span class="mono">Workspace2D</span> (the aggregated histogram) — and the time-slicing trick is the <span class="mono">FilterEvents</span> family of algorithms.</p>
       </div>
       <figure class="figure-frame">
         <div class="control-row">
@@ -122,14 +124,14 @@
           <small class="mono" style="font-size: var(--fs-tiny); color: var(--text-500)">50–2000 µs, log scale</small>
         </div>
         <canvas class="plot-box tall" id="ev-plot" role="img" aria-label="Plot of 4,000 neutron events, as raw dots or as a histogram; updates when the view mode or bin width changes"></canvas>
-        <figcaption>FIG 5.2 — 4,000 synthetic events from one detector bank (a group of detectors mounted together at one angle). toggle to histogram, then play with the bin width.</figcaption>
+        <figcaption>FIG 4.2 — 4,000 synthetic events from one detector bank (a group of detectors mounted together at one angle). toggle to histogram, then play with the bin width.</figcaption>
       </figure>
     </div>
   </section>
 
   <!-- S3: reduction = ETL -->
   <section id="etl" aria-labelledby="etl-h">
-    <span class="kicker">5.3 — Reduction is an ETL pipeline</span>
+    <span class="kicker">4.3 — Reduction is an ETL pipeline</span>
     <h2 id="etl-h">What raw data is missing</h2>
     <div class="two-col flip">
       <div>
@@ -178,14 +180,14 @@
             <line x1="120" y1="148" x2="400" y2="148" stroke="#233055"/>
           </g>
         </svg>
-        <figcaption>FIG 5.3 — reduction in one line: extract (Load), transform (ConvertUnits/Rebin/Normalize), load (a result you can fit). .nxs = NeXus, the standard facility file format.</figcaption>
+        <figcaption>FIG 4.3 — reduction in one line: extract (Load), transform (ConvertUnits/Rebin/Normalize), load (a result you can fit). .nxs = NeXus, the standard facility file format.</figcaption>
       </figure>
     </div>
   </section>
 
   <!-- S4: playground -->
   <section id="playground" aria-labelledby="pg-h">
-    <span class="kicker">5.4 — Hands on</span>
+    <span class="kicker">4.4 — Hands on</span>
     <h2 id="pg-h">The Reduction Playground</h2>
     <p class="lede" style="margin-bottom: var(--sp-4)">A simulated powder-diffraction run on a toy instrument: a powdered crystal (many tiny grains of the same material), three detector banks at different angles (2θ — just the angle the neutron is deflected through), 11&nbsp;m flight path. The crystal’s atoms sit in evenly spaced layers; neutrons whose wavelength matches a layer spacing reflect strongly, producing a sharp peak at that spacing — that’s diffraction. Run the five steps in order and watch what each one earns you.</p>
 
@@ -235,7 +237,7 @@
         <figure class="figure-frame">
           <canvas class="plot-box tall" id="pg-plot" style="height:380px" role="img" tabindex="0" aria-label="Workspace plot: updates as each reduction step is applied. When steps 1–4 are done, press Enter or Space to fit the next peak." aria-describedby="pg-caption"></canvas>
           <div class="legend" id="pg-legend"></div>
-          <figcaption id="pg-caption">FIG 5.4 — workspace view. apply STEP 1 to load the run.</figcaption>
+          <figcaption id="pg-caption">FIG 4.4 — workspace view. apply STEP 1 to load the run.</figcaption>
         </figure>
         <div class="history-panel" style="margin-top: var(--sp-2)">
           <p class="hp-title">workspace history</p>
@@ -249,7 +251,7 @@
 
   <!-- S5: reduction vs analysis -->
   <section id="analysis" aria-labelledby="an-h">
-    <span class="kicker">5.5 — Where reduction stops</span>
+    <span class="kicker">4.5 — Where reduction stops</span>
     <h2 id="an-h">Reduction vs analysis</h2>
     <div class="card-grid">
       <div class="panel">
@@ -264,14 +266,14 @@
   </section>
 
   <section id="quiz" aria-labelledby="quiz-h">
-    <span class="kicker">5.6 — Checkpoint</span>
+    <span class="kicker">4.6 — Checkpoint</span>
     <h2 id="quiz-h" class="visually-hidden" style="margin-bottom: var(--sp-3)">Quick check</h2>
     <div id="quiz-box"></div>
   </section>
 
   <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
-    <a class="cta-card" href="techniques.html"><span class="kicker">Next</span><h3>Nine ways to use the beam →</h3><p>What all this reduction is for: the techniques.</p></a>
-    <a class="cta-card" href="experiment.html"><span class="kicker">Context</span><h3>Life of an experiment</h3><p>Where reduction sits in the journey from proposal to paper.</p></a>
+    <a class="cta-card" href="experiment.html"><span class="kicker">Next</span><h3>Life of an experiment →</h3><p>Where reduction sits in the journey from proposal to paper.</p></a>
+    <a class="cta-card" href="techniques.html"><span class="kicker">Back</span><h3>Nine ways to use the beam</h3><p>What all this reduction is for: the techniques.</p></a>
   </nav>
 </main>
 <footer class="site-footer">

@@ -33,9 +33,9 @@
       <a href="index.html">STORY</a>
       <a href="probes.html">PROBES</a>
       <a href="facility.html" aria-current="page">FACILITY</a>
-      <a href="experiment.html">EXPERIMENT</a>
-      <a href="data.html">DATA</a>
       <a href="techniques.html">TECHNIQUES</a>
+      <a href="data.html">DATA</a>
+      <a href="experiment.html">EXPERIMENT</a>
     </nav>
   </div>
 </header>
@@ -232,61 +232,76 @@
   <section id="anatomy" aria-labelledby="anat-h">
     <span class="kicker">2.4 — One beamline, dissected</span>
     <h2 id="anat-h">Anatomy of an instrument</h2>
-    <figure class="figure-frame" style="margin-top: var(--sp-3)">
-      <svg viewBox="0 0 780 240" role="img" aria-label="A generic beamline from moderator to detectors: choppers, slits, sample in its environment, detector banks, and a monitor.">
-        <g font-family="IBM Plex Mono, monospace" font-size="10" text-anchor="middle">
-          <!-- beam -->
-          <line x1="60" y1="120" x2="700" y2="120" stroke="#233055" stroke-width="3" stroke-dasharray="5 7"/>
-          <!-- moderator -->
-          <rect x="30" y="90" width="30" height="60" rx="5" fill="#13203e" stroke="#3a4d85"/>
-          <text x="45" y="170" fill="#8a96c2">moderator</text>
-          <!-- chopper -->
-          <g>
-            <circle cx="170" cy="120" r="34" fill="#151d3a" stroke="#3a4d85"/>
-            <path d="M170,120 L170,86 A34,34 0 0 1 198,103 Z" fill="#2c3a6b"/>
-            <text x="170" y="170" fill="#c0c9e8">chopper</text>
-            <text x="170" y="184" fill="#8a96c2" font-size="8.5">spinning disc with a window —</text>
-            <text x="170" y="196" fill="#8a96c2" font-size="8.5">timed to open just as the</text>
-            <text x="170" y="208" fill="#8a96c2" font-size="8.5">wavelengths you want fly past</text>
+    <div class="explorer-grid" style="margin-top: var(--sp-3)">
+      <figure class="figure-frame">
+        <svg id="anat-svg" viewBox="0 0 780 220" role="group" aria-label="A generic beamline from moderator to beamstop. Click each part for details.">
+          <g font-family="IBM Plex Mono, monospace" font-size="10" text-anchor="middle">
+            <!-- beam -->
+            <line x1="60" y1="120" x2="700" y2="120" stroke="#233055" stroke-width="3" stroke-dasharray="5 7"/>
+
+            <g class="hotspot" data-part="moderator" tabindex="0" role="button" aria-label="Moderator face">
+              <rect class="hotspot-shape" x="30" y="90" width="30" height="60" rx="5" fill="#13203e" stroke="#3a4d85"/>
+              <text x="45" y="170" fill="#8a96c2">moderator</text>
+              <rect class="hit" x="18" y="78" width="56" height="100"/>
+            </g>
+
+            <g class="hotspot" data-part="chopper" tabindex="0" role="button" aria-label="Chopper">
+              <g class="hotspot-shape">
+                <circle cx="170" cy="120" r="34" fill="#151d3a" stroke="#3a4d85"/>
+                <path d="M170,120 L170,86 A34,34 0 0 1 198,103 Z" fill="#2c3a6b"/>
+              </g>
+              <text x="170" y="170" fill="#c0c9e8">chopper</text>
+              <rect class="hit" x="132" y="82" width="76" height="96"/>
+            </g>
+
+            <g class="hotspot" data-part="monitor" tabindex="0" role="button" aria-label="Monitor">
+              <line class="hotspot-shape" x1="260" y1="100" x2="260" y2="140" stroke="#5fe8a0" stroke-width="3"/>
+              <text x="260" y="170" fill="#5fe8a0">monitor</text>
+              <rect class="hit" x="238" y="86" width="44" height="92"/>
+            </g>
+
+            <g class="hotspot" data-part="slits" tabindex="0" role="button" aria-label="Slits">
+              <g class="hotspot-shape" stroke="#3a4d85" stroke-width="4">
+                <line x1="330" y1="92" x2="330" y2="110"/>
+                <line x1="330" y1="130" x2="330" y2="148"/>
+              </g>
+              <text x="330" y="170" fill="#c0c9e8">slits</text>
+              <rect class="hit" x="308" y="84" width="44" height="94"/>
+            </g>
+
+            <g class="hotspot" data-part="environment" tabindex="0" role="button" aria-label="Sample environment">
+              <rect class="hotspot-shape" x="420" y="70" width="100" height="100" rx="10" fill="none" stroke="#3a4d85" stroke-dasharray="4 4"/>
+              <text x="470" y="56" fill="#8a96c2">sample environment</text>
+              <path class="hit" d="M408,58 H532 V182 H408 Z M444,94 H496 V146 H444 Z" fill-rule="evenodd"/>
+            </g>
+
+            <g class="hotspot" data-part="sample" tabindex="0" role="button" aria-label="Sample">
+              <circle class="hotspot-shape" cx="470" cy="120" r="10" fill="#eef2ff"/>
+              <text x="470" y="190" fill="#c0c9e8">sample</text>
+              <rect class="hit" x="446" y="96" width="48" height="48"/>
+            </g>
+
+            <g class="hotspot" data-part="detectors" tabindex="0" role="button" aria-label="Detector banks">
+              <g class="hotspot-shape" fill="#101831" stroke="#4fd8eb">
+                <path d="M600,40 a95,95 0 0 1 28,40 l-22,9 a71,71 0 0 0 -21,-30 z"/>
+                <path d="M636,96 a95,95 0 0 1 10,48 l-24,-1 a71,71 0 0 0 -8,-36 z"/>
+                <path d="M644,160 a95,95 0 0 1 -12,47 l-21,-12 a71,71 0 0 0 9,-35 z"/>
+              </g>
+              <text x="615" y="218" fill="#4fd8eb">detector banks</text>
+              <rect class="hit" x="572" y="30" width="86" height="184"/>
+            </g>
+
+            <g class="hotspot" data-part="beamstop" tabindex="0" role="button" aria-label="Beamstop">
+              <rect class="hotspot-shape" x="700" y="106" width="14" height="28" fill="#2c3a6b" stroke="#3a4d85"/>
+              <text x="710" y="156" fill="#8a96c2">beamstop</text>
+              <rect class="hit" x="686" y="92" width="44" height="74"/>
+            </g>
           </g>
-          <!-- monitor -->
-          <line x1="260" y1="100" x2="260" y2="140" stroke="#5fe8a0" stroke-width="3"/>
-          <text x="260" y="78" fill="#8a96c2" font-size="8.5">counts the incoming beam —</text>
-          <text x="260" y="90" fill="#8a96c2" font-size="8.5">used later to normalize</text>
-          <text x="260" y="170" fill="#5fe8a0">monitor</text>
-          <!-- slits -->
-          <g stroke="#3a4d85" stroke-width="4">
-            <line x1="330" y1="92" x2="330" y2="110"/>
-            <line x1="330" y1="130" x2="330" y2="148"/>
-          </g>
-          <text x="330" y="170" fill="#c0c9e8">slits</text>
-          <text x="330" y="184" fill="#8a96c2" font-size="8.5">trim the beam to the</text>
-          <text x="330" y="196" fill="#8a96c2" font-size="8.5">size of the sample</text>
-          <!-- sample + environment -->
-          <g>
-            <rect x="420" y="70" width="100" height="100" rx="10" fill="none" stroke="#3a4d85" stroke-dasharray="4 4"/>
-            <circle cx="470" cy="120" r="10" fill="#eef2ff"/>
-            <text x="470" y="44" fill="#8a96c2" font-size="8.5">sample environment: cryostat</text>
-            <text x="470" y="56" fill="#8a96c2" font-size="8.5">(a very cold fridge), magnet,</text>
-            <text x="470" y="68" fill="#8a96c2" font-size="8.5">furnace, pressure cell…</text>
-            <text x="470" y="190" fill="#c0c9e8">sample</text>
-          </g>
-          <!-- detector banks -->
-          <g fill="#101831" stroke="#4fd8eb">
-            <path d="M600,40 a95,95 0 0 1 28,40 l-22,9 a71,71 0 0 0 -21,-30 z"/>
-            <path d="M636,96 a95,95 0 0 1 10,48 l-24,-1 a71,71 0 0 0 -8,-36 z"/>
-            <path d="M644,160 a95,95 0 0 1 -12,47 l-21,-12 a71,71 0 0 0 9,-35 z"/>
-          </g>
-          <text x="630" y="226" fill="#4fd8eb">detector banks</text>
-          <!-- beamstop -->
-          <rect x="700" y="106" width="14" height="28" fill="#2c3a6b"/>
-          <text x="707" y="156" fill="#8a96c2" font-size="8.5">beamstop</text>
-          <text x="710" y="170" fill="#8a96c2" font-size="8.5">stops the direct beam —</text>
-          <text x="710" y="182" fill="#8a96c2" font-size="8.5">shields the detectors</text>
-        </g>
-      </svg>
-      <figcaption class="figure-caption">FIG 2.4 — every ISIS instrument is a variation on this theme; what changes is the geometry and what surrounds the sample</figcaption>
-    </figure>
+        </svg>
+        <figcaption class="figure-caption">FIG 2.4 — every ISIS instrument is a variation on this theme. click or tab + enter on any part; click again or Esc to step out.</figcaption>
+      </figure>
+      <div class="info-card" id="anat-info" aria-live="polite"></div>
+    </div>
   </section>
 
   <section id="quiz" aria-labelledby="quiz-h">
@@ -296,7 +311,7 @@
   </section>
 
   <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
-    <a class="cta-card" href="experiment.html"><span class="kicker">Next</span><h3>Life of an experiment →</h3><p>Who uses this machine, and how a measurement actually happens.</p></a>
+    <a class="cta-card" href="techniques.html"><span class="kicker">Next</span><h3>Nine ways to use the beam →</h3><p>What the instruments around those targets actually measure.</p></a>
     <a class="cta-card" href="probes.html"><span class="kicker">Back</span><h3>Why neutrons &amp; muons?</h3><p>The case for the probes themselves.</p></a>
   </nav>
 </main>

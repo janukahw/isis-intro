@@ -9,9 +9,9 @@
     ["index.html", "STORY"],
     ["probes.html", "PROBES"],
     ["facility.html", "FACILITY"],
-    ["experiment.html", "EXPERIMENT"],
+    ["techniques.html", "TECHNIQUES"],
     ["data.html", "DATA"],
-    ["techniques.html", "TECHNIQUES"]
+    ["experiment.html", "EXPERIMENT"]
   ];
 
   if (!document.querySelector(".site-header")) {

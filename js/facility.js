@@ -5,12 +5,83 @@
   document.addEventListener("DOMContentLoaded", function () {
     var S = window.MESynth, P = window.MEPlot;
 
+    /* Shared hotspot-explorer wiring: click (or Enter/Space) selects a part
+       and fills the info card; clicking the active part again, pressing
+       Escape, or the card's close button deselects and restores the default
+       card. */
+    function wireExplorer(svgId, infoId, attr, spots, defaultCard) {
+      var svg = document.getElementById(svgId);
+      var info = document.getElementById(infoId);
+      if (!svg || !info) return;
+      var active = null;
+
+      function showDefault() {
+        active = null;
+        svg.classList.remove("has-active");
+        svg.querySelectorAll(".hotspot").forEach(function (h) {
+          h.classList.remove("active");
+        });
+        info.textContent = "";
+        var h3 = document.createElement("h3");
+        h3.textContent = defaultCard.title;
+        var p = document.createElement("p");
+        p.textContent = defaultCard.body;
+        info.append(h3, p);
+      }
+
+      function select(key) {
+        if (key === active) { showDefault(); return; }   // toggle off
+        active = key;
+        svg.classList.add("has-active");
+        svg.querySelectorAll(".hotspot").forEach(function (h) {
+          h.classList.toggle("active", h.dataset[attr] === key);
+        });
+        var d = spots[key];
+        info.textContent = "";
+        var h3 = document.createElement("h3");
+        h3.textContent = d.title;
+        var p = document.createElement("p");
+        p.textContent = d.body;
+        var stat = document.createElement("p");
+        stat.className = "stat";
+        var num = document.createElement("span");
+        num.className = "num";
+        num.textContent = d.stat;
+        var lab = document.createElement("span");
+        lab.className = "label";
+        lab.textContent = d.label;
+        stat.append(num, lab);
+        var close = document.createElement("button");
+        close.type = "button";
+        close.className = "btn ghost";
+        close.textContent = "✕ close";
+        close.style.marginTop = "var(--sp-2)";
+        close.addEventListener("click", showDefault);
+        info.append(h3, p, stat, close);
+        info.scrollIntoView({ block: "nearest" });
+      }
+
+      svg.querySelectorAll(".hotspot").forEach(function (h) {
+        h.addEventListener("click", function () { select(h.dataset[attr]); });
+        h.addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            select(h.dataset[attr]);
+          }
+        });
+      });
+      svg.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape" && active) showDefault();
+      });
+      document.addEventListener("keydown", function (ev) {
+        if (ev.key === "Escape" && active) showDefault();
+      });
+
+      showDefault();
+    }
+
     /* ================= S1: facility explorer ================= */
     (function explorer() {
-      var svg = document.getElementById("fac-svg");
-      var info = document.getElementById("fac-info");
-      if (!svg || !info) return;
-
       var SPOTS = {
         ion: {
           title: "Ion source",
@@ -54,38 +125,60 @@
         }
       };
 
-      function select(key) {
-        svg.classList.add("has-active");
-        svg.querySelectorAll(".hotspot").forEach(function (h) {
-          h.classList.toggle("active", h.dataset.spot === key);
-        });
-        var d = SPOTS[key];
-        info.textContent = "";
-        var h3 = document.createElement("h3");
-        h3.textContent = d.title;
-        var p = document.createElement("p");
-        p.textContent = d.body;
-        var stat = document.createElement("p");
-        stat.className = "stat";
-        var num = document.createElement("span");
-        num.className = "num";
-        num.textContent = d.stat;
-        var lab = document.createElement("span");
-        lab.className = "label";
-        lab.textContent = d.label;
-        stat.append(num, lab);
-        info.append(h3, p, stat);
-        info.scrollIntoView({ block: "nearest" });
-      }
+      wireExplorer("fac-svg", "fac-info", "spot", SPOTS, {
+        title: "Pick a component",
+        body: "Click any highlighted part of the machine — or press Tab and Enter — to see what it does. Click it again (or press Escape) to step back out."
+      });
+    })();
 
-      svg.querySelectorAll(".hotspot").forEach(function (h) {
-        h.addEventListener("click", function () { select(h.dataset.spot); });
-        h.addEventListener("keydown", function (ev) {
-          if (ev.key === "Enter" || ev.key === " ") {
-            ev.preventDefault();
-            select(h.dataset.spot);
-          }
-        });
+    /* ================= S4: instrument anatomy explorer ================= */
+    (function anatomy() {
+      var PARTS = {
+        moderator: {
+          title: "Moderator face",
+          body: "The beamline starts at the glowing face of a moderator — the tank that slowed the neutrons (section 2.3). Every pulse leaves here at a known instant, which is what makes time-of-flight work: every stopwatch on the instrument is timed from this point.",
+          stat: "t = 0", label: "every neutron’s stopwatch starts here, 50×/s"
+        },
+        chopper: {
+          title: "Chopper",
+          body: "A rapidly spinning disc with a window, phase-locked to the source: it opens just as the wavelengths the instrument wants fly past, and blocks everything else — including stragglers from the previous pulse that would otherwise masquerade as slow neutrons. Several choppers in series sharpen the selection.",
+          stat: "Δλ", label: "selects the wavelength band and stops pulse overlap"
+        },
+        monitor: {
+          title: "Monitor",
+          body: "A deliberately feeble detector sitting in the beam itself, counting a tiny fraction of what flies through. It records exactly what the source delivered, pulse by pulse — and reduction later divides the data by it, so results don’t depend on the machine’s mood that day.",
+          stat: "I₀", label: "the denominator in every normalization"
+        },
+        slits: {
+          title: "Slits",
+          body: "Adjustable neutron-absorbing jaws that trim the beam down to the size of the sample. Any beam that misses the sample can only contribute background, so tighter slits mean cleaner data (at the price of intensity).",
+          stat: "mm", label: "beam tailored to the sample’s size"
+        },
+        environment: {
+          title: "Sample environment",
+          body: "The kit surrounding the sample: cryostats (very cold fridges), furnaces, magnets, pressure cells, humidity chambers. Because neutrons pass through metal walls easily, the sample can be measured while genuinely cold, hot, squeezed or magnetized — conditions logged alongside every event.",
+          stat: "20 mK–2,000 °C", label: "sample conditions available at ISIS"
+        },
+        sample: {
+          title: "Sample",
+          body: "The few grams of material everything else exists for. It sits in the beam for hours to days while detectors accumulate events; teams often measure several samples (or one sample at several temperatures) in a single allocation.",
+          stat: "hours–days", label: "of beam time per measurement"
+        },
+        detectors: {
+          title: "Detector banks",
+          body: "Arrays of neutron detectors covering as much solid angle around the sample as the science needs. Each detection becomes one event in the data file: which pixel fired, and when — the raw material of the whole data page.",
+          stat: "(ID, t)", label: "every hit logged as pixel + arrival time"
+        },
+        beamstop: {
+          title: "Beamstop",
+          body: "Most neutrons sail straight through the sample without scattering. The beamstop absorbs that direct beam so it can’t blind the detectors or bounce around the room as background — the quietest-sounding part of the instrument, and one of the most necessary.",
+          stat: "most", label: "of the beam never scatters — this absorbs it"
+        }
+      };
+
+      wireExplorer("anat-svg", "anat-info", "part", PARTS, {
+        title: "Pick a part",
+        body: "Click any part of the beamline — moderator to beamstop — to see the job it does. Click again or press Escape to step back out."
       });
     })();
 
