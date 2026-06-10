@@ -1,0 +1,4 @@
+# Verification artifacts (browser screenshots, Playwright MCP session files) —
+# the site itself ships no images; all diagrams are inline SVG.
+*.png
+.playwright-mcp/
