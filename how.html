@@ -113,7 +113,7 @@
       <div class="panel tool-card">
         <span class="tag">model</span>
         <h3>Claude Fable 5</h3>
-        <p>The Anthropic model behind the work — every commit in the repo, from the very first to this page, is co-signed, so the claim is checkable: <code>git log → Co-Authored-By: Claude Fable 5</code>.</p>
+        <p>The Anthropic model behind the work — every commit in the repo, from the very first to this page, is co-signed, so the claim is checkable: <code>git log → Co-Authored-By: Claude Fable 5</code>. A second model, <strong>Claude Opus 4.7</strong>, ran the automated security reviews (next card but one).</p>
       </div>
       <div class="panel tool-card">
         <span class="tag">constitution</span>
@@ -186,8 +186,18 @@
   <section id="prompts" aria-labelledby="prompts-h">
     <span class="kicker">H.3 — The actual conversation</span>
     <h2 id="prompts-h">Real prompts, real diffs</h2>
-    <p>The site was built across a morning’s worth of sessions. The first session — the one that produced all six pages from nothing — had its transcript auto-cleaned minutes after the site shipped, so its prompts can’t be quoted; what survives is its output, commit <code>c90882e</code> at 08:20: <em>“Initial release: interactive ISIS intro site … No build step; works from file:// and any static server. Facts checked against isis.stfc.ac.uk, the ISIS Practical Guide, and Mantid docs.”</em></p>
-    <p>The later sessions <em>are</em> on record. These are quoted verbatim — typos included, because they never mattered. Each one-liner below a prompt is what landed on <code>main</code>.</p>
+    <p>Everything below is quoted verbatim from the session transcripts — typos included, because they never mattered. Each one-liner under a prompt is what actually happened. It began on the evening of 9 June, as a plan for a different website:</p>
+    <div class="panel" style="margin-top: var(--sp-3)">
+      <div class="how-chat">
+        <p class="q">Make a plan to build a website about Mantid - targetted at complete beginners. Users have advanced understanding about physics, but very little about how ISIS target stations work, how data gets produced, and how data gets reduced</p>
+        <p class="a">a plan was drafted — and then, before any code:</p>
+        <p class="q">actually, i changed my mind, lets change the focus of the website to talk about neutrons and muons, how ISIS makes use of them, the key concepts, typical phases of an experiment, data reduction … Target audience : people who work at ISIS who dont come from a physics background, like a software engineer.</p>
+        <p class="a">the whole premise repointed in one message; six pages designed, written and built through the evening — followed by authoritative source links to check them against</p>
+        <p class="q">ensure a software engineer with only highschool level physics understanding can understand the content. Also check the infomation with authorative sources for accuracy. Also check the UX. Might worth using ultracode workflow if you think you can parallely do these.</p>
+        <p class="a">a parallel multi-agent fact-check, plain-language pass and UX audit; the fixes shipped as the initial public release at 08:20 the next morning</p>
+      </div>
+    </div>
+    <p style="margin-top: var(--sp-3)">Then, through the same morning, the polish sessions:</p>
     <div class="panel" style="margin-top: var(--sp-3)">
       <div class="how-chat">
         <p class="q">can you check if front-end-design skill and google-web-design skill conflict with each other</p>
@@ -202,7 +212,7 @@
         <p class="a">a one-line fix, verified in the browser, live a few minutes later</p>
       </div>
     </div>
-    <p class="footnote">The middle prompt is the interesting one: a design U-turn mid-project. The agent didn’t patch around it — it rewrote the motion system, deleted the dead code, and updated its own rules file so the old approach can’t creep back.</p>
+    <p class="footnote">Two of these are full reversals — the premise pivot before a line was written, and the scroll-animation U-turn mid-project. Neither was patched around: the agent re-planned, rewrote the motion system, deleted the dead code, and updated its own rules file so the old approach couldn’t creep back.</p>
   </section>
 
   <!-- H4: guardrails -->
@@ -213,6 +223,7 @@
       <div>
         <p><strong>A written constitution.</strong> CLAUDE.md sets hard rules the agent checks its own work against — architecture (“no dependencies, no build step”), an accessibility bar (keyboard paths, labels on every diagram, <em>reduced-motion must leave a fully readable static page</em> — true of every animation on this site, including the ones here), and a verification checklist run before every push.</p>
         <p><strong>Facts trace to sources.</strong> Physics claims trace to isis.stfc.ac.uk or the Mantid docs, and schematic models carry a “simplified” footnote. That bar applied even to decoration: the time-of-flight race stamps are real numbers from λ×v&nbsp;=&nbsp;3956, and the detector-histogram animation only shipped once each bar grew by exactly one step per neutron hit.</p>
+        <p><strong>A second model reviewed for security.</strong> Changes were handed to a separate reviewer — Claude Opus 4.7 — with one job: find vulnerabilities in the diff. Its review sessions sit alongside the build transcripts.</p>
         <p><strong>And a human in the loop.</strong> Every diff was reviewed; every push was an explicit human decision. The agent proposes, verifies and argues — the human decides.</p>
       </div>
       <figure class="figure-frame">
@@ -228,8 +239,8 @@
     <span class="kicker">H.5 — The receipts</span>
     <h2 id="receipts-h">By the numbers</h2>
     <div class="stat-grid">
-      <p class="stat"><span class="num">1 day</span><span class="label">first commit to live site — 10 June 2026</span></p>
-      <p class="stat"><span class="num">13</span><span class="label">commits, each co-signed by the model</span></p>
+      <p class="stat"><span class="num">&lt; 24 h</span><span class="label">from “make a plan” (9 June, 18:21) to the live site, next morning</span></p>
+      <p class="stat"><span class="num">14</span><span class="label">commits, each co-signed by the model</span></p>
       <p class="stat"><span class="num">≈5,000</span><span class="label">lines of hand-rolled HTML, CSS and JS</span></p>
       <p class="stat"><span class="num">0</span><span class="label">dependencies — fonts are the only external</span></p>
       <p class="stat"><span class="num">7</span><span class="label">pages, including this one</span></p>
