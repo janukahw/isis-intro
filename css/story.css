@@ -61,6 +61,8 @@
     text-transform: uppercase;
     color: var(--text-500);
   }
+  /* unit symbols keep their case — uppercasing turns µs into ΜS (reads as ms) */
+  .scene-stat .label .unit { text-transform: none; }
   #s3 .scene-stat .num { color: var(--peak); }
   .stat-row { display: flex; gap: var(--sp-5); flex-wrap: wrap; justify-content: center; }
 
@@ -78,7 +80,31 @@
     margin-top: var(--sp-4);
   }
 
+  /* short viewports (e.g. 768px-tall laptops): tighten the hero so the stat
+     and scroll cue stay above the fold */
+  @media (max-height: 52rem) {
+    /* 3.75rem ≈ the in-flow header, so header + hero fill one viewport */
+    .scene.hero { padding-block: var(--sp-4); min-height: calc(100svh - 3.75rem); margin-top: 0; }
+    .scene.hero .scene-inner.center { gap: var(--sp-2); }
+    .scene.hero .hero-title { font-size: clamp(2.4rem, 1.2rem + 4vw, 4.2rem); }
+    .hero-pulse { inline-size: min(13rem, 50vw); margin-block: 0; }
+    .scene.hero .scene-stat { margin-top: var(--sp-2); }
+    .scene.hero .scene-stat .num { font-size: clamp(1.9rem, 1rem + 2.6vw, 3rem); }
+    .scroll-cue { margin-top: var(--sp-2); }
+  }
+
   .cta-row { width: 100%; margin-top: var(--sp-4); text-align: start; }
+  /* five topic cards: full-width fifth at two-column widths, 3+2 at laptop,
+     one row of five on wide screens — never a lone orphan card */
+  @media (max-width: 49.99rem) {
+    .cta-row .cta-card:nth-child(5) { grid-column: 1 / -1; }
+  }
+  @media (min-width: 56rem) {
+    .cta-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (min-width: 75rem) {
+    .cta-row { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  }
 
   /* ---------- 1. Reveals (IO-driven, all browsers) ---------- */
 
