@@ -24,7 +24,8 @@ The site is deployed with **GitHub Pages** (deploy from branch: `main`, root) at
 | `index.html` | The whole story: proton pulse → published paper, in 8 animated scenes plus an end-to-end recap | Looping time-of-flight race with logged arrival times |
 | `probes.html` | Why neutrons & muons are the right probes — no physics assumed | Scale zoomer (coin → atoms), X-ray vs neutron view toggle |
 | `facility.html` | How ISIS works: ion source, linac, synchrotron, targets, moderators | Clickable facility map, moderator spectrum picker |
-| `ts1.html` | Deep dive: inside Target Station 1 — the hall layout, every particle path, one pulse on the real clock (linked from the facility page) | Live plan-view simulation: proton pulses, muon spray, spallation, moderated neutrons racing down 18 beamlines |
+| `ts1.html` | Facility › TS1 tab: inside Target Station 1 — the hall layout, every particle path, one pulse on the real clock | Live plan-view simulation: proton pulses, muon spray, spallation, moderated neutrons racing down 18 beamlines |
+| `ts2.html` | Facility › TS2 tab: the cold-neutron station — why 1-in-5 pulses is a feature, and who uses the cold beams | Stat strip + instrument suite (live hall view planned) |
 | `experiment.html` | Life of an experiment: proposal → beamtime → data → paper | 7-phase lifecycle timeline (with who/which-software per phase) |
 | `data.html` | From detector events to publishable curves | **Reduction Playground** — a mini-Mantid pipeline you drive yourself |
 | `techniques.html` | Nine techniques: diffraction (powder & single crystal), SANS, reflectometry, spectroscopy, µSR, imaging, irradiation, total scattering — each mapped to the ISIS science group that owns it | Rotate-a-crystal detector view, fringe/field/lattice sliders |
@@ -37,7 +38,7 @@ Each page ends with a short self-check quiz.
 Vanilla HTML/CSS/JS — deliberately boring tech so it runs anywhere, forever:
 
 ```
-├── index.html …how.html          # eight pages, inline SVG diagrams
+├── index.html …how.html          # nine pages, inline SVG diagrams
 ├── css/
 │   ├── tokens.css                # design tokens (dark "beamline control room" theme)
 │   ├── base.css                  # reset, layout, nav, typography

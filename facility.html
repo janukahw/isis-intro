@@ -41,10 +41,17 @@
 </header>
 <main id="main">
   <div class="page-intro">
-    <span class="kicker">02 / Facility</span>
+    <span class="kicker">02 / Facility — Overview</span>
     <h1>How ISIS works</h1>
     <p class="lede">Everything at ISIS exists to do one thing 50 times a second: make a pulse of protons, smash it into tungsten, and serve the debris — neutrons chipped from the tungsten, <a href="probes.html">muons</a> (the electron’s heavier, short-lived cousin) peeled off at a thin graphite slice on the way — to thirty-plus instruments. Click around the machine below.</p>
   </div>
+
+  <nav class="subnav" aria-label="Facility sections">
+    <span class="subnav-label">FACILITY</span>
+    <a href="facility.html" aria-current="page">OVERVIEW</a>
+    <a href="ts1.html">TARGET STATION 1</a>
+    <a href="ts2.html">TARGET STATION 2</a>
+  </nav>
 
   <!-- S1: facility explorer -->
   <section id="explorer" aria-labelledby="explorer-h">
@@ -168,7 +175,10 @@
         <p>Click any highlighted part of the machine — or press Tab and Enter — to see what it does.</p>
       </div>
     </div>
-    <p class="footnote">Want to stand inside that amber box? <a href="ts1.html">Inside Target Station 1 →</a> — a live plan view of the hall: pulses landing, muons peeling off, and all eighteen beamlines drinking at once.</p>
+    <p style="margin-top: var(--sp-3)">
+      <a class="btn primary" href="ts1.html" style="text-decoration: none; display: inline-block">▶&nbsp; ENTER TARGET STATION 1 — LIVE HALL VIEW</a>
+    </p>
+    <p class="footnote">A working plan view of the TS1 hall: pulses landing, muons peeling off, and all eighteen beamlines drinking at once. Target Station 2 has <a href="ts2.html">its own tab</a>.</p>
   </section>
 
   <!-- S2: spallation vs reactor -->

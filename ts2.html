@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside Target Station 2 — ISIS Explained</title>
+<meta name="description" content="Target Station 2 at ISIS: the cold-neutron station — one pulse in five, liquid hydrogen and solid methane moderators, and instruments built for soft matter, biology and advanced materials.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/ts2.js"></script>
+<style>
+  .roster-card .instruments { font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--neutron); letter-spacing: 0.06em; }
+  .roster-card p { font-size: var(--fs-small); margin-top: var(--sp-1); }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="techniques.html">TECHNIQUES</a>
+      <a href="data.html">DATA</a>
+      <a href="experiment.html">EXPERIMENT</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="page-intro">
+    <span class="kicker">02 / Facility — Target Station 2</span>
+    <h1>Inside Target Station 2</h1>
+    <p class="lede">Opened in 2008, TS2 takes one proton pulse in five and spends it differently: everything about the station — its moderators, its guides, its instruments — is tuned for <strong>cold, long-wavelength neutrons</strong>, the kind that resolve polymers, proteins, membranes and other big, soft structures.</p>
+  </div>
+
+  <nav class="subnav" aria-label="Facility sections">
+    <span class="subnav-label">FACILITY</span>
+    <a href="facility.html">OVERVIEW</a>
+    <a href="ts1.html">TARGET STATION 1</a>
+    <a href="ts2.html" aria-current="page">TARGET STATION 2</a>
+  </nav>
+
+  <section id="vitals" aria-labelledby="vitals-h">
+    <span class="kicker">TS2 · 1 — The vitals</span>
+    <h2 id="vitals-h">Same accelerator, different recipe</h2>
+    <div class="card-grid" style="margin-top: var(--sp-3)">
+      <div class="panel"><p class="stat"><span class="num">10 /s</span><span class="label">pulses received — 1 of every 5</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">2008</span><span class="label">first neutrons — ISIS’s second station</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">H₂ + CH₄</span><span class="label">liquid hydrogen &amp; solid methane moderators</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">~40 kW</span><span class="label">beam power — rate traded for a colder spectrum</span></p></div>
+    </div>
+    <p style="max-width: 56ch; margin-top: var(--sp-3)">Fewer pulses per second sounds like a downgrade — it’s the point. A 10&nbsp;Hz frame is 100&nbsp;ms long, so slow, long-wavelength neutrons have time to reach the detectors before the next pulse starts the clock again. Pair that with the coldest moderators on site and you get beams TS1 can’t serve.</p>
+  </section>
+
+  <section id="suite" aria-labelledby="suite-h">
+    <span class="kicker">TS2 · 2 — Who drinks from it</span>
+    <h2 id="suite-h">The instrument suite</h2>
+    <div class="card-grid" style="margin-top: var(--sp-3)">
+      <div class="panel roster-card">
+        <h3>Soft matter &amp; large structures</h3>
+        <p class="instruments">SANS2D · ZOOM · LARMOR</p>
+        <p>Small-angle scattering machines — TS1’s LOQ’s bigger, colder siblings — measuring structures from nanometres up: micelles, polymers, proteins in solution.</p>
+      </div>
+      <div class="panel roster-card">
+        <h3>Surfaces &amp; interfaces</h3>
+        <p class="instruments">INTER · OFFSPEC · POLREF</p>
+        <p>Reflectometers that read layered films a few atoms thick — coatings, membranes, magnetic multilayers.</p>
+      </div>
+      <div class="panel roster-card">
+        <h3>Structure &amp; dynamics, served cold</h3>
+        <p class="instruments">WISH · NIMROD · LET</p>
+        <p>Long-wavelength diffraction for magnetism (WISH), liquids and disordered materials (NIMROD), and a cold chopper spectrometer for slow atomic motion (LET).</p>
+      </div>
+      <div class="panel roster-card">
+        <h3>Imaging &amp; irradiation</h3>
+        <p class="instruments">IMAT · CHIPIR</p>
+        <p>Neutron radiography/tomography (IMAT) and deliberate chip irradiation to test how electronics survive cosmic-ray neutrons (CHIPIR).</p>
+      </div>
+    </div>
+    <p class="footnote">Roster simplified — see the <a href="techniques.html">techniques page</a> for what each instrument type measures.</p>
+  </section>
+
+  <section id="hall" aria-labelledby="hall-h">
+    <span class="kicker">TS2 · 3 — The hall</span>
+    <h2 id="hall-h">Want the live view?</h2>
+    <p style="max-width: 56ch">Target Station 1’s tab has a working plan view of its hall — proton pulses landing, muons peeling off, neutrons racing down beamlines in real relative speeds. A TS2 hall view in the same style is the natural next build for this page.</p>
+    <p style="margin-top: var(--sp-3)">
+      <a class="btn primary" href="ts1.html" style="text-decoration: none; display: inline-block">▶&nbsp; ENTER TARGET STATION 1 — LIVE HALL VIEW</a>
+    </p>
+  </section>
+
+  <section id="quiz" aria-labelledby="quiz-h">
+    <span class="kicker">TS2 · 4 — Checkpoint</span>
+    <h2 id="quiz-h" style="margin-bottom: var(--sp-3)">Quick check</h2>
+    <div id="quiz-box"></div>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="facility.html"><span class="kicker">Back</span><h3>Facility overview</h3><p>The whole machine, ion source to instruments.</p></a>
+    <a class="cta-card" href="ts1.html"><span class="kicker">Sibling</span><h3>Inside Target Station 1 →</h3><p>The original workhorse, simulated live.</p></a>
+    <a class="cta-card" href="techniques.html"><span class="kicker">Related</span><h3>Nine ways to use the beam →</h3><p>What all these instruments actually measure.</p></a>
+  </nav>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a> · <a href="how.html">how this site was made</a></span>
+  </div>
+</footer>
+</body>
+</html>
