@@ -52,6 +52,7 @@ Design constraints worth knowing before contributing:
 - **Must work from `file://`** → no `fetch()`, no ES modules, no external data files. All data lives inline in JS; all diagrams are inline SVG.
 - **Scroll-driven animations** (`animation-timeline: view()`) are gated behind `@supports`, with an IntersectionObserver fallback for Firefox. `prefers-reduced-motion` always leaves a fully readable static page.
 - **`js/synth.js` is the single source of physics truth** — constants and formulas live there and nowhere else, so an accuracy review touches one file.
+- **Keyboard and screen-reader support is expected** — skip link, static (no-JS) header/footer, `role="img"` + labels on every canvas/SVG, `aria-live` on dynamic readouts, keyboard paths for canvas interactions. New interactives should keep that bar.
 - Only external dependency: Google Fonts (degrades to system fonts offline).
 
 ## Accuracy
@@ -66,4 +67,4 @@ The interactive models (moderator spectra, powder patterns, reflectivity, muon a
 
 ## Verifying changes
 
-Open every page via `file://` *and* a local server in Chrome — zero console errors expected. Check Firefox for the scroll-animation fallback path, and an OS reduced-motion setting for the static path. Layouts are tested down to 768 px wide.
+Open every page via `file://` *and* a local server in Chrome — zero console errors expected. Check Firefox for the scroll-animation fallback path, and an OS reduced-motion setting for the static path. Layouts are tested down to 375 px wide (the nav collapses behind a MENU button below ~704 px).
