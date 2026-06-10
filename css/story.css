@@ -12,12 +12,13 @@
   main.story { max-width: none; padding: 0; }
 
   .scene {
-    min-height: 100svh;
     display: grid;
     place-items: center;
-    padding: var(--sp-5) var(--sp-3);
+    padding: var(--sp-6) var(--sp-3);
     position: relative;
   }
+  /* only the hero claims a full viewport — other scenes size to content */
+  .scene.hero { min-height: 100svh; }
   .scene + .scene { border-top: 1px solid color-mix(in oklab, var(--line) 55%, transparent); }
 
   .scene-inner { max-width: var(--content-w); width: 100%; }
@@ -108,6 +109,8 @@
   /* recap interlude actors are loop-only; statically the figure is a
      labelled map of the machine */
   .rc-actor { opacity: 0; }
+  /* s7 static page shows the final ("physical units") caption only */
+  .pu-1 { opacity: 0; }
 
   @media (prefers-reduced-motion: no-preference) {
     .hero-pulse .bunch {
@@ -322,13 +325,62 @@
       90.5%       { filter: brightness(2.6); }
       94.5%, 100% { filter: brightness(1); }
     }
+
+    /* s7 reduction loop: the chain lights up step by step while the same
+       curve morphs in place — raw (instrument units, orange) → ConvertUnits
+       slides the peaks into position → Rebin smooths the noise → Normalize
+       flattens the baseline (and the data turns physical-units cyan) → Fit
+       draws the orange model over the main peak. All states share one
+       18-point polyline so `d` interpolates; browsers without CSS `d`
+       interpolation keep the final curve and still get the chain/captions. */
+    .pipe-data { animation: pipe-data 12s linear infinite; }
+    @keyframes pipe-data {
+      0%, 4% { d: path("M120,100 L136,88 L153,104 L169,92 L186,62 L202,78 L219,108 L235,96 L252,118 L268,104 L285,84 L301,120 L318,128 L334,142 L351,132 L367,152 L384,144 L400,160"); stroke: #ff8a5c; opacity: 0; }
+      8%     { opacity: 1; }
+      20%    { d: path("M120,100 L136,88 L153,104 L169,92 L186,62 L202,78 L219,108 L235,96 L252,118 L268,104 L285,84 L301,120 L318,128 L334,142 L351,132 L367,152 L384,144 L400,160"); stroke: #ff8a5c; }
+      32%    { d: path("M120,102 L136,90 L153,100 L169,96 L186,104 L202,94 L219,58 L235,80 L252,110 L268,100 L285,116 L301,108 L318,86 L334,124 L351,136 L367,146 L384,140 L400,158"); }
+      38%    { d: path("M120,102 L136,90 L153,100 L169,96 L186,104 L202,94 L219,58 L235,80 L252,110 L268,100 L285,116 L301,108 L318,86 L334,124 L351,136 L367,146 L384,140 L400,158"); }
+      48%    { d: path("M120,100 L136,97 L153,99 L169,98 L186,99 L202,88 L219,62 L235,84 L252,104 L268,106 L285,110 L301,104 L318,90 L334,122 L351,132 L367,142 L384,148 L400,155"); stroke: #ff8a5c; }
+      54%    { d: path("M120,100 L136,97 L153,99 L169,98 L186,99 L202,88 L219,62 L235,84 L252,104 L268,106 L285,110 L301,104 L318,90 L334,122 L351,132 L367,142 L384,148 L400,155"); }
+      64%    { d: path("M120,160 L136,159 L153,160 L169,158 L186,159 L202,130 L219,78 L235,118 L252,157 L268,158 L285,159 L301,148 L318,112 L334,150 L351,158 L367,159 L384,158 L400,160"); stroke: #4fd8eb; }
+      93%    { d: path("M120,160 L136,159 L153,160 L169,158 L186,159 L202,130 L219,78 L235,118 L252,157 L268,158 L285,159 L301,148 L318,112 L334,150 L351,158 L367,159 L384,158 L400,160"); stroke: #4fd8eb; opacity: 1; }
+      100%   { d: path("M120,160 L136,159 L153,160 L169,158 L186,159 L202,130 L219,78 L235,118 L252,157 L268,158 L285,159 L301,148 L318,112 L334,150 L351,158 L367,159 L384,158 L400,160"); stroke: #4fd8eb; opacity: 0; }
+    }
+    /* the raw ghost fades in once the data starts leaving it behind */
+    .pipe-ghost { animation: pipe-ghost 12s linear infinite; }
+    @keyframes pipe-ghost {
+      0%, 20%   { opacity: 0; }
+      28%, 90%  { opacity: 0.25; }
+      97%, 100% { opacity: 0; }
+    }
+    /* the fit draws on during the Fit step (pathLength=1 + dash trick) */
+    .pipe-fit { animation: pipe-fit 12s linear infinite; }
+    @keyframes pipe-fit {
+      0%, 70%  { stroke-dashoffset: 1; opacity: 1; }
+      80%, 93% { stroke-dashoffset: 0; opacity: 1; }
+      100%     { stroke-dashoffset: 0; opacity: 0; }
+    }
+    /* chain steps highlight in sync */
+    .pipe-chain .pc-1 { animation: pc-1 12s linear infinite; }
+    .pipe-chain .pc-2 { animation: pc-2 12s linear infinite; }
+    .pipe-chain .pc-3 { animation: pc-3 12s linear infinite; }
+    .pipe-chain .pc-4 { animation: pc-4 12s linear infinite; }
+    .pipe-chain .pc-5 { animation: pc-5 12s linear infinite; }
+    @keyframes pc-1 { 0%, 2% { fill: #586a9e; } 5%, 18% { fill: #4fd8eb; } 23%, 100% { fill: #586a9e; } }
+    @keyframes pc-2 { 0%, 20% { fill: #586a9e; } 24%, 32% { fill: #4fd8eb; } 37%, 100% { fill: #586a9e; } }
+    @keyframes pc-3 { 0%, 36% { fill: #586a9e; } 40%, 48% { fill: #4fd8eb; } 53%, 100% { fill: #586a9e; } }
+    @keyframes pc-4 { 0%, 52% { fill: #586a9e; } 56%, 64% { fill: #4fd8eb; } 69%, 100% { fill: #586a9e; } }
+    @keyframes pc-5 { 0%, 68% { fill: #586a9e; } 72%, 90% { fill: #ffb84d; } 95%, 100% { fill: #586a9e; } }
+    /* units caption crossfades at Normalize */
+    .pu-1 { animation: pu-1 12s linear infinite; }
+    .pu-2 { animation: pu-2 12s linear infinite; }
+    @keyframes pu-1 { 0%, 4% { opacity: 0; } 8%, 50% { opacity: 1; } 56%, 100% { opacity: 0; } }
+    @keyframes pu-2 { 0%, 52% { opacity: 0; } 58%, 93% { opacity: 1; } 100% { opacity: 0; } }
     /* detector tiles: staggered fade-in when scene in view (histogram bars
        are driven per-hit by the story.js WAAPI loop instead) */
     body.js-anim #s6 .det-tile { opacity: 0.25; transition: opacity 0.3s ease; }
     body.js-anim #s6 .in-view .det-tile,
     body.js-anim #s6.in-view .det-tile { opacity: 1; transition-delay: calc(var(--i) * 0.12s); }
-    body.js-anim #s7 .pipe-clean { opacity: 0; transition: opacity 0.8s ease 0.6s; }
-    body.js-anim #s7.in-view .pipe-clean { opacity: 1; }
   }
 
 }
