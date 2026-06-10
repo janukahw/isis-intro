@@ -1,10 +1,11 @@
 /* Scroll-story styles for index.html.
-   Two motion systems, per modern-web-guidance:
+   Two motion systems:
    1. Reveals — IntersectionObserver (story.js) toggles .in-view; CSS transitions.
       Content is fully visible without JS; body.js-anim arms the hidden states.
-   2. Scrub effects — native CSS scroll-driven animations behind @supports;
-      story.js provides a scroll-listener fallback when unsupported.
-   prefers-reduced-motion: story.js never arms .js-anim, so everything is static. */
+   2. Scene loops — plain time-based CSS keyframe animations (no JS, identical
+      in every browser), all inside prefers-reduced-motion: no-preference.
+   prefers-reduced-motion: loops never run, story.js never arms .js-anim —
+   everything is a static, fully readable diagram. */
 
 @layer components {
 
@@ -95,7 +96,15 @@
     translate: 0 0;
   }
 
-  /* ---------- ambient time-based motion (decorative) ---------- */
+  /* ---------- time-based motion: ambient + scene loops ---------- */
+
+  /* Static page (reduced motion / very old browsers) shows only the final
+     energy reading; the earlier ones appear during the loop. Arrival stamps
+     (s5) and event-log lines (s6) stay visible statically — they double as
+     labels. (Scene 6's flying neutrons + histogram build are generated WAAPI
+     loops in story.js; they simply never exist on the static page.) */
+  .ring-energy .e1,
+  .ring-energy .e2 { opacity: 0; }
 
   @media (prefers-reduced-motion: no-preference) {
     .hero-pulse .bunch {
@@ -125,93 +134,104 @@
       55% { transform: translateX(0); opacity: 1; }
       100% { transform: translateX(140px); opacity: 1; }
     }
-    /* detector tiles + histogram bars: staggered when scene in view */
+
+    /* s2 synchrotron loop: inject from the linac (0.75turn = the 9 o'clock
+       injection point), laps at increasing speed, extraction kick at 3 o'clock
+       (3.25turn), exit along the extraction line. The bunch sits at 12 o'clock
+       in the markup; rotation is clockwise. */
+    .fx-ring { animation: ring-cycle 7s linear infinite; }
+    @keyframes ring-cycle {
+      0%   { transform: rotate(0.75turn) translateY(-62px); opacity: 0; }
+      2%   { opacity: 1; }
+      7%   { transform: rotate(0.75turn) translateY(0); }
+      30%  { transform: rotate(1.10turn) translateY(0); }
+      52%  { transform: rotate(1.70turn) translateY(0); }
+      70%  { transform: rotate(2.45turn) translateY(0); }
+      88%  { transform: rotate(3.25turn) translateY(0); }
+      95%  { transform: rotate(3.25turn) translateY(-66px); opacity: 1; }
+      100% { transform: rotate(3.25turn) translateY(-66px); opacity: 0; }
+    }
+    /* beam-energy readout stepping up in sync with the laps */
+    .ring-energy .e1 { animation: energy-1 7s linear infinite; }
+    .ring-energy .e2 { animation: energy-2 7s linear infinite; }
+    .ring-energy .e3 { animation: energy-3 7s linear infinite; }
+    @keyframes energy-1 { 0%, 27% { opacity: 1; } 32%, 100% { opacity: 0; } }
+    @keyframes energy-2 { 0%, 29% { opacity: 0; } 34%, 53% { opacity: 1; } 58%, 100% { opacity: 0; } }
+    @keyframes energy-3 { 0%, 56% { opacity: 0; } 61%, 93% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* s3 probes loop: proton flies the beamline (passes graphite ~20%),
+       muons rise from the graphite, burst grows from the tungsten. */
+    .fx-proton { animation: probe-proton 7s linear infinite; }
+    @keyframes probe-proton {
+      0%        { transform: translateX(0); opacity: 0; }
+      3%        { opacity: 1; }
+      58%       { transform: translateX(330px); opacity: 1; }
+      62%, 100% { transform: translateX(330px); opacity: 0; }
+    }
+    .fx-muons { animation: probe-muons 7s linear infinite; }
+    @keyframes probe-muons {
+      0%, 20% { transform: translateY(0); opacity: 0; }
+      26%     { opacity: 1; }
+      55%     { transform: translateY(-90px); opacity: 1; }
+      90%     { transform: translateY(-90px); opacity: 1; }
+      100%    { transform: translateY(-90px); opacity: 0; }
+    }
+    .fx-burst { animation: probe-burst 7s linear infinite; }
+    @keyframes probe-burst {
+      0%, 58% { transform: scale(0); opacity: 0; }
+      64%     { opacity: 1; }
+      78%     { transform: scale(1); opacity: 1; }
+      92%     { transform: scale(1); opacity: 1; }
+      100%    { transform: scale(1); opacity: 0; }
+    }
+
+    /* s5 TOF race loop: all three launch together at 5%; travel times are in
+       ratio 2:3:4 (λ = 2/3/4 Å), matching the t = 5.1/7.6/10.1 ms stamps. */
+    .fx-race1 { animation: race-1 8s linear infinite; }
+    .fx-race2 { animation: race-2 8s linear infinite; }
+    .fx-race3 { animation: race-3 8s linear infinite; }
+    @keyframes race-1 {
+      0%   { transform: translateX(0); opacity: 0; }
+      4%   { opacity: 1; }
+      5%   { transform: translateX(0); }
+      45%  { transform: translateX(640px); }
+      92%  { transform: translateX(640px); opacity: 1; }
+      100% { transform: translateX(640px); opacity: 0; }
+    }
+    @keyframes race-2 {
+      0%   { transform: translateX(0); opacity: 0; }
+      4%   { opacity: 1; }
+      5%   { transform: translateX(0); }
+      65%  { transform: translateX(640px); }
+      92%  { transform: translateX(640px); opacity: 1; }
+      100% { transform: translateX(640px); opacity: 0; }
+    }
+    @keyframes race-3 {
+      0%   { transform: translateX(0); opacity: 0; }
+      4%   { opacity: 1; }
+      5%   { transform: translateX(0); }
+      85%  { transform: translateX(640px); }
+      92%  { transform: translateX(640px); opacity: 1; }
+      100% { transform: translateX(640px); opacity: 0; }
+    }
+    /* each arrival time is logged the moment its neutron lands */
+    .race-stamps .stamp-1 { animation: stamp-1 8s linear infinite; }
+    .race-stamps .stamp-2 { animation: stamp-2 8s linear infinite; }
+    .race-stamps .stamp-3 { animation: stamp-3 8s linear infinite; }
+    @keyframes stamp-1 { 0%, 45% { opacity: 0; } 48%, 92% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes stamp-2 { 0%, 65% { opacity: 0; } 68%, 92% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes stamp-3 { 0%, 85% { opacity: 0; } 88%, 92% { opacity: 1; } 100% { opacity: 0; } }
+
+    /* (s6 detectors loop — neutron stream, tile flashes, log lines and the
+       per-hit histogram build — is generated in story.js with WAAPI, since
+       its ~30 actors and the tiles/bars themselves are JS-built.) */
+    /* detector tiles: staggered fade-in when scene in view (histogram bars
+       are driven per-hit by the story.js WAAPI loop instead) */
     body.js-anim #s6 .det-tile { opacity: 0.25; transition: opacity 0.3s ease; }
     body.js-anim #s6 .in-view .det-tile,
     body.js-anim #s6.in-view .det-tile { opacity: 1; transition-delay: calc(var(--i) * 0.12s); }
-    body.js-anim #s6 .histo rect { transform: scaleY(0); transform-origin: bottom; transform-box: fill-box; transition: transform 0.45s ease; }
-    body.js-anim #s6.in-view .histo rect { transform: scaleY(1); transition-delay: calc(0.5s + var(--i) * 0.07s); }
     body.js-anim #s7 .pipe-clean { opacity: 0; transition: opacity 0.8s ease 0.6s; }
     body.js-anim #s7.in-view .pipe-clean { opacity: 1; }
   }
 
-  /* ---------- 2. Scrub scenes ---------- */
-
-  .scene.scrub { min-height: 230vh; display: block; }
-  .scene.scrub.tall { min-height: 260vh; }
-  .scrub-sticky {
-    position: sticky;
-    top: 0;
-    min-height: 100svh;
-    display: grid;
-    place-items: center;
-    padding: var(--sp-5) var(--sp-3);
-  }
-
-  /* Native scroll-driven animations (Chrome/Edge/Safari 26+).
-     Each scrub section declares a named view-timeline; the animated elements
-     are descendants, so no timeline-scope hoisting is needed. */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports ((animation-timeline: view()) and (animation-range: entry)) {
-
-      #s2 { view-timeline: --tl-ring block; }
-      #s2 [data-fx="ring"] {
-        animation: ring-orbit auto linear both;
-        animation-timeline: --tl-ring;
-        animation-range: cover 5% cover 95%;
-      }
-      @keyframes ring-orbit {
-        from { transform: rotate(0turn); }
-        to { transform: rotate(2.5turn); }
-      }
-
-      #s3 { view-timeline: --tl-probes block; }
-      #s3 [data-fx="proton"] {
-        animation: proton-fly auto linear both;
-        animation-timeline: --tl-probes;
-        animation-range: cover 10% cover 70%;
-      }
-      @keyframes proton-fly {
-        from { transform: translateX(0); }
-        to { transform: translateX(320px); }
-      }
-      #s3 [data-fx="muons"] {
-        animation: muons-rise auto linear both;
-        animation-timeline: --tl-probes;
-        animation-range: cover 30% cover 80%;
-      }
-      @keyframes muons-rise {
-        from { transform: translateY(0); opacity: 0; }
-        20% { opacity: 1; }
-        to { transform: translateY(-90px); opacity: 1; }
-      }
-      #s3 [data-fx="burst"] {
-        animation: burst-grow auto linear both;
-        animation-timeline: --tl-probes;
-        animation-range: cover 60% cover 95%;
-      }
-      @keyframes burst-grow {
-        from { transform: scale(0); opacity: 0; }
-        30% { opacity: 1; }
-        to { transform: scale(1); opacity: 1; }
-      }
-
-      #s5 { view-timeline: --tl-race block; }
-      #s5 [data-fx="race1"], #s5 [data-fx="race2"], #s5 [data-fx="race3"] {
-        animation: race auto linear both;
-        animation-timeline: --tl-race;
-      }
-      #s5 [data-fx="race1"] { animation-range: cover 15% cover 55%; }
-      #s5 [data-fx="race2"] { animation-range: cover 15% cover 75%; }
-      #s5 [data-fx="race3"] { animation-range: cover 15% cover 95%; }
-      @keyframes race {
-        from { transform: translateX(0); }
-        to { transform: translateX(640px); }
-      }
-    }
-  }
-
-  /* Without native support, story.js drives the same transforms from a
-     scroll listener (only when motion is allowed). No CSS needed here:
-     transforms are set as inline styles on [data-fx]. */
 }

@@ -21,7 +21,7 @@ The site is deployed with **GitHub Pages** (deploy from branch: `main`, root) at
 
 | Page | What it covers | Headline interactive |
 |---|---|---|
-| `index.html` | The whole story: proton pulse → published paper, in 8 scroll-driven scenes | Scroll-scrubbed time-of-flight race |
+| `index.html` | The whole story: proton pulse → published paper, in 8 animated scenes | Looping time-of-flight race with logged arrival times |
 | `probes.html` | Why neutrons & muons are the right probes — no physics assumed | Scale zoomer (coin → atoms), X-ray vs neutron view toggle |
 | `facility.html` | How ISIS works: ion source, linac, synchrotron, targets, moderators | Clickable facility map, moderator spectrum picker |
 | `experiment.html` | Life of an experiment: proposal → beamtime → data → paper | 7-phase lifecycle timeline (with who/which-software per phase) |
@@ -52,7 +52,7 @@ Vanilla HTML/CSS/JS — deliberately boring tech so it runs anywhere, forever:
 Design constraints worth knowing before contributing:
 
 - **Must work from `file://`** → no `fetch()`, no ES modules, no external data files. All data lives inline in JS; all diagrams are inline SVG.
-- **Scroll-driven animations** (`animation-timeline: view()`) are gated behind `@supports`, with an IntersectionObserver fallback for Firefox. `prefers-reduced-motion` always leaves a fully readable static page.
+- **Animations are plain time-based CSS keyframe loops** (plus IntersectionObserver-driven reveals) — identical in every browser, no scroll-scrubbing. `prefers-reduced-motion` always leaves a fully readable static page.
 - **`js/synth.js` is the single source of physics truth** — constants and formulas live there and nowhere else, so an accuracy review touches one file.
 - **Keyboard and screen-reader support is expected** — skip link, static (no-JS) header/footer, `role="img"` + labels on every canvas/SVG, `aria-live` on dynamic readouts, keyboard paths for canvas interactions. New interactives should keep that bar.
 - Only external dependency: Google Fonts (degrades to system fonts offline).

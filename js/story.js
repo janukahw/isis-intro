@@ -2,8 +2,10 @@
    - Builds the scene-6 detector arc + histogram SVG content.
    - Arms reveal animations (body.js-anim) and toggles .in-view via
      IntersectionObserver — unless the user prefers reduced motion.
-   - If native CSS scroll-driven animations are unsupported (e.g. Firefox),
-     drives the scrub effects ([data-fx]) from a scroll listener instead. */
+   - Generates scene 6's event-stream loop with the Web Animations API:
+     same time-based-loop pattern as the CSS scenes, used here because the
+     ~30 actors (and the tiles/bars they hit) are JS-built.
+   (The other scene loops are pure CSS keyframes in story.css.) */
 (function () {
   "use strict";
 
@@ -30,17 +32,18 @@
         tiles.append(t);
       }
     }
+    var HEIGHTS = [4, 7, 12, 22, 38, 30, 18, 26, 40, 24, 14, 9, 6, 4, 3];
     var histo = document.getElementById("det-histo");
     if (histo) {
-      var heights = [4, 7, 12, 22, 38, 30, 18, 26, 40, 24, 14, 9, 6, 4, 3];
-      heights.forEach(function (h, k) {
+      HEIGHTS.forEach(function (h, k) {
         var b = document.createElementNS(NS, "rect");
         b.setAttribute("x", 120 + k * 13);
         b.setAttribute("y", 218 - h);
         b.setAttribute("width", 10);
         b.setAttribute("height", h);
         b.setAttribute("fill", "#ffb84d");
-        b.style.setProperty("--i", k);
+        b.style.transformBox = "fill-box";     // grow from the baseline when animated
+        b.style.transformOrigin = "bottom";
         histo.append(b);
       });
     }
@@ -63,60 +66,106 @@
       document.querySelectorAll(".scene").forEach(function (s) { s.classList.add("in-view"); });
     }
 
-    /* ---- scrub fallback (no native scroll-driven animations) ---- */
-    var native = window.CSS && CSS.supports &&
-      CSS.supports("(animation-timeline: view()) and (animation-range: entry)");
-    if (native) return;
+    /* ---- scene 6: the event stream (generated WAAPI loop) ----
+       One pulse per 12 s cycle: ~30 neutrons fly from the sample to the
+       detector arc in time-of-flight order (one neutron per ≈9 counts of bar
+       height). Every hit flashes its tile and bumps its histogram bin by one
+       discrete step — 1 step = 1 hit — and four sample hits reveal the event
+       log lines authored in the HTML (their det/TOF text matches these
+       generated arrivals). Everything fades at 92% and the next pulse
+       starts the histogram from zero. */
+    if (tiles && histo && histo.animate) {
+      var CYCLE = 12000;                       // ms per pulse
+      var T0 = 0.13, T1 = 0.86;                // arrival window (cycle fraction)
+      var FLIGHT = 0.045;                      // sample→detector flight time
+      var RESET = 0.92;                        // global fade-out starts here
+      var WL = ["#ff8a5c", "#ffc46b", "#b8e986", "#5fd8c8", "#6aa8ff"];
+      var svg = tiles.closest("svg");
+      var barEls = histo.querySelectorAll("rect");
+      var tileEls = tiles.querySelectorAll("rect");
+      var binW = (T1 - T0) / HEIGHTS.length;
 
-    /* progress p in [0,1] over the section's "cover" range */
-    function coverProgress(sec) {
-      var rect = sec.getBoundingClientRect();
-      var vh = window.innerHeight;
-      return Math.min(1, Math.max(0, (vh - rect.top) / (rect.height + vh)));
-    }
-    function within(p, a, b) {
-      return Math.min(1, Math.max(0, (p - a) / (b - a)));
-    }
+      /* the four sampled hits: bin/index-within-bin → forced tile, so the
+         static log lines stay truthful (det NN = tile index + 1) */
+      var LOGGED = {
+        "2/0": { tile: 1, line: "l1" },
+        "4/2": { tile: 6, line: "l2" },
+        "8/0": { tile: 3, line: "l3" },
+        "12/0": { tile: 8, line: "l4" }
+      };
 
-    var effects = {
-      ring: function (sec, p) {
-        var el = sec.querySelector('[data-fx="ring"]');
-        el.style.transform = "rotate(" + (within(p, 0.05, 0.95) * 900) + "deg)";
-      },
-      probes: function (sec, p) {
-        sec.querySelector('[data-fx="proton"]').style.transform =
-          "translateX(" + (within(p, 0.10, 0.70) * 320) + "px)";
-        var m = within(p, 0.30, 0.80);
-        var mu = sec.querySelector('[data-fx="muons"]');
-        mu.style.transform = "translateY(" + (-90 * m) + "px)";
-        mu.style.opacity = Math.min(1, m * 5);
-        var b = within(p, 0.60, 0.95);
-        var burst = sec.querySelector('[data-fx="burst"]');
-        burst.style.transform = "scale(" + b + ")";
-        burst.style.opacity = Math.min(1, b * 3.3);
-      },
-      race: function (sec, p) {
-        [["race1", 0.55], ["race2", 0.75], ["race3", 0.95]].forEach(function (cfg) {
-          sec.querySelector('[data-fx="' + cfg[0] + '"]').style.transform =
-            "translateX(" + (within(p, 0.15, cfg[1]) * 640) + "px)";
+      var perTile = [];
+      HEIGHTS.forEach(function (h, k) {
+        var n = Math.max(1, Math.round(h / 9));    // hits for this bin
+        var hitTimes = [];
+        for (var j = 0; j < n; j++) {
+          var t = T0 + binW * (k + (j + 0.5) / n);
+          var logged = LOGGED[k + "/" + j];
+          var tile = logged ? logged.tile : (k * 4 + j * 7) % 9;
+          hitTimes.push(t);
+          (perTile[tile] = perTile[tile] || []).push(t);
+
+          var c = document.createElementNS(NS, "circle");
+          c.setAttribute("cx", 210);
+          c.setAttribute("cy", 80);
+          c.setAttribute("r", 3);
+          c.setAttribute("fill", WL[Math.floor(k / 3)]);
+          c.setAttribute("opacity", "0");
+          svg.insertBefore(c, histo);
+          var ang = (200 + tile * 17.5) * Math.PI / 180;   // same arc geometry as the tiles
+          var move = "translate(" + (95 * Math.cos(ang)).toFixed(1) + "px," +
+            (-95 * Math.sin(ang)).toFixed(1) + "px)";
+          c.animate([
+            { offset: 0, transform: "translate(0,0)", opacity: 0 },
+            { offset: t - FLIGHT, transform: "translate(0,0)", opacity: 0 },
+            { offset: t - FLIGHT + 0.008, opacity: 1 },
+            { offset: t, transform: move, opacity: 1 },
+            { offset: Math.min(t + 0.012, 1), transform: move, opacity: 0 },
+            { offset: 1, transform: move, opacity: 0 }
+          ], { duration: CYCLE, iterations: Infinity });
+
+          if (logged) {
+            var line = document.querySelector(".ev-log ." + logged.line);
+            if (line) line.animate([
+              { offset: 0, opacity: 0 },
+              { offset: t, opacity: 0 },
+              { offset: t + 0.015, opacity: 1 },
+              { offset: RESET, opacity: 1 },
+              { offset: RESET + 0.05, opacity: 0 },
+              { offset: 1, opacity: 0 }
+            ], { duration: CYCLE, iterations: Infinity });
+          }
+        }
+
+        /* the bar: one discrete step up per hit, reset for the next pulse */
+        var frames = [{ offset: 0, transform: "scaleY(0)", opacity: 1 }];
+        hitTimes.forEach(function (ht, j) {
+          frames.push({ offset: ht - 0.002, transform: "scaleY(" + (j / n) + ")" });
+          frames.push({ offset: ht, transform: "scaleY(" + ((j + 1) / n) + ")" });
         });
-      }
-    };
+        frames.push({ offset: RESET, transform: "scaleY(1)", opacity: 1 });
+        frames.push({ offset: 0.97, transform: "scaleY(1)", opacity: 0 });
+        frames.push({ offset: 1, transform: "scaleY(0)", opacity: 0 });
+        barEls[k].animate(frames, { duration: CYCLE, iterations: Infinity });
+      });
 
-    var sections = Array.prototype.slice.call(document.querySelectorAll("[data-scrub]"));
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        sections.forEach(function (sec) {
-          effects[sec.dataset.scrub](sec, coverProgress(sec));
+      /* tile flashes: one animation per tile, a brightness spike per hit */
+      perTile.forEach(function (times, ti) {
+        if (!times) return;
+        var frames = [{ offset: 0, filter: "brightness(1)" }];
+        var prev = 0;
+        times.sort(function (a, b) { return a - b; }).forEach(function (t) {
+          var up = Math.max(prev + 0.001, t - 0.004);
+          var peak = Math.max(up + 0.001, t);
+          var down = Math.min(1, peak + 0.02);
+          frames.push({ offset: up, filter: "brightness(1)" });
+          frames.push({ offset: peak, filter: "brightness(2.4)" });
+          frames.push({ offset: down, filter: "brightness(1)" });
+          prev = down;
         });
-        ticking = false;
+        frames.push({ offset: 1, filter: "brightness(1)" });
+        tileEls[ti].animate(frames, { duration: CYCLE, iterations: Infinity });
       });
     }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    onScroll();
   });
 })();

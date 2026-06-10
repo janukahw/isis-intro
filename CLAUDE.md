@@ -22,10 +22,19 @@ Interactive educational website about neutrons, muons, and the ISIS Neutron and 
 ## Conventions
 
 - **Progressive enhancement:** every page ships a static header/footer in its HTML; `js/nav.js` only fills in whichever is missing, then adds the mobile MENU toggle (nav collapses below ~44rem, only when JS runs via `body.has-navjs`).
-- **Motion:** scroll-driven animations gated behind `@supports ((animation-timeline: view()) and (animation-range: entry))` with an IntersectionObserver fallback in `js/story.js`. `prefers-reduced-motion` must always leave a fully readable static page.
+- **Motion:** time-based loops (CSS keyframes; Web Animations API in `js/story.js` where the actors are JS-generated, e.g. scene 6's event stream) plus IntersectionObserver-driven reveals — no scroll-scrubbed animations. `prefers-reduced-motion` must always leave a fully readable static page.
 - **Accessibility bar for new work:** skip link, `role="img"` + `aria-label` on every SVG/canvas, `aria-live` on dynamic info panels, keyboard paths for all hotspot/canvas interactions (tabindex + Enter/Space), tap targets ≥44px.
 - **Security:** `innerHTML` only with static string literals — never user or URL-derived input.
 - **Voice:** software/data analogies (events ≈ log lines, reduction ≈ ETL, history ≈ audit log); ≤2 sentences per story scene; mono-font stat callouts with units.
+
+## Design direction
+
+Bold, distinctive visual design (the `frontend-design` skill's direction) is **welcome and encouraged** here — an intentional aesthetic point of view, characterful typography, atmospheric backgrounds/texture, and high-impact motion — within these boundaries:
+
+- **Vanilla HTML/CSS/JS only.** No animation or UI libraries (no Motion, GSAP, etc.), no new dependencies, no build step. Prefer CSS-only effects; JS-driven effects follow the existing per-page IIFE pattern.
+- **Fonts via Google Fonts only** (the one allowed external), always with a system-font fallback stack so the site stays readable offline.
+- **Express the aesthetic through `tokens.css`** (colors, type, spacing as tokens), not scattered one-off values.
+- The **Motion and Accessibility rules above always win**: `prefers-reduced-motion` leaves a fully readable static page, and effects must not break keyboard paths, contrast, tap targets, `file://`, or the responsive widths in the checklist.
 
 ## Accuracy
 
@@ -35,6 +44,6 @@ Facts must trace to isis.stfc.ac.uk (especially the "Practical Guide to ISIS" PD
 
 1. Every page via `file://` **and** a local server in Chrome — zero console errors, interactives respond.
 2. Playground end-to-end: Load → ConvertUnits (peaks align) → Rebin → Normalize → Fit near 3.14 Å reports the centre within ±0.01 Å; Reset restores; steps can't run out of order.
-3. Firefox for the scroll-animation fallback path; OS reduced-motion for the static path.
+3. Firefox for animation parity (loops are plain CSS keyframes); OS reduced-motion for the static path.
 4. Responsive: no horizontal overflow at 375 / 768 / 1024 / 1366 / 1920 px; nav collapses behind MENU on narrow widths.
 5. After pushing: spot-check https://janukahw.github.io/isis-intro/ (subpath-relative links, console clean).
