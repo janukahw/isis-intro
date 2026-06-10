@@ -14,19 +14,35 @@
 <link rel="stylesheet" href="css/components.css">
 <script defer src="js/nav.js"></script>
 <style>
-  /* toolchain cards */
+  /* toolchain cards, color-coded: Claude pieces vs external pieces */
   .tool-card h3 { font-family: var(--font-mono); font-size: 1rem; letter-spacing: 0.02em; }
   .tool-card .tag {
     font-family: var(--font-mono);
     font-size: var(--fs-tiny);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--text-500);
     display: block;
     margin-bottom: var(--sp-1);
   }
   .tool-card p { font-size: var(--fs-small); margin-top: var(--sp-1); }
   .tool-card code { color: var(--accent); font-size: var(--fs-tiny); }
+  .tool-card.tc-claude { border-color: color-mix(in oklab, var(--neutron) 40%, var(--line)); }
+  .tool-card.tc-claude .tag { color: var(--neutron); }
+  .tool-card.tc-ext { border-color: color-mix(in oklab, var(--peak) 40%, var(--line)); }
+  .tool-card.tc-ext .tag { color: var(--peak); }
+  .tool-legend {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-500);
+    display: flex;
+    gap: var(--sp-3);
+    margin-top: var(--sp-2);
+  }
+  .tool-legend .lg::before { content: "■ "; }
+  .tool-legend .lg-claude::before { color: var(--neutron); }
+  .tool-legend .lg-ext::before { color: var(--peak); }
 
   /* the conversation log */
   .how-chat {
@@ -104,33 +120,39 @@
   <section id="toolchain" aria-labelledby="toolchain-h">
     <span class="kicker">H.1 — What was in the room</span>
     <h2 id="toolchain-h">The toolchain</h2>
+    <p class="tool-legend"><span class="lg lg-claude">Claude</span><span class="lg lg-ext">external</span></p>
     <div class="card-grid" style="margin-top: var(--sp-3)">
-      <div class="panel tool-card">
+      <div class="panel tool-card tc-claude">
         <span class="tag">agent</span>
         <h3>Claude Code</h3>
         <p>An AI agent that lives in the terminal: it reads the whole repo, edits files, runs commands, drives a browser, and commits — while the human reviews diffs and steers in plain English.</p>
       </div>
-      <div class="panel tool-card">
-        <span class="tag">model</span>
-        <h3>Claude Fable 5</h3>
-        <p>The Anthropic model behind the work — every commit in the repo, from the very first to this page, is co-signed, so the claim is checkable: <code>git log → Co-Authored-By: Claude Fable 5</code>. A second model, <strong>Claude Opus 4.7</strong>, ran the automated security reviews (next card but one).</p>
+      <div class="panel tool-card tc-claude">
+        <span class="tag">models</span>
+        <h3>Claude Fable 5 + Opus 4.7</h3>
+        <p><strong>Fable 5</strong> is the Anthropic model behind the work — every commit in the repo is co-signed, so the claim is checkable: <code>git log → Co-Authored-By: Claude Fable 5</code>. A second model, <strong>Opus 4.7</strong>, ran the automated security reviews.</p>
       </div>
-      <div class="panel tool-card">
+      <div class="panel tool-card tc-claude">
         <span class="tag">constitution</span>
         <h3>CLAUDE.md</h3>
         <p>A rules file the agent re-reads every session: vanilla HTML/CSS/JS only, zero dependencies, must work from <code>file://</code>, accessibility is a gate, every physics fact traced to a source. The agent polices itself against it.</p>
       </div>
-      <div class="panel tool-card">
-        <span class="tag">plugins · skills</span>
-        <h3>frontend-design + modern-web-guidance</h3>
-        <p>Two installed Claude Code plugins: Anthropic’s <em>frontend-design</em> (pushes a bold, distinctive look) and the Chrome team’s <em>modern-web-guidance</em> (current platform best practice). When they pulled in different directions, the conflict was audited and the resolution written into CLAUDE.md.</p>
+      <div class="panel tool-card tc-claude">
+        <span class="tag">plugin</span>
+        <h3>frontend-design</h3>
+        <p>Anthropic’s design-direction skill: it pushes a bold, distinctive look over generic AI styling. Where its instincts collided with this project’s hard rules, the reconciliation was written into CLAUDE.md.</p>
       </div>
-      <div class="panel tool-card">
+      <div class="panel tool-card tc-ext">
+        <span class="tag">plugin</span>
+        <h3>modern-web-guidance</h3>
+        <p>The Chrome team’s best-practice lookup: current platform features, performance budgets, browser-support fallbacks. When it pulled against <em>frontend-design</em>, the conflict was audited rather than ignored.</p>
+      </div>
+      <div class="panel tool-card tc-ext">
         <span class="tag">mcp server</span>
         <h3>Playwright</h3>
-        <p>The agent’s hands on a real browser, via the Model Context Protocol: load each page, read the console, screenshot diagrams, seek animations to exact frames, emulate reduced-motion and five screen widths.</p>
+        <p>The agent’s hands on a real browser, connected via the Model Context Protocol: load each page, read the console, screenshot diagrams, seek animations to exact frames, emulate reduced-motion and five screen widths.</p>
       </div>
-      <div class="panel tool-card">
+      <div class="panel tool-card tc-ext">
         <span class="tag">deploy</span>
         <h3>GitHub Pages</h3>
         <p>Push to <code>main</code> and the site is live in about a minute. The agent watches the deploy via the GitHub API, then re-checks the live URL with a cold cache before calling it done.</p>
@@ -144,8 +166,8 @@
     <h2 id="loop-h">The loop</h2>
     <div class="two-col">
       <div>
-        <p>Every feature on this site went around the same loop. A plain-English <strong style="color:var(--proton)">prompt</strong> becomes a concrete plan; the agent <strong style="color:var(--neutron)">builds</strong> it; then — before anything ships — it <strong style="color:var(--ok)">verifies</strong> its own work in a real browser: zero console errors, screenshots inspected frame by frame, the reduction playground run end-to-end, reduced-motion checked for a fully readable static page, no horizontal overflow from 375&nbsp;px to 1920&nbsp;px, and everything tested over both <code style="color:var(--accent)">file://</code> and a local server.</p>
-        <p>Only then does it <strong style="color:var(--peak)">ship</strong>: commit, push, watch the GitHub Pages build, and spot-check the live site. Failures go back around the loop, not into production.</p>
+        <p>Every feature on this site went around the same loop. A plain-English <strong style="color:var(--proton)">prompt</strong> becomes a concrete plan; the agent <strong style="color:var(--neutron)">builds</strong> it; then — before anything ships — it <strong style="color:var(--ok)">verifies</strong> its own work in a real browser that it drives itself, through Playwright. That step is what changes the economics: nobody had to manually look at the page and report broken layouts or stuck animations back to the agent. It takes its own screenshots <em>and reads them</em>, seeks every animation to exact frames and checks the geometry (the scene-6 neutrons land within 0.1&nbsp;px of their detector tiles), reads the console, emulates reduced-motion, walks five screen widths, runs the reduction playground end-to-end — then fixes whatever it finds and goes around again, on its own.</p>
+        <p>So defects caught in the loop never reached a human; review time went on taste and ideas instead of proofreading pixels. Only then does it <strong style="color:var(--peak)">ship</strong>: commit, push, watch the GitHub Pages build, and re-check the live URL with a cold cache. Failures go back around the loop, not into production.</p>
       </div>
       <figure class="figure-frame">
         <svg viewBox="0 0 640 150" role="img" aria-label="A loop diagram: prompt leads to build, then verify, then ship, then back around to the next prompt. A dot cycles through the four stages.">
@@ -186,29 +208,27 @@
   <section id="prompts" aria-labelledby="prompts-h">
     <span class="kicker">H.3 — The actual conversation</span>
     <h2 id="prompts-h">Real prompts, real diffs</h2>
-    <p>Everything below is quoted verbatim from the session transcripts — typos included, because they never mattered. Each one-liner under a prompt is what actually happened. It began on the evening of 9 June, as a plan for a different website:</p>
+    <p>Quoted from the session transcripts — spelling tidied, otherwise word-for-word. Each one-liner under a prompt is what actually happened. It began one evening with a change of plan, mid-conversation — an earlier brief was scrapped before a line of code was written:</p>
     <div class="panel" style="margin-top: var(--sp-3)">
       <div class="how-chat">
-        <p class="q">Make a plan to build a website about Mantid - targetted at complete beginners. Users have advanced understanding about physics, but very little about how ISIS target stations work, how data gets produced, and how data gets reduced</p>
-        <p class="a">a plan was drafted — and then, before any code:</p>
-        <p class="q">actually, i changed my mind, lets change the focus of the website to talk about neutrons and muons, how ISIS makes use of them, the key concepts, typical phases of an experiment, data reduction … Target audience : people who work at ISIS who dont come from a physics background, like a software engineer.</p>
+        <p class="q">…focus of the website to talk about neutrons and muons, how ISIS makes use of them, the key concepts, typical phases of an experiment, data reduction … Target audience: people who work at ISIS who don’t come from a physics background, like a software engineer.</p>
         <p class="a">the whole premise repointed in one message; six pages designed, written and built through the evening — followed by authoritative source links to check them against</p>
-        <p class="q">ensure a software engineer with only highschool level physics understanding can understand the content. Also check the infomation with authorative sources for accuracy. Also check the UX. Might worth using ultracode workflow if you think you can parallely do these.</p>
-        <p class="a">a parallel multi-agent fact-check, plain-language pass and UX audit; the fixes shipped as the initial public release at 08:20 the next morning</p>
+        <p class="q">Ensure a software engineer with only high-school level physics understanding can understand the content. Also check the information with authoritative sources for accuracy. Also check the UX. Might be worth using the ultracode workflow if you think you can do these in parallel.</p>
+        <p class="a">a parallel multi-agent fact-check, plain-language pass and UX audit; the fixes shipped as the initial public release the next morning</p>
       </div>
     </div>
-    <p style="margin-top: var(--sp-3)">Then, through the same morning, the polish sessions:</p>
+    <p style="margin-top: var(--sp-3)">Then the polish sessions:</p>
     <div class="panel" style="margin-top: var(--sp-3)">
       <div class="how-chat">
-        <p class="q">can you check if front-end-design skill and google-web-design skill conflict with each other</p>
+        <p class="q">Can you check if the front-end-design skill and the google-web-design skill conflict with each other</p>
         <p class="a">a plugin audit: overlap and tension points mapped, verdict written into CLAUDE.md as a design-direction section</p>
-        <p class="q">i want to explore top 5 places where motion or effects will add value … do an adversial review for each one you find — reasons not to do — then only priortize</p>
+        <p class="q">I want to explore the top 5 places where motion or effects will add value … do an adversarial review for each one you find — reasons not to do — then only prioritize</p>
         <p class="a">six candidates killed with written reasons; the four survivors built: traveling waves, panel cues, plot tweens</p>
-        <p class="q">im not keen on page scroll based animations — happy to switch to a different more straightforward method</p>
+        <p class="q">I’m not keen on page-scroll-based animations — happy to switch to a different, more straightforward method</p>
         <p class="a">the whole story page rebuilt from scroll-scrubbing to time-based loops; an entire browser-fallback subsystem deleted</p>
-        <p class="q">the bar chart underneath it, can that be animated aswell … you will need to show significantly more neutrons to align with the counts of each bar</p>
+        <p class="q">The bar chart underneath it, can that be animated as well … you will need to show significantly more neutrons to align with the counts of each bar</p>
         <p class="a">30 generated neutrons per pulse; the histogram builds one visible step per hit, left to right in arrival order</p>
-        <p class="q">Scene 02 — the machine — i see two red circles</p>
+        <p class="q">Scene 02 — the machine — I see two red circles</p>
         <p class="a">a one-line fix, verified in the browser, live a few minutes later</p>
       </div>
     </div>
@@ -239,8 +259,8 @@
     <span class="kicker">H.5 — The receipts</span>
     <h2 id="receipts-h">By the numbers</h2>
     <div class="stat-grid">
-      <p class="stat"><span class="num">&lt; 24 h</span><span class="label">from “make a plan” (9 June, 18:21) to the live site, next morning</span></p>
-      <p class="stat"><span class="num">14</span><span class="label">commits when this page shipped, each co-signed by the model</span></p>
+      <p class="stat"><span class="num">&lt; 24 h</span><span class="label">from the first prompt to the live public site</span></p>
+      <p class="stat"><span class="num">15</span><span class="label">commits at last count, each co-signed by the model</span></p>
       <p class="stat"><span class="num">≈5,000</span><span class="label">lines of hand-rolled HTML, CSS and JS</span></p>
       <p class="stat"><span class="num">0</span><span class="label">dependencies — fonts are the only external</span></p>
       <p class="stat"><span class="num">7</span><span class="label">pages, including this one</span></p>
