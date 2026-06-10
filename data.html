@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From counts to curves — ISIS Explained</title>
+<meta name="description" content="How raw neutron events become publishable curves: time of flight, events vs histograms, and an interactive data-reduction playground.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/plot.js"></script>
+<script defer src="js/synth.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/data.js"></script>
+<style>
+  .beamline-svg { width: 100%; height: auto; }
+  .tof-readout {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--text-300);
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .tof-readout b { color: var(--accent); font-weight: 600; }
+  .plot-box { width: 100%; height: 260px; }
+  .plot-box.tall { height: 320px; }
+  .legend { display: flex; gap: var(--sp-3); flex-wrap: wrap; font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--text-500); margin-top: var(--sp-1); }
+  .legend .swatch { display: inline-block; inline-size: 10px; block-size: 10px; border-radius: 2px; margin-inline-end: 0.4em; vertical-align: baseline; }
+  .pg-grid { display: grid; gap: var(--sp-3); }
+  @media (min-width: 60rem) { .pg-grid { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); } }
+  .etl-map { font-family: var(--font-mono); font-size: var(--fs-small); }
+</style>
+</head>
+<body>
+<main>
+  <div class="page-intro">
+    <span class="kicker">05 / Data</span>
+    <h1>From counts to curves</h1>
+    <p class="lede">A detector doesn’t measure science. It measures <em>events</em> — “detector&nbsp;7041 fired at 12,330&nbsp;µs”. Turning billions of those log lines into a curve someone can publish is called <strong>data reduction</strong>, and it’s an ETL pipeline you can run with your own hands below.</p>
+  </div>
+
+  <!-- S1: TOF scrubber -->
+  <section id="tof" aria-labelledby="tof-h">
+    <span class="kicker">5.1 — The clock is the instrument</span>
+    <h2 id="tof-h">Time of flight: slow neutrons arrive late</h2>
+    <div class="two-col">
+      <div>
+        <p>ISIS is pulsed: every neutron in a pulse leaves the moderator at (nearly) the same moment, like runners off a starting gun. Fast, short-wavelength neutrons reach the sample first; slow, long-wavelength ones straggle in later.</p>
+        <p>That means a plain stopwatch tells you each neutron’s wavelength — no extra hardware. <span class="mono">λ ≈ 3956 × t / L</span>: arrival time <span class="mono">t</span> (seconds) over flight path <span class="mono">L</span> (metres) gives wavelength in ångströms. In software terms: <em>the timestamp is the payload</em>.</p>
+        <p class="footnote">Drag the slider (or press play) and watch five neutrons of different wavelengths race down an 11&nbsp;m flight path into the arrival histogram.</p>
+      </div>
+      <figure class="figure-frame">
+        <svg class="beamline-svg" id="tof-svg" viewBox="0 0 640 150" role="img" aria-label="Animated beamline: five neutrons of different wavelengths travel from the moderator to the detector, arriving at different times.">
+          <!-- moderator -->
+          <rect x="14" y="35" width="26" height="60" rx="4" fill="#1f2a4f" stroke="#3a4d85"/>
+          <text x="27" y="112" fill="#8a96c2" font-size="9" text-anchor="middle" font-family="IBM Plex Mono, monospace">moderator</text>
+          <!-- flight path -->
+          <line x1="40" y1="65" x2="560" y2="65" stroke="#233055" stroke-width="2" stroke-dasharray="4 6"/>
+          <!-- scale ticks -->
+          <g fill="#8a96c2" font-size="8" font-family="IBM Plex Mono, monospace" text-anchor="middle">
+            <text x="40" y="28">0 m</text>
+            <text x="300" y="28">5.5 m</text>
+            <text x="560" y="28">11 m</text>
+          </g>
+          <!-- detector -->
+          <rect x="560" y="30" width="14" height="70" rx="3" fill="#101831" stroke="#4fd8eb"/>
+          <text x="567" y="112" fill="#8a96c2" font-size="9" text-anchor="middle" font-family="IBM Plex Mono, monospace">detector</text>
+          <!-- neutrons injected by JS -->
+          <g id="tof-neutrons"></g>
+        </svg>
+        <div class="control-row">
+          <button class="btn" id="tof-play" type="button">▶ play</button>
+          <label for="tof-time">t</label>
+          <input type="range" id="tof-time" min="0" max="25" step="0.05" value="0">
+          <output id="tof-time-out">0.0 ms</output>
+        </div>
+        <canvas class="plot-box" id="tof-hist" style="height:170px"></canvas>
+        <figcaption>FIG 5.1 — five neutrons, λ = 1–8 Å, over L = 11 m. arrival time t = L·λ / 3956.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S2: events vs histograms -->
+  <section id="events" aria-labelledby="events-h">
+    <span class="kicker">5.2 — The raw data is a log file</span>
+    <h2 id="events-h">Events vs histograms</h2>
+    <div class="two-col">
+      <div>
+        <p>In event mode, the data file is literally a list: <span class="mono">(detector&nbsp;ID, time&nbsp;of&nbsp;flight)</span>, one line per detected neutron, millions to billions of lines per run. Nothing is summarized yet — like raw, unaggregated logs.</p>
+        <p>A <strong>histogram</strong> is the aggregation you choose afterwards: chop time into bins, count events per bin. Wide bins smooth away detail; narrow bins go noisy because each bin holds only a few counts. The events are always the ground truth — you can re-bin them any way you like, any number of times.</p>
+        <p class="footnote">In Mantid these two shapes are literally two workspace types: <span class="mono">EventWorkspace</span> (the log) and <span class="mono">Workspace2D</span> (the aggregated histogram).</p>
+      </div>
+      <figure class="figure-frame">
+        <div class="control-row">
+          <span class="seg-toggle" role="group" aria-label="View mode">
+            <button type="button" id="ev-mode-events" aria-pressed="true">EVENTS</button>
+            <button type="button" id="ev-mode-hist" aria-pressed="false">HISTOGRAM</button>
+          </span>
+          <label for="ev-bins">bin width</label>
+          <input type="range" id="ev-bins" min="0" max="1" step="0.01" value="0.5" disabled>
+          <output id="ev-bins-out">— µs</output>
+        </div>
+        <canvas class="plot-box tall" id="ev-plot"></canvas>
+        <figcaption>FIG 5.2 — 4,000 synthetic events from one detector bank. toggle to histogram, then play with the bin width.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S3: reduction = ETL -->
+  <section id="etl" aria-labelledby="etl-h">
+    <span class="kicker">5.3 — Reduction is an ETL pipeline</span>
+    <h2 id="etl-h">What raw data is missing</h2>
+    <div class="two-col flip">
+      <div>
+        <p>The raw event stream is honest but useless for science as-is:</p>
+        <p>① It’s in <strong>instrument coordinates</strong> (microseconds at one particular detector), not physics coordinates (wavelength, d-spacing, energy). ② The shape of the source spectrum is <strong>baked into</strong> every measurement — more neutrons arrive at some wavelengths than others. ③ Detectors have quirks: dead pixels, different efficiencies, different positions.</p>
+        <p><strong>Reduction</strong> fixes all three, in a standard order, the same way for every run on an instrument. This is what <a href="https://www.mantidproject.org/" rel="external">Mantid</a> does. Its three core ideas map cleanly to software concepts:</p>
+        <div class="etl-map panel" style="padding: var(--sp-3)">
+          <p style="max-width:none"><b style="color:var(--neutron)">Workspace</b> — the data structure (data + instrument geometry + metadata)</p>
+          <p style="max-width:none"><b style="color:var(--peak)">Algorithm</b> — a transform: workspace in, workspace out</p>
+          <p style="max-width:none"><b style="color:var(--muon)">History</b> — an audit log: every workspace records the exact chain of algorithms (with parameters) that produced it. Full provenance, replayable as a script.</p>
+        </div>
+      </div>
+      <figure class="figure-frame">
+        <svg viewBox="0 0 520 200" role="img" aria-label="Pipeline diagram: raw event file flows through Load, ConvertUnits, Rebin, Normalize, Fit to become a result.">
+          <defs>
+            <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0 0 L8 4 L0 8 z" fill="#3a4d85"/>
+            </marker>
+          </defs>
+          <g font-family="IBM Plex Mono, monospace" font-size="10" text-anchor="middle">
+            <rect x="10" y="75" width="78" height="44" rx="6" fill="#101831" stroke="#3a4d85"/>
+            <text x="49" y="93" fill="#c0c9e8">events.nxs</text>
+            <text x="49" y="107" fill="#8a96c2" font-size="8">raw log</text>
+            <g fill="#0c1222">
+              <rect x="118" y="75" width="74" height="44" rx="6" fill="#1f2a4f" stroke="#4fd8eb"/>
+              <rect x="212" y="75" width="96" height="44" rx="6" fill="#1f2a4f" stroke="#4fd8eb"/>
+              <rect x="328" y="75" width="70" height="44" rx="6" fill="#1f2a4f" stroke="#4fd8eb"/>
+            </g>
+            <text x="155" y="99" fill="#eef2ff">Load</text>
+            <text x="260" y="93" fill="#eef2ff">ConvertUnits</text>
+            <text x="260" y="107" fill="#8a96c2" font-size="8">+ Rebin + Normalize</text>
+            <text x="363" y="99" fill="#eef2ff">Fit</text>
+            <rect x="428" y="75" width="82" height="44" rx="6" fill="#101831" stroke="#ffb84d"/>
+            <text x="469" y="93" fill="#ffb84d">result</text>
+            <text x="469" y="107" fill="#8a96c2" font-size="8">numbers + errors</text>
+            <g stroke="#3a4d85" stroke-width="1.5" marker-end="url(#arr)">
+              <line x1="88" y1="97" x2="114" y2="97"/>
+              <line x1="192" y1="97" x2="208" y2="97"/>
+              <line x1="308" y1="97" x2="324" y2="97"/>
+              <line x1="398" y1="97" x2="424" y2="97"/>
+            </g>
+            <text x="260" y="160" fill="#8a96c2" font-size="9">every step appended to the workspace HISTORY → reproducible</text>
+            <line x1="155" y1="123" x2="155" y2="145" stroke="#233055"/>
+            <line x1="260" y1="123" x2="260" y2="145" stroke="#233055"/>
+            <line x1="363" y1="123" x2="363" y2="145" stroke="#233055"/>
+            <line x1="120" y1="148" x2="400" y2="148" stroke="#233055"/>
+          </g>
+        </svg>
+        <figcaption>FIG 5.3 — reduction in one line: extract (Load), transform (ConvertUnits/Rebin/Normalize), load (a result you can fit).</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S4: playground -->
+  <section id="playground" aria-labelledby="pg-h">
+    <span class="kicker">5.4 — Hands on</span>
+    <h2 id="pg-h">The Reduction Playground</h2>
+    <p class="lede" style="margin-bottom: var(--sp-4)">A simulated powder-diffraction run on a toy instrument: one crystal, three detector banks at different angles, 11&nbsp;m flight path. Run the five steps in order and watch what each one earns you.</p>
+
+    <div class="pg-grid">
+      <div class="steps" id="pg-steps">
+        <div class="step-card" data-step="load" data-state="ready">
+          <span class="step-no">STEP 1</span>
+          <h3>Load</h3>
+          <p>Read the run file into a workspace. Three banks, same crystal — but the peaks don’t line up, because each bank has its own geometry and its own clock-to-wavelength conversion.</p>
+          <div class="step-actions"><button class="btn primary" type="button" data-apply="load">apply ▸</button></div>
+        </div>
+        <div class="step-card" data-step="convert" data-state="locked">
+          <span class="step-no">STEP 2</span>
+          <h3>ConvertUnits</h3>
+          <p>Convert microseconds → d-spacing using each bank’s known geometry (flight path + angle). Instrument coordinates become physics coordinates — watch the peaks <em>snap into alignment</em>.</p>
+          <div class="step-actions"><button class="btn primary" type="button" data-apply="convert" disabled>apply ▸</button></div>
+        </div>
+        <div class="step-card" data-step="rebin" data-state="locked">
+          <span class="step-no">STEP 3</span>
+          <h3>Rebin</h3>
+          <p>Merge the three banks onto one common set of bins. Pick the bin width — too wide blurs the peaks, too narrow goes noisy.</p>
+          <div class="step-actions">
+            <button class="btn primary" type="button" data-apply="rebin" disabled>apply ▸</button>
+            <label for="pg-binw">Δd</label>
+            <input type="range" id="pg-binw" min="0.005" max="0.05" step="0.001" value="0.01" disabled style="max-width:9rem">
+            <output id="pg-binw-out">0.010 Å</output>
+          </div>
+        </div>
+        <div class="step-card" data-step="normalize" data-state="locked">
+          <span class="step-no">STEP 4</span>
+          <h3>Normalize</h3>
+          <p>Divide out the source spectrum (measured by a monitor in the beam). The sloping background flattens and peak heights finally mean something physical.</p>
+          <div class="step-actions"><button class="btn primary" type="button" data-apply="normalize" disabled>apply ▸</button></div>
+        </div>
+        <div class="step-card" data-step="fit" data-state="locked">
+          <span class="step-no">STEP 5</span>
+          <h3>Fit</h3>
+          <p>Click near a peak in the plot to fit a Gaussian + background. The fitted centre is an interatomic spacing, in ångströms. <em>This number goes in the paper.</em></p>
+          <div class="step-actions"><span class="mono" id="pg-fit-hint" style="font-size: var(--fs-tiny); color: var(--text-500)">apply steps 1–4 first</span></div>
+        </div>
+        <div class="step-actions">
+          <button class="btn ghost" type="button" id="pg-reset">↺ reset</button>
+        </div>
+      </div>
+
+      <div>
+        <figure class="figure-frame">
+          <canvas class="plot-box tall" id="pg-plot" style="height:380px"></canvas>
+          <div class="legend" id="pg-legend"></div>
+          <figcaption id="pg-caption">FIG 5.4 — workspace view. apply STEP 1 to load the run.</figcaption>
+        </figure>
+        <div class="history-panel" style="margin-top: var(--sp-2)">
+          <p class="hp-title">workspace history</p>
+          <ol id="pg-history"></ol>
+        </div>
+        <dl class="result-card" id="pg-result" hidden style="margin-top: var(--sp-2)"></dl>
+      </div>
+    </div>
+    <p class="footnote">Simplified — real Mantid reduction adds calibration, masking, absorption corrections and per-technique steps. The real algorithms: <a href="https://docs.mantidproject.org/nightly/algorithms/Load-v1.html" rel="external">Load</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/ConvertUnits-v1.html" rel="external">ConvertUnits</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/Rebin-v1.html" rel="external">Rebin</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/NormaliseByCurrent-v1.html" rel="external">NormaliseByCurrent</a>, <a href="https://docs.mantidproject.org/nightly/algorithms/Fit-v1.html" rel="external">Fit</a>.</p>
+  </section>
+
+  <!-- S5: reduction vs analysis -->
+  <section id="analysis" aria-labelledby="an-h">
+    <span class="kicker">5.5 — Where reduction stops</span>
+    <h2 id="an-h">Reduction vs analysis</h2>
+    <div class="card-grid">
+      <div class="panel">
+        <h3 style="color: var(--neutron)">Reduction</h3>
+        <p style="font-size: var(--fs-small)">Facility-side, largely <strong>standard per instrument</strong>: same steps for every run, increasingly automated. Output: a clean, calibrated curve in physical units with error bars. If reduction is wrong, every user’s science is wrong — which is why it lives in maintained, tested software (Mantid) rather than per-user scripts.</p>
+      </div>
+      <div class="panel">
+        <h3 style="color: var(--peak)">Analysis</h3>
+        <p style="font-size: var(--fs-small)">Science-side and <strong>different for every experiment</strong>: fit a structural model, compare with simulation, refine parameters. Tools range from Mantid’s fitting interface to technique-specific codes. Output: the numbers and conclusions that go in the paper.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz" aria-labelledby="quiz-h">
+    <span class="kicker">5.6 — Checkpoint</span>
+    <h2 id="quiz-h" class="visually-hidden" style="margin-bottom: var(--sp-3)">Quick check</h2>
+    <div id="quiz-box"></div>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="techniques.html"><span class="kicker">Next</span><h3>Nine ways to use the beam →</h3><p>What all this reduction is for: the techniques.</p></a>
+    <a class="cta-card" href="experiment.html"><span class="kicker">Context</span><h3>Life of an experiment</h3><p>Where reduction sits in the journey from proposal to paper.</p></a>
+  </nav>
+</main>
+</body>
+</html>

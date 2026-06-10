@@ -1,0 +1,70 @@
+/* ISIS Explained — design tokens.
+   Beamline control-room aesthetic: deep navy, engineering-blueprint lines,
+   instrument-panel monospace readouts, color-coded particles. */
+
+:root {
+  color-scheme: dark;
+
+  /* Tier 1 — palette */
+  --ink-950: #070b16;
+  --ink-900: #0c1222;
+  --ink-850: #101831;
+  --ink-800: #151d3a;
+  --ink-700: #1f2a4f;
+  --ink-600: #2c3a6b;
+  --line: #233055;
+  --line-bright: #3a4d85;
+  --text-100: #eef2ff;
+  --text-300: #c0c9e8;
+  --text-500: #8a96c2;
+
+  /* Particles */
+  --proton: #ff5d8f;
+  --neutron: #4fd8eb;
+  --muon: #b78aff;
+  --peak: #ffb84d;
+  --ok: #5fe8a0;
+  --bad: #ff7a6b;
+
+  /* Wavelength ramp: short (hot) → long (cold) */
+  --wl-1: #ff8a5c;
+  --wl-2: #ffc46b;
+  --wl-3: #b8e986;
+  --wl-4: #5fd8c8;
+  --wl-5: #6aa8ff;
+
+  /* Tier 2 — semantic */
+  --bg: var(--ink-900);
+  --bg-deep: var(--ink-950);
+  --panel: var(--ink-850);
+  --panel-raised: var(--ink-800);
+  --accent: var(--neutron);
+  --accent-dim: color-mix(in oklab, var(--neutron) 35%, var(--ink-800));
+
+  /* Type */
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Code", Consolas, monospace;
+
+  --fs-hero: clamp(2.6rem, 1.4rem + 5vw, 5.2rem);
+  --fs-h1: clamp(2rem, 1.2rem + 3vw, 3.4rem);
+  --fs-h2: clamp(1.4rem, 1.1rem + 1.4vw, 2rem);
+  --fs-h3: 1.15rem;
+  --fs-body: 1.06rem;
+  --fs-small: 0.9rem;
+  --fs-tiny: 0.8rem;
+
+  /* Spacing & shape */
+  --sp-1: 0.375rem;
+  --sp-2: 0.75rem;
+  --sp-3: 1.25rem;
+  --sp-4: 2rem;
+  --sp-5: 3.25rem;
+  --sp-6: 5rem;
+  --radius: 10px;
+  --radius-lg: 18px;
+
+  --content-w: 72rem;
+  --shadow: 0 1px 2px rgb(0 0 0 / .5), 0 12px 32px -12px rgb(0 0 0 / .55);
+  --glow-accent: 0 0 18px color-mix(in oklab, var(--accent) 40%, transparent);
+}

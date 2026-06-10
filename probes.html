@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why neutrons &amp; muons? — ISIS Explained</title>
+<meta name="description" content="Why neutrons and muons are the right probes for seeing inside materials — explained without assuming any physics background.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/probes.js"></script>
+<style>
+  .zoom-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--accent);
+    min-block-size: 2.4em;
+    margin-top: var(--sp-2);
+  }
+  .atom-label { font-family: "IBM Plex Mono", monospace; font-size: 9px; fill: #8a96c2; text-anchor: middle; }
+</style>
+</head>
+<body>
+<main>
+  <div class="page-intro">
+    <span class="kicker">01 / Probes</span>
+    <h1>Why neutrons and muons?</h1>
+    <p class="lede">You can’t photograph an atom with light — its wavelength is thousands of times too big. To see how a material works you need a probe that’s the right size, gets inside, and doesn’t wreck what it’s measuring. ISIS makes two of the best ones in the world.</p>
+  </div>
+
+  <!-- S1: scale zoomer -->
+  <section id="scale" aria-labelledby="scale-h">
+    <span class="kicker">1.1 — The right-sized ruler</span>
+    <h2 id="scale-h">How small is an atom, really?</h2>
+    <div class="two-col">
+      <div>
+        <p>Materials are built from atoms spaced a few <strong>ångströms</strong> apart (1&nbsp;Å = 0.1 nanometre = 10⁻¹⁰&nbsp;m). To measure structure at that scale you need a probe whose wavelength is also a few ångströms — a ruler with markings as fine as the thing you’re measuring.</p>
+        <p>Moderated (“slowed-down”) neutrons land <em>exactly</em> there. That’s not luck — it’s why the moderators exist.</p>
+        <p class="footnote">Drag the slider to zoom from a coin to the atoms inside it.</p>
+      </div>
+      <figure class="figure-frame">
+        <div class="control-row">
+          <label for="zoom">zoom</label>
+          <input type="range" id="zoom" min="0" max="100" step="0.5" value="0">
+          <output id="zoom-out">2 cm</output>
+        </div>
+        <svg id="zoom-svg" viewBox="0 0 480 240" role="img" aria-label="Zooming from a coin, through metal grains and molecules, down to atoms with a marker showing the neutron wavelength matching the atomic spacing.">
+          <g id="zoom-layers"></g>
+        </svg>
+        <p class="zoom-label" id="zoom-label">a £1 coin — about 2 cm across</p>
+        <figcaption class="figure-caption">FIG 1.1 — eight orders of magnitude down to the atomic ruler</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S2: wave-particle -->
+  <section id="wave" aria-labelledby="wave-h">
+    <span class="kicker">1.2 — One idea from quantum mechanics</span>
+    <h2 id="wave-h">Slow particles have long wavelengths</h2>
+    <div class="two-col flip">
+      <div>
+        <p>Here’s the only quantum fact this site needs: every moving particle also behaves like a wave, and <strong>the slower it moves, the longer its wavelength</strong>. For neutrons the relationship is beautifully simple:</p>
+        <p class="stat" style="margin-block: var(--sp-3)"><span class="num" style="font-size:1.9rem">λ × v = 3,956</span><span class="label">wavelength (Å) times speed (m/s) is a constant</span></p>
+        <p>A neutron strolling at 1,000&nbsp;m/s has a 4&nbsp;Å wavelength — atom-sized. This is why “slowing neutrons down” and “tuning the ruler” are the same job, and why arrival time reveals wavelength on a <a href="data.html#tof">pulsed source</a>.</p>
+      </div>
+      <figure class="figure-frame">
+        <svg viewBox="0 0 420 180" role="img" aria-label="Fast particle drawn with a short tight wave; slow particle drawn with a long stretched wave.">
+          <g font-family="IBM Plex Mono, monospace" font-size="10">
+            <path d="M20,55 q9,-24 18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0 t18,0" fill="none" stroke="#ff8a5c" stroke-width="2"/>
+            <text x="20" y="24" fill="#ff8a5c">fast neutron — short wavelength</text>
+            <path d="M20,135 q40,-44 80,0 t80,0 t80,0 t80,0" fill="none" stroke="#6aa8ff" stroke-width="2"/>
+            <text x="20" y="170" fill="#6aa8ff">slow neutron — long wavelength</text>
+          </g>
+        </svg>
+        <figcaption class="figure-caption">FIG 1.2 — same particle, different speeds</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S3: what neutrons see -->
+  <section id="contrast" aria-labelledby="contrast-h">
+    <span class="kicker">1.3 — Superpower #1</span>
+    <h2 id="contrast-h">Neutrons see what X-rays miss</h2>
+    <div class="two-col">
+      <div>
+        <p>X-rays scatter off electrons, so heavy atoms (lots of electrons) dominate and hydrogen (one electron) is nearly invisible. Neutrons scatter off the <strong>nucleus</strong>, and the strength varies almost randomly across the periodic table — hydrogen and lithium show up brightly even next to heavy metals.</p>
+        <p>That makes neutrons the probe of choice for water, polymers, proteins, and the lithium chemistry inside a working battery. Bonus: swapping an isotope (hydrogen → deuterium) changes the contrast without changing the chemistry — like highlighting one variable in a debugger.</p>
+        <p>And because neutrons are electrically <strong>neutral</strong>, they pass deep through metal — through an engine block, a weld, a pressure cell — without damaging anything.</p>
+      </div>
+      <figure class="figure-frame">
+        <div class="control-row">
+          <span class="seg-toggle" role="group" aria-label="Probe view">
+            <button type="button" id="view-xray" aria-pressed="true">X-RAY VIEW</button>
+            <button type="button" id="view-neutron" aria-pressed="false">NEUTRON VIEW</button>
+          </span>
+        </div>
+        <svg viewBox="0 0 420 220" role="img" aria-label="A hydrogen-rich molecule next to a heavy atom. In X-ray view hydrogens are nearly invisible; in neutron view they glow brightly." id="mol-svg">
+          <g id="mol-atoms"></g>
+        </svg>
+        <p class="zoom-label" id="mol-label">X-rays: the heavy atom dominates, hydrogens almost vanish.</p>
+        <figcaption class="figure-caption">FIG 1.3 — same molecule, two probes (schematic)</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S4: magnetism -->
+  <section id="magnet" aria-labelledby="magnet-h">
+    <span class="kicker">1.4 — Superpower #2</span>
+    <h2 id="magnet-h">Neutrons feel magnetism</h2>
+    <div class="two-col flip">
+      <div>
+        <p>A neutron has no charge, but it is a tiny <strong>compass needle</strong> — it carries a magnetic moment. As it flies through a material it responds to the magnetic field of every atom it passes.</p>
+        <p>So neutrons don’t just map where atoms <em>are</em>; they map how each atom’s magnetism <em>points</em>. Much of what we know about magnetic materials — hard drives, MRI magnets, superconductors — was measured with neutrons. ISIS work includes the structures of high-temperature superconductors and the solid form of buckminsterfullerene.</p>
+      </div>
+      <figure class="figure-frame">
+        <svg viewBox="0 0 420 180" role="img" aria-label="A grid of atoms with alternating magnetic arrows, and a neutron with its own small compass arrow flying through.">
+          <g id="mag-grid"></g>
+          <g>
+            <circle cx="40" cy="90" r="7" fill="#4fd8eb"/>
+            <path d="M40,80 l0,-12 m-4,4 l4,-4 l4,4" stroke="#4fd8eb" stroke-width="2" fill="none"/>
+            <text x="52" y="118" class="atom-label">neutron — a flying compass</text>
+          </g>
+        </svg>
+        <figcaption class="figure-caption">FIG 1.4 — atomic magnets (violet/pink) and the probe that reads them</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- S5: muons -->
+  <section id="muons" aria-labelledby="muons-h">
+    <span class="kicker">1.5 — The other probe</span>
+    <h2 id="muons-h">Muons: reporters embedded in the material</h2>
+    <div class="two-col">
+      <div>
+        <p>A <strong style="color:var(--muon)">muon</strong> is a heavy, short-lived cousin of the electron. ISIS implants them into a sample <em>one at a time</em>. Each muon sits at an atomic site and its spin <strong>precesses</strong> — swings around like a gyroscope — at a rate set by the magnetic field <em>right there</em>, at that exact spot in the material.</p>
+        <p>After 2.2&nbsp;µs on average the muon decays and fires out a positron, <em>preferentially along its spin direction</em>. Collect a few million of those and you’ve read out the local magnetic field inside the material — a probe that texts you its orientation as it dies.</p>
+        <p>Muons excel at faint magnetism, superconductivity, and tracking lithium-ion motion in battery materials. A separate trick — the X-ray fingerprint a captured muon emits — reveals <em>elemental composition</em> without cutting a sample, gentle enough for museum pieces.</p>
+      </div>
+      <figure class="figure-frame">
+        <svg viewBox="0 0 420 230" role="img" aria-label="A muon inside a crystal precesses like a gyroscope, then decays, emitting a positron along its spin direction." id="muon-svg">
+          <g id="muon-scene"></g>
+        </svg>
+        <div class="control-row">
+          <label for="prec-b">local field</label>
+          <input type="range" id="prec-b" min="2" max="30" step="1" value="8">
+          <output id="prec-b-out">8 G</output>
+        </div>
+        <figcaption class="figure-caption">FIG 1.5 — stronger local field → faster precession of the muon’s spin arrow</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="quiz" aria-labelledby="quiz-h">
+    <span class="kicker">1.6 — Checkpoint</span>
+    <h2 id="quiz-h" style="margin-bottom: var(--sp-3)">Quick check</h2>
+    <div id="quiz-box"></div>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="facility.html"><span class="kicker">Next</span><h3>How ISIS works →</h3><p>Where these probes actually come from.</p></a>
+    <a class="cta-card" href="techniques.html"><span class="kicker">Related</span><h3>Nine ways to use the beam</h3><p>What people do with neutrons and muons all day.</p></a>
+  </nav>
+</main>
+</body>
+</html>

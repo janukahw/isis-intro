@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life of an experiment — ISIS Explained</title>
+<meta name="description" content="From proposal to published paper: the phases of an ISIS experiment and the people and software behind each one.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/experiment.js"></script>
+<style>
+  .phase-detail { margin-top: var(--sp-3); }
+  .phase-detail .who { color: var(--muon); }
+  .phase-detail .sw { color: var(--neutron); }
+  .phase-detail dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-500);
+    margin-top: var(--sp-2);
+  }
+  .phase-detail dd { margin: 0.2rem 0 0; font-size: var(--fs-small); }
+  .day-strip { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; margin-top: var(--sp-3); }
+  .day-strip .slot {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    text-align: center;
+    padding: var(--sp-2) 0.2rem;
+    border-radius: 6px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text-500);
+  }
+  .day-strip .slot.beam { border-color: var(--neutron); color: var(--text-100); }
+  .day-strip .slot.off { opacity: 0.55; }
+  #flow-svg text { font-family: "IBM Plex Mono", monospace; }
+</style>
+</head>
+<body>
+<main>
+  <div class="page-intro">
+    <span class="kicker">03 / Experiment</span>
+    <h1>Life of an experiment</h1>
+    <p class="lede">Beam time is one of the scarcest resources in science: ~1,200 experiments a year, allocated by peer review, scheduled months ahead, and over in a few days. Here’s the whole journey — and where the software you build or run fits into it.</p>
+  </div>
+
+  <!-- S1: lifecycle timeline -->
+  <section id="lifecycle" aria-labelledby="lc-h">
+    <span class="kicker">3.1 — Seven phases</span>
+    <h2 id="lc-h">Proposal to paper</h2>
+    <div class="timeline" id="phase-timeline" style="margin-top: var(--sp-3)" role="group" aria-label="Experiment phases — select one for details"></div>
+    <div class="panel phase-detail" id="phase-detail" aria-live="polite"></div>
+  </section>
+
+  <!-- S2: a beam day -->
+  <section id="beamday" aria-labelledby="bd-h">
+    <span class="kicker">3.2 — Why an hour matters</span>
+    <h2 id="bd-h">A day on an instrument</h2>
+    <div class="two-col">
+      <div>
+        <p>ISIS runs in <strong>cycles</strong> — stretches of several weeks with beam on around the clock, separated by maintenance shutdowns. During a cycle, an instrument is handed from one user team to the next with barely a gap; experiments run through the night with support staff on call.</p>
+        <p>A typical allocation is two to five days. There are no do-overs: if equipment, beam, or software loses six hours, that might be a quarter of someone’s experiment — possibly one they waited eight months for. It’s the closest science gets to a live production deployment.</p>
+      </div>
+      <div>
+        <div class="day-strip" aria-label="24 hours on an instrument, in 3-hour blocks">
+          <span class="slot beam">00–03 measure</span>
+          <span class="slot beam">03–06 measure</span>
+          <span class="slot beam">06–09 measure</span>
+          <span class="slot off">09–10 swap sample</span>
+          <span class="slot beam">10–15 measure</span>
+          <span class="slot off">15–16 recalibrate</span>
+          <span class="slot beam">16–21 measure</span>
+          <span class="slot beam">21–24 measure</span>
+        </div>
+        <p class="footnote">A run schedule is mostly “measure” — every other block is something the team tries to minimize.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- S3: data flow map -->
+  <section id="dataflow" aria-labelledby="df-h">
+    <span class="kicker">3.3 — Follow the bytes</span>
+    <h2 id="df-h">Where the data goes</h2>
+    <figure class="figure-frame" style="margin-top: var(--sp-3)">
+      <svg id="flow-svg" viewBox="0 0 780 210" role="img" aria-label="Data flow: instrument and DAQ write raw NeXus files to the archive and catalogue, reduction produces reduced data, analysis produces a publication with a DOI.">
+        <defs>
+          <marker id="farr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="#3a4d85"/>
+          </marker>
+        </defs>
+        <g font-size="10" text-anchor="middle">
+          <rect x="15" y="60" width="110" height="56" rx="8" fill="#151d3a" stroke="#3a4d85"/>
+          <text x="70" y="84" fill="#eef2ff">instrument</text>
+          <text x="70" y="99" fill="#8a96c2" font-size="8.5">control + DAQ</text>
+
+          <rect x="165" y="60" width="120" height="56" rx="8" fill="#101831" stroke="#4fd8eb"/>
+          <text x="225" y="84" fill="#4fd8eb">raw events</text>
+          <text x="225" y="99" fill="#8a96c2" font-size="8.5">NeXus / HDF5 files</text>
+
+          <rect x="325" y="60" width="115" height="56" rx="8" fill="#151d3a" stroke="#3a4d85"/>
+          <text x="382" y="84" fill="#eef2ff">archive</text>
+          <text x="382" y="99" fill="#8a96c2" font-size="8.5">+ catalogue, kept forever</text>
+
+          <rect x="480" y="60" width="115" height="56" rx="8" fill="#101831" stroke="#4fd8eb"/>
+          <text x="537" y="84" fill="#4fd8eb">reduction</text>
+          <text x="537" y="99" fill="#8a96c2" font-size="8.5">Mantid — often automatic</text>
+
+          <rect x="635" y="60" width="130" height="56" rx="8" fill="#151d3a" stroke="#ffb84d"/>
+          <text x="700" y="84" fill="#ffb84d">analysis → paper</text>
+          <text x="700" y="99" fill="#8a96c2" font-size="8.5">models, fits, DOI</text>
+
+          <g stroke="#3a4d85" stroke-width="1.5" marker-end="url(#farr)">
+            <line x1="125" y1="88" x2="161" y2="88"/>
+            <line x1="285" y1="88" x2="321" y2="88"/>
+            <line x1="440" y1="88" x2="476" y2="88"/>
+            <line x1="595" y1="88" x2="631" y2="88"/>
+          </g>
+
+          <text x="225" y="150" fill="#8a96c2" font-size="9">one run = millions to billions of events;</text>
+          <text x="225" y="164" fill="#8a96c2" font-size="9">every byte traceable to proposal + run number</text>
+          <text x="537" y="150" fill="#8a96c2" font-size="9">reduced data is what users actually take home —</text>
+          <text x="537" y="164" fill="#8a96c2" font-size="9">small, calibrated, in physical units</text>
+        </g>
+      </svg>
+      <figcaption class="figure-caption">FIG 3.3 — the pipeline every experiment’s bytes travel. raw files stay; reduced data travels; conclusions get published.</figcaption>
+    </figure>
+    <p class="footnote">Want the reduction step hands-on? <a href="data.html#playground">Drive the pipeline yourself →</a></p>
+  </section>
+
+  <section id="quiz" aria-labelledby="quiz-h">
+    <span class="kicker">3.4 — Checkpoint</span>
+    <h2 id="quiz-h" style="margin-bottom: var(--sp-3)">Quick check</h2>
+    <div id="quiz-box"></div>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="data.html"><span class="kicker">Next</span><h3>From counts to curves →</h3><p>The reduce-and-analyse phases, in detail and interactive.</p></a>
+    <a class="cta-card" href="facility.html"><span class="kicker">Back</span><h3>How ISIS works</h3><p>The machine all these experiments share.</p></a>
+  </nav>
+</main>
+</body>
+</html>

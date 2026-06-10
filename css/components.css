@@ -1,0 +1,421 @@
+/* Shared interactive components: panels, hotspots, quizzes, sliders,
+   playground step cards, stat callouts, figure frames. */
+
+@layer components {
+
+  /* ---------- Panels & figures ---------- */
+
+  .panel {
+    background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-4);
+    box-shadow: var(--shadow);
+  }
+
+  .figure-frame {
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    position: relative;
+  }
+  .figure-frame > figcaption,
+  .figure-caption {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    color: var(--text-500);
+    letter-spacing: 0.04em;
+    margin-top: var(--sp-2);
+  }
+
+  /* Corner ticks, like a technical drawing */
+  .figure-frame::before, .figure-frame::after {
+    content: "";
+    position: absolute;
+    inline-size: 14px;
+    block-size: 14px;
+    border: 1px solid var(--line-bright);
+    pointer-events: none;
+  }
+  .figure-frame::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+  .figure-frame::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+  .stat {
+    font-family: var(--font-mono);
+    color: var(--text-100);
+  }
+  .stat .num {
+    font-size: clamp(1.8rem, 1rem + 2.4vw, 2.8rem);
+    font-weight: 600;
+    color: var(--accent);
+    display: block;
+    line-height: 1.1;
+  }
+  .stat .label {
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-500);
+  }
+
+  .footnote {
+    font-size: var(--fs-small);
+    color: var(--text-500);
+    border-inline-start: 2px solid var(--line-bright);
+    padding-inline-start: var(--sp-2);
+    margin-top: var(--sp-3);
+  }
+
+  .two-col {
+    display: grid;
+    gap: var(--sp-4);
+    align-items: start;
+  }
+  @media (min-width: 56rem) {
+    .two-col { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .two-col.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+    .two-col.flip > :first-child { order: 2; }
+    .two-col.flip > :last-child { order: 1; }
+  }
+
+  .card-grid {
+    display: grid;
+    gap: var(--sp-3);
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+
+  /* ---------- Controls ---------- */
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+    margin-block: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+  }
+  .control-row label { color: var(--text-500); white-space: nowrap; }
+  .control-row output {
+    color: var(--accent);
+    min-inline-size: 6.5ch;
+    font-variant-numeric: tabular-nums;
+  }
+
+  input[type="range"] {
+    appearance: none;
+    flex: 1 1 10rem;
+    min-inline-size: 8rem;
+    block-size: 24px;
+    background: transparent;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    block-size: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--accent-dim), var(--accent));
+  }
+  input[type="range"]::-moz-range-track {
+    block-size: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--accent-dim), var(--accent));
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    inline-size: 18px;
+    block-size: 18px;
+    margin-top: -7px;
+    border-radius: 50%;
+    background: var(--text-100);
+    border: 2px solid var(--accent);
+    box-shadow: var(--glow-accent);
+  }
+  input[type="range"]::-moz-range-thumb {
+    inline-size: 14px;
+    block-size: 14px;
+    border-radius: 50%;
+    background: var(--text-100);
+    border: 2px solid var(--accent);
+    box-shadow: var(--glow-accent);
+  }
+  input[type="range"]:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.04em;
+    color: var(--text-100);
+    background: var(--ink-700);
+    border: 1px solid var(--line-bright);
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    min-block-size: 24px;
+  }
+  .btn:hover:not(:disabled) { background: var(--ink-600); }
+  .btn:active:not(:disabled) { background: var(--ink-800); transform: scale(0.97); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg-deep);
+    font-weight: 600;
+  }
+  .btn.primary:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--accent) 80%, white);
+  }
+  .btn.primary:active:not(:disabled) {
+    background: color-mix(in oklab, var(--accent) 70%, var(--ink-800));
+  }
+  .btn.ghost { background: transparent; }
+
+  .seg-toggle {
+    display: inline-flex;
+    border: 1px solid var(--line-bright);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .seg-toggle button {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    background: transparent;
+    color: var(--text-500);
+    border: 0;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+  }
+  .seg-toggle button:active { opacity: 0.8; }
+  .seg-toggle button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  .seg-toggle button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--bg-deep);
+    font-weight: 600;
+  }
+
+  /* ---------- SVG hotspots ---------- */
+
+  .hotspot {
+    cursor: pointer;
+  }
+  .hotspot .hit { fill: transparent; }
+  .hotspot:hover .hotspot-shape,
+  .hotspot:focus-visible .hotspot-shape,
+  .hotspot.active .hotspot-shape {
+    filter: drop-shadow(0 0 6px var(--accent));
+  }
+  .hotspot.active .hotspot-shape { stroke: var(--accent); stroke-width: 2; }
+  svg.has-active .hotspot:not(.active) { opacity: 0.38; }
+  .hotspot { transition: opacity 0.25s ease; }
+
+  .info-card {
+    background: var(--panel-raised);
+    border: 1px solid var(--line-bright);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    min-block-size: 9rem;
+  }
+  .info-card h3 { margin-bottom: var(--sp-1); }
+  .info-card .stat { margin-top: var(--sp-2); }
+  .info-card p { font-size: var(--fs-small); }
+
+  /* ---------- Quiz ---------- */
+
+  .quiz { display: grid; gap: var(--sp-3); }
+  .quiz-score {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--text-500);
+  }
+  .quiz-q {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+  }
+  .quiz-q legend, .quiz-q .q-text {
+    font-weight: 600;
+    color: var(--text-100);
+    margin-bottom: var(--sp-2);
+    font-family: var(--font-body);
+  }
+  .quiz-choices { display: grid; gap: var(--sp-1); }
+  .quiz-choice {
+    text-align: start;
+    background: var(--ink-800);
+    color: var(--text-300);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+  }
+  .quiz-choice:hover:not(:disabled) { border-color: var(--line-bright); color: var(--text-100); }
+  .quiz-choice:active:not(:disabled) { background: color-mix(in oklab, var(--accent) 12%, var(--ink-800)); }
+  .quiz-choice:disabled { cursor: default; }
+  .quiz-choice.correct {
+    border-color: var(--ok);
+    background: color-mix(in oklab, var(--ok) 16%, var(--ink-800));
+    color: var(--text-100);
+  }
+  .quiz-choice.wrong {
+    border-color: var(--bad);
+    background: color-mix(in oklab, var(--bad) 14%, var(--ink-800));
+  }
+  .quiz-why {
+    font-size: var(--fs-small);
+    color: var(--text-300);
+    margin-top: var(--sp-2);
+    padding-inline-start: var(--sp-2);
+    border-inline-start: 2px solid var(--ok);
+  }
+  .quiz-why.wrong { border-inline-start-color: var(--bad); }
+
+  /* ---------- Playground step cards ---------- */
+
+  .steps { display: grid; gap: var(--sp-2); }
+  .step-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    position: relative;
+    transition: border-color 0.3s ease, opacity 0.3s ease;
+  }
+  .step-card .step-no {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    color: var(--text-500);
+    letter-spacing: 0.15em;
+  }
+  .step-card h3 { font-family: var(--font-mono); font-size: 1rem; letter-spacing: 0.02em; }
+  .step-card p { font-size: var(--fs-small); margin-top: var(--sp-1); }
+  .step-card .step-actions { margin-top: var(--sp-2); display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
+
+  /* Locked: dim the chrome, not the copy — text must stay readable. */
+  .step-card[data-state="locked"] { opacity: 0.8; }
+  .step-card[data-state="locked"] .step-no,
+  .step-card[data-state="locked"] h3 { color: var(--text-500); }
+  .step-card[data-state="ready"] { border-color: var(--accent); box-shadow: var(--glow-accent); }
+  .step-card[data-state="done"] { border-color: var(--ok); }
+  .step-card[data-state="done"]::after {
+    content: "✓";
+    position: absolute;
+    top: var(--sp-2);
+    right: var(--sp-3);
+    color: var(--ok);
+    font-weight: 700;
+  }
+
+  .history-panel {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--sp-2) var(--sp-3);
+    min-block-size: 3rem;
+  }
+  .history-panel ol { margin: 0; padding-inline-start: 1.2rem; }
+  .history-panel li { margin-block: 0.3rem; color: var(--text-300); }
+  .history-panel li .args { color: var(--text-500); }
+  .history-panel .hp-title {
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-500);
+    margin-block: 0.4rem;
+  }
+
+  .result-card {
+    border: 1px solid var(--peak);
+    background: color-mix(in oklab, var(--peak) 9%, var(--panel));
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+  }
+  .result-card dt { color: var(--text-500); font-size: var(--fs-tiny); letter-spacing: 0.1em; text-transform: uppercase; }
+  .result-card dd { margin: 0 0 0.5rem; color: var(--peak); font-size: 1.1rem; }
+
+  /* ---------- CTA cards (story end + cross-links) ---------- */
+
+  .cta-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text-300);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    transition: border-color 0.25s ease, translate 0.25s ease;
+  }
+  .cta-card:hover { border-color: var(--accent); color: var(--text-300); }
+  @media (prefers-reduced-motion: no-preference) {
+    .cta-card:hover { translate: 0 -3px; }
+  }
+  .cta-card:focus-visible { border-radius: var(--radius); }
+  .cta-card .kicker { margin-bottom: var(--sp-1); }
+  .cta-card h3 { margin-bottom: var(--sp-1); }
+  .cta-card p { font-size: var(--fs-small); }
+
+  /* ---------- Timeline (experiment page) ---------- */
+
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: var(--sp-1);
+    counter-reset: phase;
+  }
+  .timeline-node {
+    counter-increment: phase;
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.04em;
+    text-align: center;
+    background: var(--panel);
+    color: var(--text-300);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--sp-2) var(--sp-1);
+    cursor: pointer;
+    position: relative;
+  }
+  .timeline-node::before {
+    content: "0" counter(phase);
+    display: block;
+    color: var(--text-500);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.2em;
+  }
+  .timeline-node:hover { border-color: var(--line-bright); color: var(--text-100); }
+  .timeline-node[aria-pressed="true"] {
+    border-color: var(--accent);
+    color: var(--text-100);
+    box-shadow: var(--glow-accent);
+  }
+  .timeline-node[aria-pressed="true"]::before { color: var(--accent); }
+
+  /* ---------- Technique cards ---------- */
+
+  .tech-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-3);
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .tech-card .instruments {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    color: var(--muon);
+    letter-spacing: 0.06em;
+  }
+  .tech-card .answers {
+    font-size: var(--fs-small);
+    color: var(--peak);
+    font-style: italic;
+  }
+}

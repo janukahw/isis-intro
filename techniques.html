@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nine ways to use the beam — ISIS Explained</title>
+<meta name="description" content="The scientific techniques at ISIS — diffraction, single crystal, SANS, reflectometry, spectroscopy, muons, imaging, irradiation — each with a hands-on interactive.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/plot.js"></script>
+<script defer src="js/synth.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/techniques.js"></script>
+<style>
+  .tech-grid { display: grid; gap: var(--sp-4); margin-top: var(--sp-4); }
+  @media (min-width: 62rem) { .tech-grid { grid-template-columns: 1fr 1fr; } }
+  .tech-plot { width: 100%; height: 210px; }
+  .tech-plot.sq { height: 250px; }
+  .compact-grid { display: grid; gap: var(--sp-3); margin-top: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+</style>
+</head>
+<body>
+<main>
+  <div class="page-intro">
+    <span class="kicker">06 / Techniques</span>
+    <h1>Nine ways to use the beam</h1>
+    <p class="lede">Every instrument at ISIS is a variation on one move — throw probes at a sample and study what comes out — but each technique asks a different question. Six you can play with below; three more in brief.</p>
+  </div>
+
+  <section aria-label="Interactive techniques">
+    <div class="tech-grid">
+
+      <!-- 1 powder diffraction -->
+      <article class="tech-card" id="powder">
+        <span class="kicker">Technique 1 — neutron diffraction (powder)</span>
+        <h3>Powder diffraction</h3>
+        <p class="answers">“What crystal structure is this — and is it stressed, strained, or changing phase?”</p>
+        <p style="font-size: var(--fs-small)">Millions of randomly-oriented crystal grains diffract the beam at angles set by their atomic spacings (Bragg’s law). The result is a fingerprint of peaks — move an atom, the fingerprint moves. Try squeezing the crystal lattice:</p>
+        <div class="control-row">
+          <label for="t-lattice">lattice size a</label>
+          <input type="range" id="t-lattice" min="3" max="7" step="0.05" value="5.43">
+          <output id="t-lattice-out">5.43 Å</output>
+        </div>
+        <canvas class="tech-plot" id="t-powder-plot"></canvas>
+        <p class="instruments">on instruments like WISH · GEM · POLARIS · ENGIN-X (engineering strain)</p>
+      </article>
+
+      <!-- 2 single crystal -->
+      <article class="tech-card" id="sxd">
+        <span class="kicker">Technique 2 — neutron diffraction (single crystal)</span>
+        <h3>Single crystal diffraction</h3>
+        <p class="answers">“Where exactly is every atom — including the hydrogens?”</p>
+        <p style="font-size: var(--fs-small)">One perfect crystal diffracts into sharp <strong>spots</strong>, each lighting up only when the crystal’s rotation satisfies Bragg’s condition. Map enough spots and you can place every atom in 3D. Rotate the crystal — then see what a powder “is”:</p>
+        <div class="control-row">
+          <label for="t-rot">crystal rotation</label>
+          <input type="range" id="t-rot" min="0" max="180" step="1" value="30">
+          <output id="t-rot-out">30°</output>
+          <button class="btn" type="button" id="t-powder-mode" aria-pressed="false">show as powder</button>
+        </div>
+        <canvas class="tech-plot sq" id="t-sxd-plot" aria-label="2D detector view: Bragg spots that move and flash as the crystal rotates; in powder mode they smear into rings."></canvas>
+        <p class="instruments">on instruments like SXD · WISH</p>
+      </article>
+
+      <!-- 3 SANS -->
+      <article class="tech-card" id="sans">
+        <span class="kicker">Technique 3 — small-angle scattering</span>
+        <h3>SANS</h3>
+        <p class="answers">“How big are the particles, pores or droplets in here — and what shape?”</p>
+        <p style="font-size: var(--fs-small)">Big objects (1–100s of nm: polymers, proteins, precipitates) scatter at <em>small</em> angles. The intensity curve I(Q) encodes size and shape — bigger particles push the pattern to smaller Q. Resize the spheres:</p>
+        <div class="control-row">
+          <label for="t-radius">sphere radius</label>
+          <input type="range" id="t-radius" min="10" max="500" step="5" value="60">
+          <output id="t-radius-out">60 Å</output>
+        </div>
+        <canvas class="tech-plot" id="t-sans-plot"></canvas>
+        <p class="instruments">on instruments like SANS2D · LOQ · ZOOM</p>
+      </article>
+
+      <!-- 4 reflectometry -->
+      <article class="tech-card" id="refl">
+        <span class="kicker">Technique 4 — reflectometry</span>
+        <h3>Neutron reflectometry</h3>
+        <p class="answers">“How thick are these layers, and what’s buried at the interfaces?”</p>
+        <p style="font-size: var(--fs-small)">Skim the beam off a flat film and the reflectivity ripples — waves bouncing off the top and bottom of each layer interfere. Fringe spacing reads out layer thickness: <strong>thicker film, tighter fringes</strong>. Used on coatings, membranes, magnetic multilayers:</p>
+        <div class="control-row">
+          <label for="t-thick">film thickness</label>
+          <input type="range" id="t-thick" min="50" max="500" step="5" value="150">
+          <output id="t-thick-out">150 Å</output>
+        </div>
+        <canvas class="tech-plot" id="t-refl-plot"></canvas>
+        <p class="instruments">on instruments like INTER · POLREF · OFFSPEC</p>
+      </article>
+
+      <!-- 5 spectroscopy -->
+      <article class="tech-card" id="spect">
+        <span class="kicker">Technique 5 — neutron spectroscopy</span>
+        <h3>Inelastic spectroscopy</h3>
+        <p class="answers">“How do the atoms move — vibrations, rotations, magnetic waves?”</p>
+        <p style="font-size: var(--fs-small)">Diffraction asks where atoms <em>are</em>; spectroscopy asks what they’re <em>doing</em>. A neutron can give energy to the sample (excite a vibration) or steal some — measure the energy change and you’ve recorded the material’s dynamics: how it conducts heat, stores hydrogen, or hosts exotic magnetism.</p>
+        <svg viewBox="0 0 420 150" role="img" aria-label="A neutron arrives with energy E, leaves with E minus ΔE, leaving the sample vibrating.">
+          <g font-family="IBM Plex Mono, monospace" font-size="10">
+            <line x1="20" y1="75" x2="170" y2="75" stroke="#4fd8eb" stroke-width="2"/>
+            <circle cx="170" cy="75" r="6" fill="#4fd8eb"/>
+            <text x="60" y="62" fill="#4fd8eb">in: energy E</text>
+            <circle cx="210" cy="75" r="11" fill="#eef2ff"/>
+            <g class="spect-wobble"><circle cx="210" cy="75" r="18" fill="none" stroke="#ffb84d" stroke-dasharray="4 4"/></g>
+            <line x1="222" y1="68" x2="392" y2="38" stroke="#6aa8ff" stroke-width="2"/>
+            <circle cx="392" cy="38" r="5" fill="#6aa8ff"/>
+            <text x="252" y="32" fill="#6aa8ff">out: E − ΔE (slower)</text>
+            <text x="210" y="122" fill="#ffb84d" text-anchor="middle">sample keeps ΔE — now it vibrates</text>
+          </g>
+        </svg>
+        <p class="instruments">on instruments like LET · MAPS · MARI · MERLIN · TOSCA</p>
+      </article>
+
+      <!-- 6 muons -->
+      <article class="tech-card" id="musr">
+        <span class="kicker">Technique 6 — muon spectroscopy (µSR)</span>
+        <h3>Muon spin rotation</h3>
+        <p class="answers">“What’s the magnetic field like <em>inside</em> — atom by atom, even when it’s faint?”</p>
+        <p style="font-size: var(--fs-small)">Implanted muons precess in the local field and tattle via their decay positrons. The wiggle frequency reads the field; how fast the wiggle dies reads its disorder. Turn the knobs:</p>
+        <div class="control-row">
+          <label for="t-field">field B</label>
+          <input type="range" id="t-field" min="0" max="50" step="1" value="15">
+          <output id="t-field-out">15 G</output>
+          <label for="t-relax">disorder λ</label>
+          <input type="range" id="t-relax" min="0" max="1" step="0.02" value="0.1">
+          <output id="t-relax-out">0.10 /µs</output>
+        </div>
+        <canvas class="tech-plot" id="t-muon-plot"></canvas>
+        <p class="instruments">on instruments like MuSR · HiFi · EMU — see <a href="probes.html#muons">how muons report</a></p>
+      </article>
+    </div>
+
+    <!-- compact cards -->
+    <div class="compact-grid">
+      <article class="tech-card" id="imaging">
+        <span class="kicker">Technique 7</span>
+        <h3>Neutron imaging</h3>
+        <svg viewBox="0 0 300 90" role="img" aria-label="A beam passes through an engine outline and casts a shadow image revealing the inside.">
+          <g stroke="#4fd8eb" stroke-width="1.4" opacity=".8">
+            <line x1="10" y1="30" x2="120" y2="30"/><line x1="10" y1="45" x2="120" y2="45"/><line x1="10" y1="60" x2="120" y2="60"/>
+          </g>
+          <rect x="122" y="18" width="60" height="56" rx="8" fill="#1f2a4f" stroke="#3a4d85"/>
+          <circle cx="152" cy="46" r="14" fill="none" stroke="#ffb84d"/>
+          <rect x="220" y="18" width="44" height="56" fill="#101831" stroke="#3a4d85"/>
+          <circle cx="242" cy="46" r="11" fill="none" stroke="#ffb84d" opacity=".8"/>
+          <text x="242" y="86" fill="#8a96c2" font-size="8.5" text-anchor="middle" font-family="IBM Plex Mono, monospace">shadow image</text>
+        </svg>
+        <p style="font-size: var(--fs-small)">X-ray-style radiography and 3D tomography, but with neutron superpowers: see water in a running fuel cell, oil in an engine, or inside a fossil — through solid metal, without harm. <span class="instruments">IMAT</span></p>
+      </article>
+
+      <article class="tech-card" id="chipir">
+        <span class="kicker">Technique 8</span>
+        <h3>Irradiation testing</h3>
+        <svg viewBox="0 0 300 90" role="img" aria-label="Neutrons rain on a computer chip.">
+          <g fill="#4fd8eb"><circle cx="60" cy="16" r="3"/><circle cx="110" cy="10" r="3"/><circle cx="160" cy="18" r="3"/><circle cx="210" cy="12" r="3"/></g>
+          <g stroke="#4fd8eb" stroke-width="1" opacity=".6"><line x1="60" y1="22" x2="60" y2="40"/><line x1="110" y1="16" x2="110" y2="40"/><line x1="160" y1="24" x2="160" y2="40"/><line x1="210" y1="18" x2="210" y2="40"/></g>
+          <rect x="40" y="44" width="200" height="30" rx="4" fill="#151d3a" stroke="#5fe8a0"/>
+          <g fill="#5fe8a0" font-size="8.5" font-family="IBM Plex Mono, monospace"><text x="140" y="63" text-anchor="middle">CPU / FPGA / SSD under test</text></g>
+        </svg>
+        <p style="font-size: var(--fs-small)">Cosmic-ray neutrons randomly flip bits in electronics at altitude and on the ground. ChipIr replays <em>years</em> of that exposure in hours, so chips for aircraft, cars and data centres can prove they fail safely. <span class="instruments">ChipIr</span></p>
+      </article>
+
+      <article class="tech-card" id="other">
+        <span class="kicker">Technique 9</span>
+        <h3>Total scattering &amp; elemental analysis</h3>
+        <svg viewBox="0 0 300 90" role="img" aria-label="A disordered cluster of atoms, and a muonic X-ray fingerprint bar code.">
+          <g fill="#1f2a4f" stroke="#6aa8ff">
+            <circle cx="60" cy="30" r="8"/><circle cx="85" cy="55" r="8"/><circle cx="45" cy="62" r="8"/><circle cx="100" cy="25" r="8"/><circle cx="120" cy="58" r="8"/>
+          </g>
+          <g stroke="#b78aff" stroke-width="3">
+            <line x1="190" y1="20" x2="190" y2="74"/><line x1="205" y1="32" x2="205" y2="74"/><line x1="226" y1="20" x2="226" y2="74"/><line x1="248" y1="40" x2="248" y2="74"/><line x1="262" y1="26" x2="262" y2="74"/>
+          </g>
+          <text x="226" y="86" fill="#8a96c2" font-size="8.5" text-anchor="middle" font-family="IBM Plex Mono, monospace">element fingerprint</text>
+        </svg>
+        <p style="font-size: var(--fs-small)">Total scattering reads the local structure of glasses and liquids, where there’s no neat crystal. And captured muons emit X-ray fingerprints that identify elements deep inside an object — gentle enough for Roman coins and meteorites. <span class="instruments">GEM · POLARIS (PDF) · negative muons</span></p>
+      </article>
+    </div>
+    <p class="footnote">Schematic curves throughout — real data has resolution effects and backgrounds these toys skip. The real technique pages: <a href="https://www.isis.stfc.ac.uk/techniques/" rel="external">isis.stfc.ac.uk/techniques</a>.</p>
+  </section>
+
+  <section id="quiz" aria-labelledby="quiz-h">
+    <span class="kicker">6.2 — Checkpoint</span>
+    <h2 id="quiz-h" style="margin-bottom: var(--sp-3)">Quick check</h2>
+    <div id="quiz-box"></div>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="data.html"><span class="kicker">Related</span><h3>From counts to curves</h3><p>How every one of these techniques gets its data reduced.</p></a>
+    <a class="cta-card" href="index.html"><span class="kicker">Start over</span><h3>The story →</h3><p>Proton pulse to published paper, in eight scenes.</p></a>
+  </nav>
+</main>
+</body>
+</html>
