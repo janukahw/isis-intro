@@ -136,6 +136,15 @@
         if (ev.key === "Escape" && active) showDefault();
       });
 
+      /* clicking anywhere outside the simulation figure (or its info card)
+         steps back out, same as Escape */
+      var frame = svg.closest(".figure-frame");
+      document.addEventListener("click", function (ev) {
+        if (!active) return;
+        if ((frame && frame.contains(ev.target)) || info.contains(ev.target)) return;
+        showDefault();
+      });
+
       showDefault(true);
     })();
 
@@ -697,8 +706,9 @@
         setState();
         kick();
       });
+      /* always fires a fresh pulse, then auto-pauses at the end of its cycle
+         — pressing it while free-running converts the sim to step mode */
       if (stepBtn) stepBtn.addEventListener("click", function () {
-        if (playing && !stepping) return;       // already free-running
         firePulse();
         cycleT = 0;
         stepping = true;
