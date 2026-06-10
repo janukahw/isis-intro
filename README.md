@@ -21,7 +21,7 @@ The site is deployed with **GitHub Pages** (deploy from branch: `main`, root) at
 
 | Page | What it covers | Headline interactive |
 |---|---|---|
-| `index.html` | The whole story: proton pulse → published paper, in 8 animated scenes | Looping time-of-flight race with logged arrival times |
+| `index.html` | The whole story: proton pulse → published paper, in 8 animated scenes plus an end-to-end recap | Looping time-of-flight race with logged arrival times |
 | `probes.html` | Why neutrons & muons are the right probes — no physics assumed | Scale zoomer (coin → atoms), X-ray vs neutron view toggle |
 | `facility.html` | How ISIS works: ion source, linac, synchrotron, targets, moderators | Clickable facility map, moderator spectrum picker |
 | `experiment.html` | Life of an experiment: proposal → beamtime → data → paper | 7-phase lifecycle timeline (with who/which-software per phase) |

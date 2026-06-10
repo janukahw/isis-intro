@@ -105,6 +105,9 @@
      loops in story.js; they simply never exist on the static page.) */
   .ring-energy .e1,
   .ring-energy .e2 { opacity: 0; }
+  /* recap interlude actors are loop-only; statically the figure is a
+     labelled map of the machine */
+  .rc-actor { opacity: 0; }
 
   @media (prefers-reduced-motion: no-preference) {
     .hero-pulse .bunch {
@@ -225,6 +228,100 @@
     /* (s6 detectors loop — neutron stream, tile flashes, log lines and the
        per-hit histogram build — is generated in story.js with WAAPI, since
        its ~30 actors and the tiles/bars themselves are JS-built.) */
+
+    /* recap interlude: the whole chain in one 14 s loop — inject, 2.5
+       accelerating laps, extraction, muons at the graphite, burst at the
+       tungsten, into the moderator, then three wavelengths race the flight
+       path (speed ratio 2:3:4, as in s5) and scatter onto the detectors. */
+    .rc-p1 { animation: rc-p1 14s linear infinite; }
+    @keyframes rc-p1 {
+      0%, 1%    { transform: translateX(0); opacity: 0; }
+      2.5%      { opacity: 1; }
+      6%        { transform: translateX(64px); opacity: 1; }
+      7%, 100%  { transform: translateX(64px); opacity: 0; }
+    }
+    .rc-p2 { animation: rc-p2 14s linear infinite; }
+    @keyframes rc-p2 {
+      0%, 5.5%  { transform: rotate(0.75turn); opacity: 0; }
+      6.5%      { opacity: 1; }
+      11%       { transform: rotate(1.15turn); }
+      15%       { transform: rotate(1.6turn); }
+      18.5%     { transform: rotate(2.15turn); }
+      21.5%     { transform: rotate(2.75turn); }
+      24%       { transform: rotate(3.25turn); opacity: 1; }
+      25%, 100% { transform: rotate(3.25turn); opacity: 0; }
+    }
+    .rc-p3 { animation: rc-p3 14s linear infinite; }
+    @keyframes rc-p3 {
+      0%, 24%     { transform: translateX(0); opacity: 0; }
+      25%         { opacity: 1; }
+      30%         { transform: translateX(64px); }
+      36.5%       { transform: translateX(137px); opacity: 1; }
+      37.5%, 100% { transform: translateX(137px); opacity: 0; }
+    }
+    .rc-mu { animation: rc-mu 14s linear infinite; }
+    @keyframes rc-mu {
+      0%, 30%   { transform: translateY(0); opacity: 0; }
+      32%       { opacity: 1; }
+      41%       { transform: translateY(-62px); opacity: 1; }
+      46%, 100% { transform: translateY(-78px); opacity: 0; }
+    }
+    .rc-burst { animation: rc-burst 14s linear infinite; }
+    @keyframes rc-burst {
+      0%, 36.5% { transform: scale(0); opacity: 0; }
+      38%       { opacity: 1; }
+      40.5%     { transform: scale(1); opacity: 1; }
+      45%, 100% { transform: scale(1); opacity: 0; }
+    }
+    .rc-nf { animation: rc-nf 14s linear infinite; }
+    @keyframes rc-nf {
+      0%, 37.5%   { transform: translateX(0); opacity: 0; }
+      38.5%       { opacity: 1; }
+      44%         { transform: translateX(44px); opacity: 1; }
+      46.5%, 100% { transform: translateX(44px); opacity: 0; }
+    }
+    .rc-r1 { animation: rc-r1 14s linear infinite; }
+    .rc-r2 { animation: rc-r2 14s linear infinite; }
+    .rc-r3 { animation: rc-r3 14s linear infinite; }
+    @keyframes rc-r1 {
+      0%, 49%   { transform: translate(0, 0); opacity: 0; }
+      50.5%     { opacity: 1; }
+      70%       { transform: translate(295px, 0); }
+      71.5%     { transform: translate(345px, -22px); opacity: 1; }
+      73%, 100% { transform: translate(345px, -22px); opacity: 0; }
+    }
+    @keyframes rc-r2 {
+      0%, 49%   { transform: translate(0, 0); opacity: 0; }
+      50.5%     { opacity: 1; }
+      79%       { transform: translate(295px, 0); }
+      80.5%     { transform: translate(357px, 0); opacity: 1; }
+      82%, 100% { transform: translate(357px, 0); opacity: 0; }
+    }
+    @keyframes rc-r3 {
+      0%, 49%   { transform: translate(0, 0); opacity: 0; }
+      50.5%     { opacity: 1; }
+      88%       { transform: translate(295px, 0); }
+      89.5%     { transform: translate(345px, 22px); opacity: 1; }
+      91%, 100% { transform: translate(345px, 22px); opacity: 0; }
+    }
+    .rc-d1 { animation: rc-d1 14s linear infinite; }
+    .rc-d2 { animation: rc-d2 14s linear infinite; }
+    .rc-d3 { animation: rc-d3 14s linear infinite; }
+    @keyframes rc-d1 {
+      0%, 71%   { filter: brightness(1); }
+      72%       { filter: brightness(2.6); }
+      76%, 100% { filter: brightness(1); }
+    }
+    @keyframes rc-d2 {
+      0%, 80.5%   { filter: brightness(1); }
+      81.5%       { filter: brightness(2.6); }
+      85.5%, 100% { filter: brightness(1); }
+    }
+    @keyframes rc-d3 {
+      0%, 89.5%   { filter: brightness(1); }
+      90.5%       { filter: brightness(2.6); }
+      94.5%, 100% { filter: brightness(1); }
+    }
     /* detector tiles: staggered fade-in when scene in view (histogram bars
        are driven per-hit by the story.js WAAPI loop instead) */
     body.js-anim #s6 .det-tile { opacity: 0.25; transition: opacity 0.3s ease; }
