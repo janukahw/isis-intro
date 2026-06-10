@@ -72,6 +72,8 @@
     text-transform: uppercase;
     color: var(--text-500);
   }
+  /* unit symbols keep their case — uppercasing turns µA into ΜA (reads as mega-amps) */
+  .stat .label .unit { text-transform: none; }
 
   .footnote {
     font-size: var(--fs-small);

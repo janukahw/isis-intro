@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inside Target Station 2 — ISIS Explained</title>
-<meta name="description" content="Target Station 2 at ISIS: the cold-neutron station — one pulse in five, liquid hydrogen and solid methane moderators, and instruments built for soft matter, biology and advanced materials.">
+<meta name="description" content="An animated plan view of ISIS Target Station 2: every fifth proton pulse switched out of EPB1, down 143 m of new beamline, into a tantalum-clad tungsten cylinder serving the coldest neutrons on site to eleven instruments.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,9 +13,40 @@
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
 <script defer src="js/nav.js"></script>
+<script defer src="js/synth.js"></script>
 <script defer src="js/quiz.js"></script>
 <script defer src="js/ts2.js"></script>
 <style>
+  /* The synoptic display: static SVG map + transparent canvas overlay for
+     the moving particles. On narrow screens the map scrolls sideways inside
+     its frame instead of shrinking the labels into illegibility. */
+  .sim-scroll { overflow-x: auto; }
+  .sim-stage { position: relative; min-inline-size: 62rem; }
+  .sim-stage svg { display: block; width: 100%; height: auto; }
+  .sim-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #ts2-svg text { font-family: "IBM Plex Mono", monospace; }
+  /* the shared active-hotspot stroke is meant for shapes — inherited onto
+     9.5px labels it outlines the glyphs into unreadable blobs */
+  #ts2-svg .hotspot.active .hotspot-shape text { stroke: none; fill: var(--text-100); }
+
+  .sim-hud {
+    display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3);
+    font-family: var(--font-mono); font-size: var(--fs-tiny);
+    letter-spacing: 0.08em; color: var(--text-500);
+    margin-top: var(--sp-2);
+  }
+  .sim-hud b {
+    color: var(--accent); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .sim-hud .hud-state { color: var(--peak); }
+
+  /* idle breathing of the target core (static page keeps the plain glyph) */
+  @media (prefers-reduced-motion: no-preference) {
+    .ts2-core { animation: ts2-core-breathe 2.5s ease-in-out infinite; }
+  }
+  @keyframes ts2-core-breathe { 50% { opacity: 0.55; } }
+
   .roster-card .instruments { font-family: var(--font-mono); font-size: var(--fs-tiny); color: var(--neutron); letter-spacing: 0.06em; }
   .roster-card p { font-size: var(--fs-small); margin-top: var(--sp-1); }
 </style>
@@ -36,12 +67,6 @@
   </div>
 </header>
 <main id="main">
-  <div class="page-intro">
-    <span class="kicker">02 / Facility — Target Station 2</span>
-    <h1>Inside Target Station 2</h1>
-    <p class="lede">Opened in 2008, TS2 takes one proton pulse in five and spends it differently: everything about the station — its moderators, its guides, its instruments — is tuned for <strong>cold, long-wavelength neutrons</strong>, the kind that resolve polymers, proteins, membranes and other big, soft structures.</p>
-  </div>
-
   <nav class="subnav" aria-label="Facility sections">
     <span class="subnav-label">FACILITY</span>
     <a href="facility.html">OVERVIEW</a>
@@ -49,20 +74,208 @@
     <a href="ts2.html" aria-current="page">TARGET STATION 2</a>
   </nav>
 
+  <div class="page-intro">
+    <span class="kicker">02 / Facility — Target Station 2</span>
+    <h1>Inside Target Station 2</h1>
+    <p class="lede">Opened in 2008, TS2 takes one proton pulse in five and spends it differently: everything about the station — its moderators, its guides, its instruments — is tuned for <strong>cold, long-wavelength neutrons</strong>, the kind that resolve polymers, proteins, membranes and other big, soft structures. Below, the hall is live: watch the fifth pulse turn off the main line, then step through what happens on the real clock.</p>
+  </div>
+
+  <!-- S1: the live hall -->
+  <section id="hall" aria-labelledby="hall-h">
+    <span class="kicker">TS2 · 1 — The hall, live</span>
+    <h2 id="hall-h">A working plan view</h2>
+    <div style="margin-top: var(--sp-3)">
+      <figure class="figure-frame">
+        <div class="sim-scroll" role="region" aria-label="Plan view of Target Station 2 — scrolls sideways on small screens" tabindex="0">
+          <div class="sim-stage">
+            <svg id="ts2-svg" viewBox="0 0 1200 660" role="group" aria-label="Schematic plan of Target Station 2: the EPB1 proton beamline crosses the top of the drawing, carrying four of every five pulses onward to the muon target and TS1; slow kicker magnets switch every fifth pulse into the curved EPB2 beamline, which descends 143 metres to a tantalum-clad tungsten cylinder at the centre of a shielded monolith, where a liquid hydrogen moderator, a solid methane moderator and a beryllium reflector feed eleven neutron beamlines. Click each highlighted part for details.">
+              <defs>
+                <pattern id="ts2grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M40,0 H0 V40" fill="none" stroke="#15203f" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="1200" height="660" fill="url(#ts2grid)" opacity="0.55"/>
+
+              <!-- drawing furniture -->
+              <g font-size="11" letter-spacing="2" fill="#8a96c2">
+                <text x="24" y="30">TS2 — TARGET HALL · PLAN VIEW</text>
+              </g>
+              <text x="1176" y="30" fill="#8a96c2" font-size="9.5" text-anchor="end" letter-spacing="1.5">SCHEMATIC · NOT TO SCALE</text>
+              <g font-size="9.5" fill="#8a96c2">
+                <text x="24" y="608"><tspan fill="#ff5d8f">●</tspan> protons</text>
+                <text x="24" y="626"><tspan fill="#4fd8eb">●</tspan> neutrons · colour = moderator</text>
+              </g>
+
+              <!-- 1 EPB1 through line -->
+              <g class="hotspot" data-spot="epb1" tabindex="0" role="button" aria-label="EPB1 — the proton line that passes by toward the muon target and TS1">
+                <g class="hotspot-shape">
+                  <line x1="20" y1="70" x2="1180" y2="70" stroke="#233055" stroke-width="6"/>
+                </g>
+                <text x="24" y="56" fill="#ff5d8f" font-size="10">EPB1 · 800 MeV protons · 50 pulses a second</text>
+                <text x="1176" y="56" fill="#8a96c2" font-size="10" text-anchor="end">40 a second carry on to the muon target &amp; TS1 →</text>
+                <rect class="hit" x="15" y="42" width="190" height="56" fill="transparent"/>
+                <rect class="hit" x="640" y="42" width="540" height="50" fill="transparent"/>
+              </g>
+
+              <!-- 2 slow kickers + septum -->
+              <g class="hotspot" data-spot="kick" tabindex="0" role="button" aria-label="Slow kicker magnets and septum — the 1 in 5 switch">
+                <g class="hotspot-shape">
+                  <rect x="222" y="59" width="13" height="22" rx="2" fill="#151d3a" stroke="#ff5d8f"/>
+                  <rect x="240" y="59" width="13" height="22" rx="2" fill="#151d3a" stroke="#ff5d8f"/>
+                  <line x1="263" y1="58" x2="275" y2="82" stroke="#0c1222" stroke-width="4"/>
+                </g>
+                <text x="40" y="106" fill="#ff5d8f" font-size="10">slow kickers K1·K2 + septum</text>
+                <text x="40" y="122" fill="#8a96c2" font-size="10">armed before every 5th pulse</text>
+                <rect class="hit" x="208" y="42" width="80" height="56" fill="transparent"/>
+                <rect class="hit" x="30" y="92" width="180" height="40" fill="transparent"/>
+              </g>
+
+              <!-- 3 EPB2 — visible curve stops at the monolith; the hidden
+                   sampler path continues to the target face for the sim -->
+              <g class="hotspot" data-spot="epb2" tabindex="0" role="button" aria-label="Extracted proton beamline EPB2 — 143 metres to the TS2 target">
+                <path class="hotspot-shape" d="M262,70 C 320,96 360,160 390,240 C 410,295 440,340 500,360 C 540,372 580,375 631,375" fill="none" stroke="#233055" stroke-width="6"/>
+                <path data-ppath="epb2" d="M262,70 C 320,96 360,160 390,240 C 410,295 440,340 500,360 C 540,372 580,375 631,375 L 757,375" fill="none" stroke="none"/>
+                <text x="404" y="250" fill="#ff5d8f" font-size="10">EPB2 · 143 m · 57 magnets</text>
+                <text x="404" y="266" fill="#8a96c2" font-size="10">drops 1.5 m · bends 30° left</text>
+                <rect class="hit" x="300" y="100" width="120" height="180" fill="transparent"/>
+                <rect class="hit" x="420" y="300" width="110" height="70" fill="transparent"/>
+              </g>
+
+              <!-- 4 proton beam window -->
+              <g class="hotspot" data-spot="window" tabindex="0" role="button" aria-label="Proton beam window">
+                <rect class="hotspot-shape" x="556" y="362" width="6" height="26" fill="#151d3a" stroke="#c0c9e8"/>
+                <text x="560" y="412" fill="#8a96c2" font-size="9" text-anchor="middle">0.5 mm Al window</text>
+                <rect class="hit" x="536" y="346" width="48" height="74" fill="transparent"/>
+              </g>
+
+              <!-- 5 shielding monolith -->
+              <g class="hotspot" data-spot="monolith" tabindex="0" role="button" aria-label="Shielding monolith">
+                <g class="hotspot-shape">
+                  <path d="M948.9,309.2 L855.8,216.1 L724.2,216.1 L631.1,309.2 L631.1,440.8 L724.2,533.9 L855.8,533.9 L948.9,440.8 Z" fill="#101831" stroke="#3a4d85" stroke-width="2"/>
+                  <path d="M928.6,317.6 L847.4,236.4 L732.6,236.4 L651.4,317.6 L651.4,432.4 L732.6,513.6 L847.4,513.6 L928.6,432.4 Z" fill="#0a1024" stroke="#233055" stroke-width="1.5"/>
+                </g>
+                <text x="790" y="529" fill="#8a96c2" font-size="10" text-anchor="middle">steel + concrete monolith</text>
+                <path class="hit" d="M948.9,309.2 L855.8,216.1 L724.2,216.1 L631.1,309.2 L631.1,440.8 L724.2,533.9 L855.8,533.9 L948.9,440.8 Z" fill="transparent"/>
+              </g>
+
+              <!-- beam channel through the shielding -->
+              <line x1="631" y1="375" x2="757" y2="375" stroke="#1f2a4f" stroke-width="3" aria-hidden="true"/>
+
+              <!-- 6 north beamlines -->
+              <g class="hotspot" data-spot="ports" tabindex="0" role="button" aria-label="North beamlines — SANS2D, ZOOM, LARMOR, OFFSPEC and INTER">
+                <g class="hotspot-shape" font-size="9.5" text-anchor="middle">
+                  <g data-port="SANS2D"><line x1="649.7" y1="294" x2="583.9" y2="256" stroke="#2c3a6b" stroke-width="2"/><rect x="561" y="241" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="570" y="235" fill="#8a96c2">SANS2D</text></g>
+                  <g data-port="ZOOM"><line x1="709" y1="234.7" x2="671" y2="168.9" stroke="#2c3a6b" stroke-width="2"/><rect x="654" y="148" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="663" y="142" fill="#8a96c2">ZOOM</text></g>
+                  <g data-port="LARMOR"><line x1="790" y1="213" x2="790" y2="137" stroke="#2c3a6b" stroke-width="2"/><rect x="781" y="114" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="790" y="108" fill="#8a96c2">LARMOR</text></g>
+                  <g data-port="OFFSPEC"><line x1="871" y1="234.7" x2="909" y2="168.9" stroke="#2c3a6b" stroke-width="2"/><rect x="908" y="148" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="917" y="142" fill="#8a96c2">OFFSPEC</text></g>
+                  <g data-port="INTER"><line x1="930.3" y1="294" x2="996.1" y2="256" stroke="#2c3a6b" stroke-width="2"/><rect x="1001" y="241" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="1010" y="235" fill="#8a96c2">INTER</text></g>
+                </g>
+                <path class="hit" d="M538.9,230 L645,123.9 L790,85 L935,123.9 L1041.1,230 L935.5,291 L874,229.5 L790,207 L706,229.5 L644.5,291 Z" fill="transparent"/>
+              </g>
+
+              <!-- 7 south beamlines -->
+              <g class="hotspot" data-spot="ports" tabindex="0" role="button" aria-label="South beamlines — POLREF, WISH, NIMROD, LET, IMAT and ChipIr">
+                <g class="hotspot-shape" font-size="9.5" text-anchor="middle">
+                  <g data-port="POLREF"><line x1="649.7" y1="456" x2="583.9" y2="494" stroke="#2c3a6b" stroke-width="2"/><rect x="561" y="495" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="570" y="523" fill="#8a96c2">POLREF</text></g>
+                  <g data-port="WISH"><line x1="675.4" y1="489.6" x2="621.7" y2="543.3" stroke="#2c3a6b" stroke-width="2"/><rect x="601.4" y="547.6" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="610.4" y="575.6" fill="#8a96c2">WISH</text></g>
+                  <g data-port="NIMROD"><line x1="748.1" y1="531.5" x2="728.4" y2="604.9" stroke="#2c3a6b" stroke-width="2"/><rect x="715.3" y="613.3" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="724.3" y="641.3" fill="#8a96c2">NIMROD</text></g>
+                  <g data-port="LET"><line x1="790" y1="537" x2="790" y2="613" stroke="#2c3a6b" stroke-width="2"/><rect x="781" y="622" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="790" y="650" fill="#8a96c2">LET</text></g>
+                  <g data-port="IMAT"><line x1="831.9" y1="531.5" x2="851.6" y2="604.9" stroke="#2c3a6b" stroke-width="2"/><rect x="846.7" y="613.3" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="855.7" y="641.3" fill="#8a96c2">IMAT</text></g>
+                  <g data-port="ChipIr"><line x1="904.6" y1="489.6" x2="958.3" y2="543.3" stroke="#2c3a6b" stroke-width="2"/><rect x="960.6" y="547.6" width="18" height="14" rx="3" fill="#151d3a" stroke="#3a4d85"/><text x="969.6" y="575.6" fill="#8a96c2">ChipIr</text></g>
+                </g>
+                <path class="hit" d="M538.9,520 L645,626.1 L790,658 L935,626.1 L1041.1,520 L935.5,459 L874,520.5 L790,543 L706,520.5 L644.5,459 Z" fill="transparent"/>
+              </g>
+
+              <!-- 8 beryllium reflector -->
+              <g class="hotspot" data-spot="refl" tabindex="0" role="button" aria-label="Beryllium reflector">
+                <circle class="hotspot-shape" cx="790" cy="375" r="80" fill="#13203e" stroke="#2c3a6b" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <text x="790" y="470" fill="#8a96c2" font-size="9" text-anchor="middle">Ni-plated Be reflector</text>
+                <circle class="hit" cx="790" cy="375" r="84" fill="transparent"/>
+              </g>
+
+              <!-- 9 moderators -->
+              <g class="hotspot" data-spot="mods" tabindex="0" role="button" aria-label="Moderators — liquid hydrogen and solid methane">
+                <g class="hotspot-shape">
+                  <g data-mod="20" data-color="#6aa8ff"><rect x="778" y="330" width="24" height="16" rx="3" fill="#13203e" stroke="#6aa8ff"/></g>
+                  <g data-mod="47" data-color="#5fd8c8"><rect x="778" y="414" width="24" height="16" rx="3" fill="#13203e" stroke="#5fd8c8"/></g>
+                </g>
+                <g font-size="9">
+                  <text x="770" y="342" fill="#6aa8ff" text-anchor="end">H₂ 20 K · coupled</text>
+                  <text x="770" y="426" fill="#5fd8c8" text-anchor="end">CH₄ solid · 47 K · decoupled</text>
+                </g>
+                <rect class="hit" x="664" y="324" width="142" height="28" fill="transparent"/>
+                <rect class="hit" x="606" y="408" width="200" height="28" fill="transparent"/>
+              </g>
+
+              <!-- 10 tungsten target -->
+              <g class="hotspot" data-spot="target" tabindex="0" role="button" aria-label="Tantalum-clad tungsten target cylinder">
+                <g class="hotspot-shape ts2-core">
+                  <rect x="762" y="362" width="56" height="26" rx="11" fill="#2c3a6b" stroke="#ffb84d" stroke-width="1.5"/>
+                  <line x1="774" y1="364" x2="774" y2="386" stroke="#ffb84d" stroke-width="1" opacity="0.5"/>
+                </g>
+                <text x="790" y="357" fill="#ffb84d" font-size="9" text-anchor="middle">Ta-clad W · 68 mm</text>
+                <rect class="hit" x="754" y="354" width="72" height="42" fill="transparent"/>
+              </g>
+            </svg>
+            <canvas id="ts2-canvas" aria-hidden="true"></canvas>
+          </div>
+        </div>
+        <div class="control-row" role="group" aria-label="Simulation controls">
+          <button type="button" class="btn primary" id="sim-toggle">⏸ PAUSE</button>
+          <button type="button" class="btn" id="sim-step">FIRE ONE PULSE</button>
+          <span class="seg-toggle" role="group" aria-label="Simulation speed">
+            <button type="button" data-speed="0.5" aria-pressed="false">0.5×</button>
+            <button type="button" data-speed="1" aria-pressed="true">1×</button>
+            <button type="button" data-speed="2" aria-pressed="false">2×</button>
+          </span>
+        </div>
+        <div class="sim-hud" aria-hidden="true">
+          <span>PULSE <b id="hud-pulse">0</b></span>
+          <span>→ TS1 <b id="hud-ts1">0</b></span>
+          <span>→ TS2 <b id="hud-ts2">0</b></span>
+          <span>COLD NEUTRONS MADE <b id="hud-n">0</b></span>
+          <span class="hud-state" id="hud-state">RUNNING</span>
+        </div>
+        <figcaption class="figure-caption">FIG TS2.1 — schematic plan, not to scale; port angles and the port-to-moderator pairing are illustrative. The animation slows each stage by a different amount (the proton hop by ~×1,000,000; the neutron drift by ~×100) so everything is visible at once. Counts are real ISIS figures; neutrons-per-proton uses the facility-wide ~15–20 spallation yield.</figcaption>
+      </figure>
+      <div class="info-card" id="hall-info" aria-live="polite" style="margin-top: var(--sp-3)">
+        <h3>Pick a part of the hall</h3>
+        <p>Click any highlighted region — or press Tab and Enter — to see what it does. Click again or press Escape to step back out.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- S2: one pulse, on the real clock -->
+  <section id="pulse" aria-labelledby="pulse-h">
+    <span class="kicker">TS2 · 2 — One pulse, on the real clock</span>
+    <h2 id="pulse-h">100 milliseconds in the life of TS2</h2>
+    <p style="max-width: 56ch">The animation above cheats time so you can see everything at once. Here is the same story at honest timescales — click through the five beats between one TS2 pulse and the next.</p>
+    <div class="timeline" id="pulse-timeline" style="margin-top: var(--sp-3)" role="group" aria-label="Pulse timeline">
+      <button type="button" class="timeline-node" data-beat="0" aria-pressed="true">the switch</button>
+      <button type="button" class="timeline-node" data-beat="1" aria-pressed="false">impact</button>
+      <button type="button" class="timeline-node" data-beat="2" aria-pressed="false">deep freeze</button>
+      <button type="button" class="timeline-node" data-beat="3" aria-pressed="false">the slow flight</button>
+      <button type="button" class="timeline-node" data-beat="4" aria-pressed="false">again</button>
+    </div>
+    <div class="info-card" id="pulse-info" aria-live="polite" style="margin-top: var(--sp-3)"></div>
+  </section>
+
+  <!-- S3: vitals -->
   <section id="vitals" aria-labelledby="vitals-h">
-    <span class="kicker">TS2 · 1 — The vitals</span>
+    <span class="kicker">TS2 · 3 — The vitals</span>
     <h2 id="vitals-h">Same accelerator, different recipe</h2>
     <div class="card-grid" style="margin-top: var(--sp-3)">
       <div class="panel"><p class="stat"><span class="num">10 /s</span><span class="label">pulses received — 1 of every 5</span></p></div>
-      <div class="panel"><p class="stat"><span class="num">2008</span><span class="label">first neutrons — ISIS’s second station</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">2008</span><span class="label">first neutrons — 3 August, seen on INTER</span></p></div>
       <div class="panel"><p class="stat"><span class="num">H₂ + CH₄</span><span class="label">liquid hydrogen &amp; solid methane moderators</span></p></div>
-      <div class="panel"><p class="stat"><span class="num">~40 kW</span><span class="label">beam power — rate traded for a colder spectrum</span></p></div>
+      <div class="panel"><p class="stat"><span class="num">~32 kW</span><span class="label">beam power on target — TS1 runs ~160 kW</span></p></div>
     </div>
     <p style="max-width: 56ch; margin-top: var(--sp-3)">Fewer pulses per second sounds like a downgrade — it’s the point. A 10&nbsp;Hz frame is 100&nbsp;ms long, so slow, long-wavelength neutrons have time to reach the detectors before the next pulse starts the clock again. Pair that with the coldest moderators on site and you get beams TS1 can’t serve.</p>
   </section>
 
+  <!-- S4: instrument suite -->
   <section id="suite" aria-labelledby="suite-h">
-    <span class="kicker">TS2 · 2 — Who drinks from it</span>
+    <span class="kicker">TS2 · 4 — Who drinks from it</span>
     <h2 id="suite-h">The instrument suite</h2>
     <div class="card-grid" style="margin-top: var(--sp-3)">
       <div class="panel roster-card">
@@ -83,23 +296,14 @@
       <div class="panel roster-card">
         <h3>Imaging &amp; irradiation</h3>
         <p class="instruments">IMAT · CHIPIR</p>
-        <p>Neutron radiography/tomography (IMAT) and deliberate chip irradiation to test how electronics survive cosmic-ray neutrons (CHIPIR).</p>
+        <p>Neutron radiography/tomography (IMAT) and deliberate chip irradiation to test how electronics survive cosmic-ray neutrons (ChipIr).</p>
       </div>
     </div>
-    <p class="footnote">Roster simplified — see the <a href="techniques.html">techniques page</a> for what each instrument type measures.</p>
-  </section>
-
-  <section id="hall" aria-labelledby="hall-h">
-    <span class="kicker">TS2 · 3 — The hall</span>
-    <h2 id="hall-h">Want the live view?</h2>
-    <p style="max-width: 56ch">Target Station 1’s tab has a working plan view of its hall — proton pulses landing, muons peeling off, neutrons racing down beamlines in real relative speeds. A TS2 hall view in the same style is the natural next build for this page.</p>
-    <p style="margin-top: var(--sp-3)">
-      <a class="btn primary" href="ts1.html" style="text-decoration: none; display: inline-block">▶&nbsp; ENTER TARGET STATION 1 — LIVE HALL VIEW</a>
-    </p>
+    <p class="footnote">Roster simplified — seven instruments opened the station in 2009, and four more (ChipIr first) were funded in March 2011. See the <a href="techniques.html">techniques page</a> for what each instrument type measures.</p>
   </section>
 
   <section id="quiz" aria-labelledby="quiz-h">
-    <span class="kicker">TS2 · 4 — Checkpoint</span>
+    <span class="kicker">TS2 · 5 — Checkpoint</span>
     <h2 id="quiz-h" style="margin-bottom: var(--sp-3)">Quick check</h2>
     <div id="quiz-box"></div>
   </section>

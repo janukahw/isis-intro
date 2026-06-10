@@ -169,7 +169,7 @@
         {
           title: "T + 2–50 ms — the flight",
           body: "Out in the beamlines the pulse spreads out by speed: 252.78 µs per metre of flight per ångström of wavelength. Arrival time tells you the wavelength — that is the whole measuring trick. At HRPD’s 96 m, a 2 Å neutron clocks in ~49 ms after impact, two pulses behind the one that made it; choppers keep the generations from mixing.",
-          stat: "252.78", label: "µs per metre per ångström"
+          stat: "252.78", label: "microseconds per metre per ångström"
         },
         {
           title: "T + 25 ms — again",
