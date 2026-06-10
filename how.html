@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How this site was made — ISIS Explained</title>
+<meta name="description" content="How an AI coding agent (Anthropic's Claude Code) built this site from plain-English prompts — the toolchain, the real prompts, and the verify loop that kept it honest.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%234fd8eb'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<script defer src="js/nav.js"></script>
+<style>
+  /* toolchain cards */
+  .tool-card h3 { font-family: var(--font-mono); font-size: 1rem; letter-spacing: 0.02em; }
+  .tool-card .tag {
+    font-family: var(--font-mono);
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-500);
+    display: block;
+    margin-bottom: var(--sp-1);
+  }
+  .tool-card p { font-size: var(--fs-small); margin-top: var(--sp-1); }
+  .tool-card code { color: var(--accent); font-size: var(--fs-tiny); }
+
+  /* the conversation log */
+  .how-chat {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .how-chat .q {
+    color: var(--text-100);
+    border-inline-start: 2px solid var(--proton);
+    padding-inline-start: var(--sp-2);
+  }
+  .how-chat .q::before { content: "▸ "; color: var(--proton); }
+  .how-chat .a {
+    color: var(--text-500);
+    padding-inline-start: var(--sp-3);
+  }
+  .how-chat .a::before { content: "→ "; color: var(--accent); }
+
+  /* stat receipts */
+  .stat-grid {
+    display: grid;
+    gap: var(--sp-3);
+    grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+    margin-top: var(--sp-3);
+  }
+
+  /* the prompt → build → verify → ship loop */
+  @media (prefers-reduced-motion: no-preference) {
+    .lp-dot { animation: lp-dot 10s linear infinite; }
+    @keyframes lp-dot {
+      0%        { transform: translate(0, 0); }
+      22%       { transform: translate(160px, 0); }
+      44%       { transform: translate(320px, 0); }
+      66%       { transform: translate(480px, 0); }
+      74%       { transform: translate(480px, 64px); }
+      90%       { transform: translate(0, 64px); }
+      98%, 100% { transform: translate(0, 0); }
+    }
+    .lp-1 { animation: lp-1 10s linear infinite; }
+    .lp-2 { animation: lp-2 10s linear infinite; }
+    .lp-3 { animation: lp-3 10s linear infinite; }
+    .lp-4 { animation: lp-4 10s linear infinite; }
+    @keyframes lp-1 { 0%, 8% { filter: brightness(1.7); } 14%, 92% { filter: brightness(1); } 96%, 100% { filter: brightness(1.7); } }
+    @keyframes lp-2 { 0%, 16% { filter: brightness(1); } 20%, 30% { filter: brightness(1.7); } 36%, 100% { filter: brightness(1); } }
+    @keyframes lp-3 { 0%, 38% { filter: brightness(1); } 42%, 52% { filter: brightness(1.7); } 58%, 100% { filter: brightness(1); } }
+    @keyframes lp-4 { 0%, 60% { filter: brightness(1); } 64%, 74% { filter: brightness(1.7); } 80%, 100% { filter: brightness(1); } }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="techniques.html">TECHNIQUES</a>
+      <a href="data.html">DATA</a>
+      <a href="experiment.html">EXPERIMENT</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="page-intro">
+    <span class="kicker">Meta / the making of</span>
+    <h1>Built by talking to a machine.</h1>
+    <p class="lede">Every page, diagram and animation on this site was written by an AI coding agent — Anthropic’s <strong>Claude Code</strong> — steered in plain English by one human. No frameworks, no build step, no designer, no copywriter. This page shows the receipts: the toolchain, the loop, and the actual prompts.</p>
+  </div>
+
+  <!-- H1: toolchain -->
+  <section id="toolchain" aria-labelledby="toolchain-h">
+    <span class="kicker">H.1 — What was in the room</span>
+    <h2 id="toolchain-h">The toolchain</h2>
+    <div class="card-grid" style="margin-top: var(--sp-3)">
+      <div class="panel tool-card">
+        <span class="tag">agent</span>
+        <h3>Claude Code</h3>
+        <p>An AI agent that lives in the terminal: it reads the whole repo, edits files, runs commands, drives a browser, and commits — while the human reviews diffs and steers in plain English.</p>
+      </div>
+      <div class="panel tool-card">
+        <span class="tag">model</span>
+        <h3>Claude Fable 5</h3>
+        <p>The Anthropic model behind the work — every commit in the repo, from the very first to this page, is co-signed, so the claim is checkable: <code>git log → Co-Authored-By: Claude Fable 5</code>.</p>
+      </div>
+      <div class="panel tool-card">
+        <span class="tag">constitution</span>
+        <h3>CLAUDE.md</h3>
+        <p>A rules file the agent re-reads every session: vanilla HTML/CSS/JS only, zero dependencies, must work from <code>file://</code>, accessibility is a gate, every physics fact traced to a source. The agent polices itself against it.</p>
+      </div>
+      <div class="panel tool-card">
+        <span class="tag">plugins · skills</span>
+        <h3>frontend-design + modern-web-guidance</h3>
+        <p>Two installed Claude Code plugins: Anthropic’s <em>frontend-design</em> (pushes a bold, distinctive look) and the Chrome team’s <em>modern-web-guidance</em> (current platform best practice). When they pulled in different directions, the conflict was audited and the resolution written into CLAUDE.md.</p>
+      </div>
+      <div class="panel tool-card">
+        <span class="tag">mcp server</span>
+        <h3>Playwright</h3>
+        <p>The agent’s hands on a real browser, via the Model Context Protocol: load each page, read the console, screenshot diagrams, seek animations to exact frames, emulate reduced-motion and five screen widths.</p>
+      </div>
+      <div class="panel tool-card">
+        <span class="tag">deploy</span>
+        <h3>GitHub Pages</h3>
+        <p>Push to <code>main</code> and the site is live in about a minute. The agent watches the deploy via the GitHub API, then re-checks the live URL with a cold cache before calling it done.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- H2: the loop -->
+  <section id="loop" aria-labelledby="loop-h">
+    <span class="kicker">H.2 — How every change shipped</span>
+    <h2 id="loop-h">The loop</h2>
+    <div class="two-col">
+      <div>
+        <p>Every feature on this site went around the same loop. A plain-English <strong style="color:var(--proton)">prompt</strong> becomes a concrete plan; the agent <strong style="color:var(--neutron)">builds</strong> it; then — before anything ships — it <strong style="color:var(--ok)">verifies</strong> its own work in a real browser: zero console errors, screenshots inspected frame by frame, the reduction playground run end-to-end, reduced-motion checked for a fully readable static page, no horizontal overflow from 375&nbsp;px to 1920&nbsp;px, and everything tested over both <code style="color:var(--accent)">file://</code> and a local server.</p>
+        <p>Only then does it <strong style="color:var(--peak)">ship</strong>: commit, push, watch the GitHub Pages build, and spot-check the live site. Failures go back around the loop, not into production.</p>
+      </div>
+      <figure class="figure-frame">
+        <svg viewBox="0 0 640 150" role="img" aria-label="A loop diagram: prompt leads to build, then verify, then ship, then back around to the next prompt. A dot cycles through the four stages.">
+          <g font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="middle">
+            <g class="lp-1">
+              <rect x="10" y="28" width="120" height="36" rx="8" fill="#151d3a" stroke="#ff5d8f"/>
+              <text x="70" y="50" fill="#ff5d8f">PROMPT</text>
+            </g>
+            <g class="lp-2">
+              <rect x="170" y="28" width="120" height="36" rx="8" fill="#151d3a" stroke="#4fd8eb"/>
+              <text x="230" y="50" fill="#4fd8eb">BUILD</text>
+            </g>
+            <g class="lp-3">
+              <rect x="330" y="28" width="120" height="36" rx="8" fill="#151d3a" stroke="#5fe8a0"/>
+              <text x="390" y="50" fill="#5fe8a0">VERIFY</text>
+            </g>
+            <g class="lp-4">
+              <rect x="490" y="28" width="120" height="36" rx="8" fill="#151d3a" stroke="#ffb84d"/>
+              <text x="550" y="50" fill="#ffb84d">SHIP</text>
+            </g>
+          </g>
+          <g stroke="#3a4d85" stroke-width="1.5">
+            <line x1="130" y1="46" x2="170" y2="46"/>
+            <line x1="290" y1="46" x2="330" y2="46"/>
+            <line x1="450" y1="46" x2="490" y2="46"/>
+            <!-- return path -->
+            <path d="M550,64 L550,110 L70,110 L70,64" fill="none"/>
+          </g>
+          <text x="310" y="128" fill="#8a96c2" font-size="10" text-anchor="middle" font-family="IBM Plex Mono, monospace">…then the next prompt</text>
+          <circle class="lp-dot" cx="70" cy="46" r="5" fill="#eef2ff"/>
+        </svg>
+        <figcaption class="figure-caption">on loop — a schematic of the actual workflow, including the animated dot’s own journey around it</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- H3: real prompts -->
+  <section id="prompts" aria-labelledby="prompts-h">
+    <span class="kicker">H.3 — The actual conversation</span>
+    <h2 id="prompts-h">Real prompts, real diffs</h2>
+    <p>The site was built across a morning’s worth of sessions. The first session — the one that produced all six pages from nothing — had its transcript auto-cleaned minutes after the site shipped, so its prompts can’t be quoted; what survives is its output, commit <code>c90882e</code> at 08:20: <em>“Initial release: interactive ISIS intro site … No build step; works from file:// and any static server. Facts checked against isis.stfc.ac.uk, the ISIS Practical Guide, and Mantid docs.”</em></p>
+    <p>The later sessions <em>are</em> on record. These are quoted verbatim — typos included, because they never mattered. Each one-liner below a prompt is what landed on <code>main</code>.</p>
+    <div class="panel" style="margin-top: var(--sp-3)">
+      <div class="how-chat">
+        <p class="q">can you check if front-end-design skill and google-web-design skill conflict with each other</p>
+        <p class="a">a plugin audit: overlap and tension points mapped, verdict written into CLAUDE.md as a design-direction section</p>
+        <p class="q">i want to explore top 5 places where motion or effects will add value … do an adversial review for each one you find — reasons not to do — then only priortize</p>
+        <p class="a">six candidates killed with written reasons; the four survivors built: traveling waves, panel cues, plot tweens</p>
+        <p class="q">im not keen on page scroll based animations — happy to switch to a different more straightforward method</p>
+        <p class="a">the whole story page rebuilt from scroll-scrubbing to time-based loops; an entire browser-fallback subsystem deleted</p>
+        <p class="q">the bar chart underneath it, can that be animated aswell … you will need to show significantly more neutrons to align with the counts of each bar</p>
+        <p class="a">30 generated neutrons per pulse; the histogram builds one visible step per hit, left to right in arrival order</p>
+        <p class="q">Scene 02 — the machine — i see two red circles</p>
+        <p class="a">a one-line fix, verified in the browser, live a few minutes later</p>
+      </div>
+    </div>
+    <p class="footnote">The middle prompt is the interesting one: a design U-turn mid-project. The agent didn’t patch around it — it rewrote the motion system, deleted the dead code, and updated its own rules file so the old approach can’t creep back.</p>
+  </section>
+
+  <!-- H4: guardrails -->
+  <section id="guardrails" aria-labelledby="guardrails-h">
+    <span class="kicker">H.4 — What kept it honest</span>
+    <h2 id="guardrails-h">Guardrails</h2>
+    <div class="two-col">
+      <div>
+        <p><strong>A written constitution.</strong> CLAUDE.md sets hard rules the agent checks its own work against — architecture (“no dependencies, no build step”), an accessibility bar (keyboard paths, labels on every diagram, <em>reduced-motion must leave a fully readable static page</em> — true of every animation on this site, including the ones here), and a verification checklist run before every push.</p>
+        <p><strong>Facts trace to sources.</strong> Physics claims trace to isis.stfc.ac.uk or the Mantid docs, and schematic models carry a “simplified” footnote. That bar applied even to decoration: the time-of-flight race stamps are real numbers from λ×v&nbsp;=&nbsp;3956, and the detector-histogram animation only shipped once each bar grew by exactly one step per neutron hit.</p>
+        <p><strong>And a human in the loop.</strong> Every diff was reviewed; every push was an explicit human decision. The agent proposes, verifies and argues — the human decides.</p>
+      </div>
+      <figure class="figure-frame">
+        <p class="stat" style="margin-bottom: var(--sp-3)"><span class="num">3.1415&nbsp;Å</span><span class="label">the playground fit the agent re-runs before each release — true peak 3.1355, tolerance ±0.01</span></p>
+        <p class="stat"><span class="num">0 errors</span><span class="label">console requirement, every page, file:// and http, before any push</span></p>
+        <figcaption class="figure-caption">two of the checklist gates, verbatim from CLAUDE.md</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- H5: receipts -->
+  <section id="receipts" aria-labelledby="receipts-h">
+    <span class="kicker">H.5 — The receipts</span>
+    <h2 id="receipts-h">By the numbers</h2>
+    <div class="stat-grid">
+      <p class="stat"><span class="num">1 day</span><span class="label">first commit to live site — 10 June 2026</span></p>
+      <p class="stat"><span class="num">13</span><span class="label">commits, each co-signed by the model</span></p>
+      <p class="stat"><span class="num">≈5,000</span><span class="label">lines of hand-rolled HTML, CSS and JS</span></p>
+      <p class="stat"><span class="num">0</span><span class="label">dependencies — fonts are the only external</span></p>
+      <p class="stat"><span class="num">7</span><span class="label">pages, including this one</span></p>
+    </div>
+    <p class="footnote">Counts taken when this page was written; the <a href="https://github.com/janukahw/isis-intro" rel="external">git history</a> is the live source of truth. This page was itself written by the agent it describes — every claim on it traces to that repo or to the build conversation.</p>
+    <nav class="card-grid" style="margin-top: var(--sp-4)" aria-label="Where next">
+      <a class="cta-card" href="index.html"><span class="kicker">↩</span><h3>Back to the story</h3><p>The site this page is about: a proton pulse becomes a published paper.</p></a>
+      <a class="cta-card" href="https://github.com/janukahw/isis-intro" rel="external"><span class="kicker">SRC</span><h3>Read the source</h3><p>Every commit, every diff — the whole build, in the open.</p></a>
+      <a class="cta-card" href="https://claude.com/claude-code" rel="external"><span class="kicker">CC</span><h3>Claude Code</h3><p>The agent that built this. Bring your own repo and a plain-English idea.</p></a>
+    </nav>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a> · <a href="how.html" aria-current="page">how this site was made</a></span>
+  </div>
+</footer>
+</body>
+</html>

@@ -40,7 +40,8 @@
       '<div class="bar">' +
       "<span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>" +
       '<span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · ' +
-      '<a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a></span>' +
+      '<a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a> · ' +
+      '<a href="how.html">how this site was made</a></span>' +
       "</div>";
     document.body.append(footer);
   }

@@ -27,6 +27,7 @@ The site is deployed with **GitHub Pages** (deploy from branch: `main`, root) at
 | `experiment.html` | Life of an experiment: proposal → beamtime → data → paper | 7-phase lifecycle timeline (with who/which-software per phase) |
 | `data.html` | From detector events to publishable curves | **Reduction Playground** — a mini-Mantid pipeline you drive yourself |
 | `techniques.html` | Nine techniques: diffraction (powder & single crystal), SANS, reflectometry, spectroscopy, µSR, imaging, irradiation, total scattering — each mapped to the ISIS science group that owns it | Rotate-a-crystal detector view, fringe/field/lattice sliders |
+| `how.html` | Meta: how this site was made — Claude Code, the real prompts, the verify loop (footer-linked, served as `/how`) | Animated prompt→build→verify→ship loop |
 
 Each page ends with a short self-check quiz.
 
@@ -35,7 +36,7 @@ Each page ends with a short self-check quiz.
 Vanilla HTML/CSS/JS — deliberately boring tech so it runs anywhere, forever:
 
 ```
-├── index.html …techniques.html   # six pages, inline SVG diagrams
+├── index.html …how.html          # seven pages, inline SVG diagrams
 ├── css/
 │   ├── tokens.css                # design tokens (dark "beamline control room" theme)
 │   ├── base.css                  # reset, layout, nav, typography
