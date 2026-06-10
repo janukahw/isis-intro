@@ -15,7 +15,13 @@
       if (!svg || !info) return;
       var active = null;
 
-      function showDefault() {
+      function pulse() {
+        info.classList.remove("panel-update");
+        void info.offsetWidth;             // restart the one-shot animation
+        info.classList.add("panel-update");
+      }
+
+      function showDefault(quiet) {
         active = null;
         svg.classList.remove("has-active");
         svg.querySelectorAll(".hotspot").forEach(function (h) {
@@ -27,6 +33,7 @@
         var p = document.createElement("p");
         p.textContent = defaultCard.body;
         info.append(h3, p);
+        if (!quiet) pulse();
       }
 
       function select(key) {
@@ -58,6 +65,7 @@
         close.style.marginTop = "var(--sp-2)";
         close.addEventListener("click", showDefault);
         info.append(h3, p, stat, close);
+        pulse();
         info.scrollIntoView({ block: "nearest" });
       }
 
@@ -77,7 +85,7 @@
         if (ev.key === "Escape" && active) showDefault();
       });
 
-      showDefault();
+      showDefault(true);
     }
 
     /* ================= S1: facility explorer ================= */

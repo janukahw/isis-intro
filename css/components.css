@@ -41,6 +41,20 @@
   .figure-frame::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
   .figure-frame::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
 
+  /* Traveling-wave figure (probes): short wave travels fast, long wave slow —
+     speeds are schematic. Each loop shifts by exactly one wavelength, and the
+     paths extend one wavelength past the viewBox so the loop is seamless.
+     Reduced motion: the static figure stands on its own. */
+  .wave-fast { --wave-period: -36px; }
+  .wave-slow { --wave-period: -160px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .wave-fast { animation: wave-travel 0.45s linear infinite; }
+    .wave-slow { animation: wave-travel 6s linear infinite; }
+  }
+  @keyframes wave-travel {
+    to { transform: translateX(var(--wave-period)); }
+  }
+
   .stat {
     font-family: var(--font-mono);
     color: var(--text-100);
@@ -202,6 +216,11 @@
     cursor: pointer;
   }
   .hotspot .hit { fill: transparent; }
+  /* zero-size shadow as base so the glow fades in instead of popping */
+  .hotspot .hotspot-shape {
+    filter: drop-shadow(0 0 0 transparent);
+    transition: filter 0.25s ease;
+  }
   .hotspot:hover .hotspot-shape,
   .hotspot:focus-visible .hotspot-shape,
   .hotspot.active .hotspot-shape {
@@ -221,6 +240,16 @@
   .info-card h3 { margin-bottom: var(--sp-1); }
   .info-card .stat { margin-top: var(--sp-2); }
   .info-card p { font-size: var(--fs-small); }
+
+  /* One-shot cue when a panel's content is swapped in place (explorer info
+     cards, lifecycle phase detail) — without it, similar-length text swaps
+     are easy to miss. JS re-triggers by removing and re-adding the class. */
+  @media (prefers-reduced-motion: no-preference) {
+    .panel-update { animation: panel-update 0.22s ease-out; }
+  }
+  @keyframes panel-update {
+    from { opacity: 0.25; translate: 0 5px; }
+  }
 
   /* ---------- Quiz ---------- */
 

@@ -58,12 +58,12 @@
       b.className = "timeline-node";
       b.textContent = p.key;
       b.setAttribute("aria-pressed", "false");
-      b.addEventListener("click", function () { select(i); });
+      b.addEventListener("click", function () { select(i, true); });
       bar.append(b);
       return b;
     });
 
-    function select(i) {
+    function select(i, pulse) {
       buttons.forEach(function (b, k) { b.setAttribute("aria-pressed", String(k === i)); });
       var p = PHASES[i];
       detail.textContent = "";
@@ -82,6 +82,11 @@
         dl.append(dt, dd);
       });
       detail.append(h3, what, dl);
+      if (pulse) {
+        detail.classList.remove("panel-update");
+        void detail.offsetWidth;           // restart the one-shot animation
+        detail.classList.add("panel-update");
+      }
     }
     select(0);
 
