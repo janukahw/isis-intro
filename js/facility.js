@@ -103,7 +103,7 @@
         },
         synch: {
           title: "Synchrotron",
-          body: "A ring 163 m around. Protons circulate about 8,000 laps, gaining ~0.1 MeV per pass from RF cavities (the same timed voltage push as the linac) while bending magnets hold the orbit, then two bunches are kicked out in under 0.1 µs — 50 times every second.",
+          body: "A ring 163 m around. Protons circulate about 10,000 laps, gaining ~0.07 MeV per pass from RF cavities (the same timed voltage push as the linac) while bending magnets hold the orbit, then two bunches are kicked out in under 0.1 µs — 50 times every second.",
           stat: "800 MeV", label: "84% of light speed · one lap in 0.65 µs"
         },
         muon: {
