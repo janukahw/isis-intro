@@ -93,6 +93,8 @@ Two adversarially-verified workflow audits (46 agents total) ran against the fea
 - Dissolve visually confirmed (foil scene blended under the synchrotron's RF rings mid-transition); boundary continuity confirmed on CLOCK/ENERGY/LAP
 - LAP↔CLOCK live check: 93 laps at +137 µs ⇒ 1.47 µs/lap (exact injection period), shrinking to 1.17 µs/lap mid-ramp
 - Zero console errors across all 11 chapters, the finale, `http://` and `file://`; no horizontal overflow at 375 px
-- **Still manual:** Firefox parity, an actual listen to the soundtrack, OS-level reduced-motion spot-check, GitHub Pages deploy check after push
+- Reduced-motion (emulated): ride stays parked, CTA anchors to the storyboard, decorative animations compute to `none`, explanatory note renders, zero errors
+- Live deploy spot-check (2026-06-11): Three.js r149 loads, ride launches (overlay + WebGL canvas), subnav tab and cross-link card present, index caption reads ~10,000 laps, zero console errors / failed requests
+- **Still manual:** Firefox parity, an actual listen to the soundtrack, OS-level reduced-motion toggle
 
-*Status at end of day: feature complete on the working tree, nothing committed yet.*
+*Status: committed and deployed 2026-06-11; live at https://janukahw.github.io/isis-intro/bethebeam.html.*
