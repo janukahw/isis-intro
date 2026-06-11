@@ -10,6 +10,9 @@
                             sqrt(0.4·949/T).
      GAMMA_MU = 851.6 Mrad/(s·T) (135.5 MHz/T) — muon gyromagnetic ratio
      TAU_MU = 2.2 µs      — muon lifetime
+     MP_MEV = 938.272 MeV — proton rest mass (CODATA)
+     MN_MEV = 939.565 MeV — neutron rest mass (CODATA)
+     C_KMS = 299792.458 km/s — speed of light
 */
 (function () {
   "use strict";
@@ -19,7 +22,10 @@
     TOFC: 252.78,
     LAM2K: 949,
     GAMMA_MU_MHZ_PER_T: 135.5,
-    TAU_MU: 2.2
+    TAU_MU: 2.2,
+    MP_MEV: 938.272,
+    MN_MEV: 939.565,
+    C_KMS: 299792.458
   };
 
   /* Synthetic powder instrument shared by data.html (inspector + playground). */
@@ -77,6 +83,18 @@
     var m = Math.max.apply(null, y);
     return { x: x, y: y.map(function (v) { return v / m; }), peak: Math.sqrt(0.4 * C.LAM2K / T) };
   }
+
+  /* ---------- relativistic kinematics (bethebeam HUD) ---------- */
+
+  /* Speed as a fraction of c for kinetic energy T (MeV) and rest mass m (MeV):
+     γ = 1 + T/m, β = √(1 − 1/γ²). Exact at all energies — 35 keV ion-source
+     protons (β≈0.0086) through 800 MeV synchrotron protons (β≈0.84). */
+  function beta(tMeV, mMeV) {
+    var g = 1 + tMeV / mMeV;
+    return Math.sqrt(Math.max(0, 1 - 1 / (g * g)));
+  }
+  function protonBeta(tMeV) { return beta(tMeV, C.MP_MEV); }
+  function neutronBeta(tMeV) { return beta(tMeV, C.MN_MEV); }
 
   /* ---------- powder diffraction (synthetic instrument) ---------- */
 
@@ -382,6 +400,8 @@
     INSTRUMENT: INSTRUMENT,
     linspace: linspace,
     mulberry32: mulberry32,
+    protonBeta: protonBeta,
+    neutronBeta: neutronBeta,
     maxwell: maxwell,
     moderatorSpectrum: moderatorSpectrum,
     difc: difc,

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BE THE BEAM — ISIS Explained</title>
+<meta name="description" content="A first-person ride through ISIS: twenty milliseconds from a caesium-laced plasma to a timestamped detector event, seen from inside the beam. You don't steer. You are the beam.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23ff5d8f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,550;9..144,650&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/bethebeam.css">
+<script defer src="js/nav.js"></script>
+<script defer src="js/synth.js"></script>
+<script defer src="vendor/three.min.js"></script>
+<script defer src="js/bethebeam-audio.js"></script>
+<script defer src="js/bethebeam-scenes.js"></script>
+<script defer src="js/bethebeam.js"></script>
+</head>
+<body class="btb-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="site-title" href="index.html"><span class="pip" aria-hidden="true"></span>ISIS&nbsp;EXPLAINED</a>
+    <nav class="site-nav" id="site-nav" aria-label="Site">
+      <a href="index.html">STORY</a>
+      <a href="probes.html">PROBES</a>
+      <a href="facility.html">FACILITY</a>
+      <a href="techniques.html">TECHNIQUES</a>
+      <a href="data.html">DATA</a>
+      <a href="experiment.html">EXPERIMENT</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <nav class="subnav" aria-label="Facility sections">
+    <span class="subnav-label">FACILITY</span>
+    <a href="facility.html">OVERVIEW</a>
+    <a href="ts1.html">TARGET STATION 1</a>
+    <a href="ts2.html">TARGET STATION 2</a>
+    <a href="bethebeam.html" aria-current="page">BE THE BEAM</a>
+  </nav>
+
+  <!-- ====================== LANDING ====================== -->
+  <section class="btb-hero" aria-labelledby="btb-title">
+    <div class="btb-hero-grid" aria-hidden="true"></div>
+    <div class="btb-hero-beam" aria-hidden="true"></div>
+    <div class="btb-hero-inner">
+      <span class="kicker">02 / FACILITY — FIRST PERSON</span>
+      <h1 id="btb-title" class="btb-title" data-text="BE THE BEAM">BE THE BEAM</h1>
+      <p class="btb-lede">In the next twenty milliseconds you will be stripped of everything
+        you own, accelerated to 84% of the speed of light, and slammed into a block of
+        tungsten. <em>Then the interesting part starts.</em></p>
+      <p class="btb-lede-sub">No steering. No brakes. No respawn — but you do become data.</p>
+
+      <div class="btb-hero-stats" role="group" aria-label="Ride numbers">
+        <p class="stat"><span class="num">~20 ms</span><span class="label">door to detector, real time</span></p>
+        <p class="stat"><span class="num">84% c</span><span class="label">top speed, no ticket issued</span></p>
+        <p class="stat"><span class="num">1</span><span class="label">collision that matters</span></p>
+      </div>
+
+      <div class="btb-hero-actions">
+        <a id="btb-start" class="btn primary btb-cta" href="#storyboard">I AM THE BEAM</a>
+        <button id="btb-start-quiet" class="btn ghost btb-cta-quiet" type="button" hidden>enter without sound</button>
+      </div>
+      <p class="btb-hero-note" id="btb-hero-note">Headphones recommended — the soundtrack is
+        synthesized live in your browser. One continuous flight, about three minutes; it does
+        not stop to explain itself. The whole ride is written out <a href="#storyboard">below</a>.</p>
+    </div>
+  </section>
+
+  <!-- ====================== STORYBOARD / TRANSCRIPT ====================== -->
+  <section id="storyboard" aria-labelledby="sb-h" class="btb-storyboard">
+    <span class="kicker">THE RIDE — STOP BY STOP</span>
+    <h2 id="sb-h">Twenty milliseconds, written down</h2>
+    <p class="btb-sb-intro">The ride doesn't stop to explain itself — this is the reading
+      layer: every stop, in order, with the numbers. It is also the ride for keyboard-only
+      readers, reduced-motion settings, and browsers without WebGL.</p>
+
+    <div class="btb-sb-grid">
+      <article class="panel sb-stop" id="sb-1">
+        <span class="kicker">STOP 01 · ION SOURCE</span>
+        <h3>Born negative</h3>
+        <p>You start as an H⁻ ion — one proton (you), holding two borrowed electrons. Fifty
+          times a second, an electric field plucks trillions of you out of a caesium-laced
+          hydrogen plasma and shoves you toward the first accelerator. Think of it as the
+          dispatch queue.</p>
+        <p class="stat"><span class="num">35 kV</span><span class="label">extraction — what first gets you moving</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-2">
+        <span class="kicker">STOP 02 · RFQ</span>
+        <h3>Falling into formation</h3>
+        <p>The radio-frequency quadrupole does two jobs at once: it accelerates you, and it
+          chops the continuous stream of ions into tidy bunches locked to a 202.5 MHz radio
+          wave. From here on you never travel alone — you are one message in a batch.</p>
+        <p class="stat"><span class="num">665 keV</span><span class="label">energy leaving the RFQ</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-3">
+        <span class="kicker">STOP 03 · LINAC</span>
+        <h3>The straight sprint</h3>
+        <p>Four tanks of drift tubes. Inside each tube the field can't touch you; in the gaps
+          it shoves you forward — timed so you only ever feel the push, never the pull. Each
+          tube is longer than the last, because you're faster when you reach it. By the end of
+          the line you're doing over a third of the speed of light.</p>
+        <p class="stat"><span class="num">70 MeV</span><span class="label">≈ 37% of light speed</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-4">
+        <span class="kicker">STOP 04 · STRIPPING FOIL</span>
+        <h3>Lose the disguise</h3>
+        <p>This is the synchrotron's trick for merging new beam into a ring already full of
+          protons: you arrive negatively charged, so the magnets bend you <em>into</em> the ring
+          while the circulating beam holds its line — then a foil a third of a micrometre thick
+          strips both electrons off mid-flight. You came in as an H⁻ ion. You leave as a proton.</p>
+        <p class="stat"><span class="num">0.3 µm</span><span class="label">of aluminium oxide — changes what you are</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-5">
+        <span class="kicker">STOP 05 · SYNCHROTRON</span>
+        <h3>Ten thousand laps</h3>
+        <p>Ten big dipole magnets bend you around a 163-metre ring while RF cavities kick you
+          harder every lap — roughly ten thousand laps in ten milliseconds, packed with 2.5×10¹³
+          colleagues into two bunches. The ride shows you just two laps of it, in heavy slow
+          motion; by the last one you're at 84% of the speed of light.</p>
+        <p class="stat"><span class="num">800 MeV</span><span class="label">in ~10,000 laps · 10 ms</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-6">
+        <span class="kicker">STOP 06 · EXTRACTION</span>
+        <h3>The kick</h3>
+        <p>Kicker magnets fire in under 100 nanoseconds — in the gap between bunches — and
+          punt the whole beam out of the ring in a single turn. You're now on EPB1, a 150-metre
+          straight with 68 magnets keeping the bunch tidy. Four of every five pulses go this
+          way, to Target Station 1; the fifth peels off to TS2.</p>
+        <p class="stat"><span class="num">&lt;100 ns</span><span class="label">for the kickers to fire</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-7">
+        <span class="kicker">STOP 07 · MUON TARGET</span>
+        <h3>Drive-through</h3>
+        <p>A 10-millimetre wafer of graphite sits dead ahead — in the beam, on purpose. Fewer
+          than 5% of protons hit anything inside it; those collisions make pions that decay
+          into muons for the µSR instruments on either side. You're in the other 95%: straight
+          through, barely grazed.</p>
+        <p class="stat"><span class="num">&lt;5%</span><span class="label">of protons interact — you fly on</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-8">
+        <span class="kicker">STOP 08 · THE TARGET</span>
+        <h3>Spallation</h3>
+        <p>Tungsten plates, tantalum-clad, the whole stack about the size of a shoebox. You hit
+          a nucleus at 84% of light speed and stop existing as a free proton — the nucleus
+          boils, evaporating around twenty neutrons. The point of view survives the crash:
+          you are now one of them, doing ~6% of light speed in a direction nobody chose.</p>
+        <p class="stat"><span class="num">~20</span><span class="label">neutrons chipped off per proton</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-9">
+        <span class="kicker">STOP 09 · MODERATOR</span>
+        <h3>The cool-down</h3>
+        <p>Fast neutrons are useless for measuring atoms — wrong wavelength. So you ricochet
+          through a pocket-sized tank of room-temperature water, shedding energy with every
+          bounce until you move no faster than the molecules around you. From ~20,000 km/s to
+          2.2 km/s in a few dozen collisions.</p>
+        <p class="stat"><span class="num">2.2 km/s</span><span class="label">thermal — wavelength ≈ 1.8 Å</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-10">
+        <span class="kicker">STOP 10 · BEAMLINE</span>
+        <h3>One of eighteen doors</h3>
+        <p>The shielding monolith absorbs everything that isn't aimed down a beam port — you
+          happen to be. Now it's a long, quiet, dead-straight flight to an instrument, and the
+          clock is the whole point: slow neutrons arrive late, fast ones early, so your arrival
+          time <em>is</em> your wavelength. Time-of-flight is structured logging.</p>
+        <p class="stat"><span class="num">18</span><span class="label">beam ports fan out around TS1</span></p>
+      </article>
+
+      <article class="panel sb-stop" id="sb-11">
+        <span class="kicker">STOP 11 · DETECTION</span>
+        <h3>You are now data</h3>
+        <p>Inside the instrument you graze the sample — a crystal, say — and its planes of
+          atoms deflect you at an angle that encodes exactly how they're spaced. A detector
+          tube swallows you, a timestamp is written, and everything you just lived becomes one
+          line in an event log. Science is the post-processing.</p>
+        <p class="stat"><span class="num">1 event</span><span class="label">timestamped, detector ID attached</span></p>
+      </article>
+    </div>
+
+    <p class="footnote">Simplified, like everything on this site: the geometry is schematic,
+      the clock is dilated by a different amount at every stage (up to ~×10⁸), the synchrotron
+      shows two laps instead of ~10,000, and the instrument at the end is a generic
+      diffractometer rather than any real beamline. The numbers are real ISIS figures — see
+      <a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a>. One liberty is
+      flagged where it happens: a real proton's point of view ends at the tungsten; the ride
+      hands you to a neutron so you can finish the journey the beam actually makes.</p>
+  </section>
+
+  <nav class="card-grid" aria-label="Continue exploring" style="margin-top: var(--sp-6)">
+    <a class="cta-card" href="facility.html"><span class="kicker">Back</span><h3>How ISIS works</h3><p>The same journey from the outside, with the engineering visible.</p></a>
+    <a class="cta-card" href="ts1.html"><span class="kicker">Related</span><h3>Inside Target Station 1 →</h3><p>The hall you just crashed into, in plan view and on the real clock.</p></a>
+    <a class="cta-card" href="data.html"><span class="kicker">Next</span><h3>Time-of-flight &amp; data →</h3><p>What happens to your event: units, rebinning, and the reduction playground.</p></a>
+  </nav>
+</main>
+
+<!-- ====================== RIDE OVERLAY (JS only) ======================
+     Lives outside <main> on purpose: main { z-index: 1 } creates a stacking
+     context that would trap the overlay below the sticky site header. -->
+<div id="btb-overlay" class="btb-overlay" role="dialog" aria-modal="true" aria-label="BE THE BEAM — first-person ride" tabindex="-1" hidden>
+  <canvas id="btb-canvas" role="img" aria-label="First-person animated view from inside the ISIS beam. Each stop is described in the panel that follows it; the same stop descriptions appear in the storyboard on the page."></canvas>
+  <div class="btb-flash" id="btb-flash" aria-hidden="true"></div>
+  <div class="btb-vignette" id="btb-vignette" aria-hidden="true"></div>
+
+  <div class="btb-hud">
+    <div class="btb-hud-top">
+      <p class="btb-loc" id="btb-loc" aria-live="polite"></p>
+      <div class="btb-hud-buttons">
+        <button class="btn ghost btb-hud-btn" id="btb-mute" type="button" aria-pressed="false">MUTE</button>
+        <button class="btn ghost btb-hud-btn" id="btb-exit" type="button">EXIT&nbsp;<span aria-hidden="true">[ESC]</span></button>
+      </div>
+    </div>
+
+    <p class="btb-sub" id="btb-sub" aria-hidden="true"></p>
+
+    <div class="btb-hud-bottom">
+      <div class="btb-readouts" aria-hidden="true">
+        <span class="btb-ro">YOU <b id="ro-you">H⁻</b></span>
+        <span class="btb-ro">ENERGY <b id="ro-energy">—</b></span>
+        <span class="btb-ro btb-ro-speed">SPEED <b id="ro-speed">—</b>
+          <span class="btb-speedbar"><span id="ro-speedfill"></span></span></span>
+        <span class="btb-ro">CLOCK <b id="ro-clock">0.0 µs</b></span>
+        <span class="btb-ro" id="ro-extra-wrap" hidden>LAP <b id="ro-extra">—</b></span>
+      </div>
+      <nav class="btb-rail" id="btb-rail" aria-label="Ride stops"></nav>
+      <p class="btb-keys" aria-hidden="true">SPACE pause · ← → skip stops · M mute</p>
+    </div>
+  </div>
+
+  <!-- minimap: the facility.html plan, miniaturized — decorative; the
+       location label above is the accessible position readout -->
+  <div class="btb-map" aria-hidden="true">
+    <span class="btb-map-title">YOU ARE HERE</span>
+    <svg viewBox="0 0 220 150">
+      <path class="bm-route" d="M8,118 H78 L85.6,88.4"/>
+      <circle class="bm-route" cx="104" cy="70" r="26"/>
+      <path class="bm-route" d="M130,70 H186"/>
+      <path class="bm-route bm-dim" d="M150,70 L168,104"/>
+      <rect class="bm-block bm-dim" x="160" y="104" width="20" height="13"/>
+      <rect class="bm-block" x="186" y="60" width="20" height="20"/>
+      <path class="bm-route" d="M196,80 L213,100"/>
+      <circle class="bm-poi" cx="160" cy="70" r="2"/>
+      <circle class="bm-poi bm-poi-det" cx="215" cy="102" r="2.4"/>
+      <text x="8" y="131">SOURCE</text>
+      <text x="48" y="131">LINAC</text>
+      <text x="104" y="73" text-anchor="middle">RING</text>
+      <text x="160" y="62" text-anchor="middle">µ</text>
+      <text x="196" y="55" text-anchor="middle">TS1</text>
+      <text class="bm-dim" x="170" y="128" text-anchor="middle">TS2</text>
+      <text x="213" y="114" text-anchor="end">DETECTOR</text>
+      <circle id="bm-halo" cx="8" cy="118" r="6"/>
+      <circle id="bm-dot" cx="8" cy="118" r="2.4"/>
+    </svg>
+  </div>
+
+  <div class="btb-end" id="btb-end" hidden>
+    <div class="btb-term" role="group" aria-label="Your detector event">
+      <p class="btb-term-line">ISIS · TS1 · beamline N5 · run 51440</p>
+      <p class="btb-term-line btb-term-event" id="btb-term-event"></p>
+      <p class="btb-term-line btb-term-note">// you are one event among ~5×10¹⁴ neutrons made in this
+        pulse alone. every dot in every spectrum lived this ride.</p>
+    </div>
+    <div class="btb-end-actions">
+      <button class="btn primary" id="btb-again" type="button">RIDE AGAIN</button>
+      <a class="btn" href="data.html">WHAT HAPPENS TO YOUR EVENT →</a>
+      <button class="btn ghost" id="btb-end-exit" type="button">BACK TO THE PAGE</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="bar">
+    <span>An unofficial, simplified guide for ISIS staff who didn’t study physics.</span>
+    <span><a href="https://www.isis.stfc.ac.uk/" rel="external">isis.stfc.ac.uk</a> · <a href="https://docs.mantidproject.org/nightly/" rel="external">Mantid docs</a> · <a href="how.html">how this site was made</a></span>
+  </div>
+</footer>
+</body>
+</html>

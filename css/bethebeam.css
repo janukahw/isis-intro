@@ -1,0 +1,462 @@
+/* BE THE BEAM — page-scoped styles (bethebeam.html only).
+   Cyberpunk read on the existing control-room palette: proton pink × neutron
+   cyan neon, mono display type, a framed "containment field" hero, and the
+   full-viewport ride overlay (HUD, chapter card, progress rail, end terminal).
+   All decorative motion is gated behind prefers-reduced-motion. */
+
+/* ====================== LANDING ====================== */
+
+.btb-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: min(88svh, 56rem);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: var(--sp-5) var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(60rem 30rem at 50% 120%, color-mix(in oklab, var(--proton) 14%, transparent), transparent 70%),
+    radial-gradient(50rem 26rem at 50% -30%, color-mix(in oklab, var(--neutron) 12%, transparent), transparent 70%),
+    var(--bg-deep);
+}
+/* corner brackets, same grammar as .figure-frame */
+.btb-hero::before, .btb-hero::after {
+  content: "";
+  position: absolute;
+  width: 22px; height: 22px;
+  border: 0 solid var(--proton);
+  opacity: 0.9;
+}
+.btb-hero::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.btb-hero::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.btb-hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.28;
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 100%);
+  mask-image: radial-gradient(70% 70% at 50% 50%, #000 30%, transparent 100%);
+}
+.btb-hero-beam {
+  position: absolute;
+  left: 0; right: 0; top: 58%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--proton) 18%, var(--proton) 82%, transparent);
+  opacity: 0.5;
+  box-shadow: 0 0 14px color-mix(in oklab, var(--proton) 55%, transparent);
+}
+.btb-hero-beam::after {
+  content: "";
+  position: absolute;
+  top: -3px; left: -12%;
+  width: 9rem; height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, #fff, var(--proton) 45%, transparent);
+  filter: blur(1px);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btb-hero-beam::after { animation: btb-pulse-fly 3.4s cubic-bezier(0.6, 0, 0.9, 1) infinite; }
+  @keyframes btb-pulse-fly {
+    0% { left: -12%; opacity: 0; }
+    8% { opacity: 1; }
+    92% { opacity: 1; }
+    100% { left: 104%; opacity: 0; }
+  }
+}
+
+.btb-hero-inner { position: relative; max-width: 50rem; }
+.btb-hero-inner > .kicker { color: var(--proton); }
+
+.btb-title {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 1rem + 9vw, 7rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin-block: var(--sp-3);
+  color: var(--text-100);
+  text-shadow:
+    0 0 22px color-mix(in oklab, var(--proton) 55%, transparent),
+    0 0 60px color-mix(in oklab, var(--proton) 30%, transparent);
+}
+/* chromatic-split glitch — decorative only */
+@media (prefers-reduced-motion: no-preference) {
+  .btb-title { position: relative; }
+  .btb-title::before, .btb-title::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    text-shadow: none;
+  }
+  .btb-title::before { color: var(--neutron); animation: btb-glitch-a 5.2s steps(1) infinite; }
+  .btb-title::after { color: var(--proton); animation: btb-glitch-b 5.2s steps(1) infinite; }
+  @keyframes btb-glitch-a {
+    0%, 92.4% { opacity: 0; transform: none; clip-path: none; }
+    92.5% { opacity: 0.85; transform: translate(-4px, 2px); clip-path: inset(12% 0 58% 0); }
+    93.6% { opacity: 0.85; transform: translate(3px, -1px); clip-path: inset(62% 0 8% 0); }
+    94.8%, 100% { opacity: 0; transform: none; clip-path: none; }
+  }
+  @keyframes btb-glitch-b {
+    0%, 92.4% { opacity: 0; transform: none; clip-path: none; }
+    92.5% { opacity: 0.85; transform: translate(4px, -2px); clip-path: inset(55% 0 18% 0); }
+    93.6% { opacity: 0.85; transform: translate(-3px, 1px); clip-path: inset(4% 0 72% 0); }
+    94.8%, 100% { opacity: 0; transform: none; clip-path: none; }
+  }
+}
+
+.btb-lede {
+  font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.3rem);
+  color: var(--text-300);
+  max-width: 44ch;
+  margin-inline: auto;
+}
+.btb-lede em { color: var(--text-100); font-style: normal; border-bottom: 1px solid var(--proton); }
+.btb-lede-sub {
+  margin-top: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  letter-spacing: 0.08em;
+  color: var(--text-500);
+}
+
+.btb-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2) var(--sp-5);
+  margin-block: var(--sp-4);
+}
+
+.btb-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.btb-cta {
+  font-family: var(--font-mono);
+  font-size: clamp(1.05rem, 0.9rem + 1vw, 1.4rem);
+  letter-spacing: 0.14em;
+  padding: 1rem 2.6rem;
+  background: var(--proton);
+  border-color: var(--proton);
+  color: var(--ink-950);
+  box-shadow:
+    0 0 24px color-mix(in oklab, var(--proton) 45%, transparent),
+    0 0 80px color-mix(in oklab, var(--proton) 22%, transparent);
+}
+.btb-cta:hover {
+  background: color-mix(in oklab, var(--proton) 80%, #fff);
+  border-color: color-mix(in oklab, var(--proton) 80%, #fff);
+  color: var(--ink-950);
+}
+.btb-cta-quiet { font-family: var(--font-mono); font-size: var(--fs-tiny); letter-spacing: 0.12em; }
+.btb-hero-note {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-tiny);
+  color: var(--text-500);
+  max-width: 46ch;
+  margin-inline: auto;
+}
+
+/* ====================== RIDE OVERLAY ====================== */
+
+.btb-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: #02040a;
+}
+/* author display rules (grid, etc.) must never resurrect [hidden] elements */
+.btb-overlay[hidden], .btb-overlay [hidden] { display: none !important; }
+.btb-overlay canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.btb-flash {
+  position: absolute; inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease-out;
+}
+.btb-flash.now { transition: none; }
+.btb-vignette {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 50%, transparent 55%, var(--btb-tint, transparent) 130%);
+  opacity: 0.6;
+  /* tint switches are instant by design — they happen behind a white flash */
+  transition: opacity 1s linear;
+}
+.btb-overlay:focus { outline: none; }  /* programmatic focus target (tabindex="-1") only */
+
+.btb-hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-3);
+  pointer-events: none;
+  font-family: var(--font-mono);
+}
+.btb-hud button, .btb-rail { pointer-events: auto; }
+
+.btb-hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--sp-2);
+}
+.btb-loc {
+  font-size: var(--fs-small);
+  letter-spacing: 0.16em;
+  color: var(--text-100);
+  text-shadow: 0 0 12px color-mix(in oklab, var(--neutron) 50%, transparent);
+  padding-top: 0.4rem;
+}
+.btb-hud-buttons { display: flex; gap: var(--sp-1); }
+.btb-hud-btn {
+  font-size: var(--fs-tiny);
+  letter-spacing: 0.1em;
+  min-block-size: 44px;
+  background: color-mix(in oklab, var(--ink-900) 65%, transparent);
+  backdrop-filter: blur(6px);
+}
+#btb-mute[aria-pressed="true"] {
+  color: var(--proton);
+  border-color: var(--proton);
+  text-decoration: line-through;
+}
+
+.btb-sub {
+  margin-top: auto;
+  text-align: center;
+  font-size: var(--fs-small);
+  letter-spacing: 0.1em;
+  color: var(--text-300);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.9);
+  min-height: 1.4em;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  padding-inline: var(--sp-3);
+}
+.btb-sub.show { opacity: 1; }
+
+.btb-hud-bottom {
+  margin-top: var(--sp-2);
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+}
+.btb-readouts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-1) var(--sp-3);
+  font-size: var(--fs-tiny);
+  letter-spacing: 0.1em;
+  color: var(--text-500);
+  background: color-mix(in oklab, var(--ink-900) 65%, transparent);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 0.35rem 1.1rem;
+}
+.btb-readouts b {
+  color: var(--text-100);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  min-width: 7.5ch;
+  text-align: left;
+  margin-left: 0.5ch;
+}
+.btb-ro-speed { display: inline-flex; align-items: center; }
+.btb-speedbar {
+  inline-size: 8rem;
+  block-size: 4px;
+  margin-left: 0.75ch;
+  border-radius: 999px;
+  background: var(--ink-700);
+  overflow: hidden;
+}
+.btb-speedbar > span {
+  display: block;
+  block-size: 100%;
+  inline-size: 0%;
+  background: linear-gradient(90deg, var(--neutron), var(--proton));
+  box-shadow: 0 0 8px color-mix(in oklab, var(--proton) 60%, transparent);
+}
+
+.btb-rail {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  background: color-mix(in oklab, var(--ink-900) 55%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding-inline: var(--sp-1);
+  backdrop-filter: blur(6px);
+}
+.btb-rail button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--text-500);
+  font-family: var(--font-mono);
+  font-size: var(--fs-tiny);
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  display: grid;
+  place-items: center;
+}
+.btb-rail .btb-dot::before {
+  content: "";
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--line-bright);
+  background: transparent;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.btb-rail .btb-dot.done::before { background: var(--text-500); border-color: var(--text-500); }
+.btb-rail .btb-dot[aria-current="step"]::before {
+  background: var(--proton);
+  border-color: var(--proton);
+  box-shadow: 0 0 10px var(--proton);
+}
+.btb-rail .btb-dot:hover::before,
+.btb-rail .btb-dot:focus-visible::before { border-color: var(--text-100); }
+.btb-rail .btb-rail-count { padding-inline: var(--sp-1); color: var(--text-300); letter-spacing: 0.1em; }
+.btb-rail .btb-rail-step { color: var(--text-300); }
+.btb-rail .btb-rail-step:hover, .btb-rail .btb-rail-step:focus-visible { color: var(--text-100); }
+
+.btb-keys {
+  font-size: var(--fs-tiny);
+  letter-spacing: 0.08em;
+  color: var(--text-300);
+  background: color-mix(in oklab, var(--ink-900) 65%, transparent);
+  backdrop-filter: blur(6px);
+  border-radius: 999px;
+  padding: 0.2rem 0.9rem;
+}
+
+/* minimap — bottom-right corner */
+.btb-map {
+  position: absolute;
+  right: var(--sp-3);
+  bottom: var(--sp-3);
+  width: 13rem;
+  padding: var(--sp-1) var(--sp-2) var(--sp-2);
+  background: color-mix(in oklab, var(--ink-900) 65%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.btb-map-title {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--text-500);
+  margin-bottom: 0.2rem;
+}
+.btb-map svg { display: block; width: 100%; height: auto; }
+.btb-map text { font: 600 7.5px var(--font-mono); fill: var(--text-500); letter-spacing: 0.06em; }
+.bm-route { fill: none; stroke: var(--line-bright); stroke-width: 1.4; }
+.bm-block { fill: none; stroke: var(--line-bright); stroke-width: 1.4; }
+.bm-dim { opacity: 0.45; }
+.bm-poi { fill: var(--muon); }
+.bm-poi-det { fill: var(--ok); }
+#bm-dot { fill: var(--neutron); }
+#bm-halo { fill: var(--neutron); opacity: 0.3; }
+@media (prefers-reduced-motion: no-preference) {
+  #bm-halo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bm-halo-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes bm-halo-pulse { 50% { transform: scale(1.7); opacity: 0.12; } }
+}
+
+/* base .btn computes to ~42px — the project tap-target bar is 44px */
+.btb-end-actions .btn, .btb-cta-quiet { min-block-size: 44px; }
+
+/* end terminal */
+.btb-end {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3);
+  background: color-mix(in oklab, #02040a 78%, transparent);
+  backdrop-filter: blur(4px);
+}
+.btb-term {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  background: #04070f;
+  border: 1px solid var(--line-bright);
+  border-radius: var(--radius);
+  box-shadow: 0 0 40px color-mix(in oklab, var(--ok) 14%, transparent);
+  padding: var(--sp-3) var(--sp-4);
+  max-width: 44rem;
+}
+.btb-term-line { color: var(--text-500); letter-spacing: 0.06em; }
+.btb-term-line + .btb-term-line { margin-top: var(--sp-2); }
+.btb-term-event { color: var(--ok); font-weight: 600; }
+.btb-term-event::after { content: "▌"; }
+@media (prefers-reduced-motion: no-preference) {
+  .btb-term-event::after { animation: btb-caret 1.1s steps(1) infinite; }
+  @keyframes btb-caret { 50% { opacity: 0; } }
+}
+.btb-term-note { font-size: var(--fs-tiny); }
+.btb-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+.btb-end-actions .btn { font-family: var(--font-mono); letter-spacing: 0.1em; }
+
+/* ====================== STORYBOARD ====================== */
+
+.btb-sb-intro { max-width: 52ch; color: var(--text-300); margin-top: var(--sp-2); }
+.btb-sb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+.sb-stop h3 { margin-block: var(--sp-1); }
+.sb-stop p { font-size: var(--fs-small); color: var(--text-300); }
+.sb-stop .stat { margin-top: var(--sp-2); }
+
+/* ====================== NARROW SCREENS ====================== */
+
+@media (max-width: 56rem) {
+  .btb-map { display: none; }   /* the loc label carries position on small screens */
+}
+@media (max-width: 44rem) {
+  .btb-hero { min-height: 78svh; }
+  .btb-keys { display: none; }
+  .btb-loc { font-size: 0.7rem; letter-spacing: 0.1em; max-width: 50%; }
+  .btb-rail .btb-dot { display: none; }   /* 11×44px dots can't fit; prev/next + counter take over */
+  .btb-readouts { font-size: 0.7rem; gap: var(--sp-1) var(--sp-2); }
+  .btb-readouts b { min-width: 6ch; }
+  .btb-speedbar { inline-size: 4.5rem; }
+  .btb-hud { padding: var(--sp-2); }
+}
+@media (min-width: 44.01rem) {
+  .btb-rail .btb-rail-count { display: none; } /* counter is the narrow-screen affordance */
+}
