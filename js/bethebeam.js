@@ -83,12 +83,21 @@
       seg(172, 70, 193, 70),                             // 08 into the tungsten
       function (k, time) {                               // 09 rattling inside TS1
         var r = 2.6 * (1 - k * 0.75);
-        return [193 + Math.sin(time * 3.1) * r, 72 + Math.cos(time * 2.4) * r];
+        // amplitude eases in from ch8's endpoint and out again, so the
+        // endpoints chain exactly: (193,70) → rattle → (193,72)
+        var e = Math.min(1, k * 8, (1 - k) * 8);
+        return [193 + Math.sin(time * 3.1) * r * e,
+                70 + 2 * Math.min(1, k * 8) + Math.cos(time * 2.4) * r * e];
       },
-      seg(193, 72, 213, 100),                            // 10 beamline
-      function (k) {                                     // 11 the last two millimetres
-        var m = Math.min(1, k * 2);
-        return [213 + 2 * m, 100 + 2 * m];
+      seg(193, 72, 208, 93),                             // 10 beamline (stops short of the sample)
+      function (k) {                                     // 11 to the sample, then the Bragg kink
+        if (k < 0.57) {                                  // approach — scatter event lands at k≈0.57
+          var a = k / 0.57;
+          return [208 + 5 * a, 93 + 7 * a];
+        }
+        // 45° left off the beam axis to the detector, arriving at the flash (k≈0.98)
+        var m = Math.min(1, (k - 0.57) / 0.41);
+        return [213 + 4.5 * m, 100 + 0.8 * m];
       }
     ];
 

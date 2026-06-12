@@ -543,23 +543,25 @@
       events: [{ t: 0.1, flash: 0.5, thud: true }],
       build: function (T) {
         var scene = fogged(T, 0x03040c, 0x060916, 0.035);
+        /* the kick deflects you OUTWARD — to the right of the counterclockwise
+           orbit (ring centre on your left), matching the minimap's right turn */
         var path = new T.CatmullRomCurve3([
-          new T.Vector3(0, 0, 0), new T.Vector3(-1.5, 0, -10), new T.Vector3(-2, 0, -22),
-          new T.Vector3(-2, 0, -50), new T.Vector3(-2, 0, -85), new T.Vector3(-2, 0, -110)
+          new T.Vector3(0, 0, 0), new T.Vector3(1.5, 0, -10), new T.Vector3(2, 0, -22),
+          new T.Vector3(2, 0, -50), new T.Vector3(2, 0, -85), new T.Vector3(2, 0, -110)
         ]);
         // kicker frames at the exit of the ring
-        var kick1 = addFrame(T, scene, "#eef2ff", 7, new T.Vector3(-0.6, 0, -6), new T.Vector3(0, 0, 4));
-        var kick2 = addFrame(T, scene, "#eef2ff", 7, new T.Vector3(-1.4, 0, -9), new T.Vector3(-0.4, 0, -2));
+        var kick1 = addFrame(T, scene, "#eef2ff", 7, new T.Vector3(0.6, 0, -6), new T.Vector3(0, 0, 4));
+        var kick2 = addFrame(T, scene, "#eef2ff", 7, new T.Vector3(1.4, 0, -9), new T.Vector3(0.4, 0, -2));
         kick1.material.opacity = kick2.material.opacity = 0.35;
-        labelSprite(T, scene, "KICKERS · <100 ns", "#eef2ff", new T.Vector3(-1, 3.4, -7.5), 1);
+        labelSprite(T, scene, "KICKERS · <100 ns", "#eef2ff", new T.Vector3(1, 3.4, -7.5), 1);
         var markers = [];
         for (var i = 0; i < 14; i++) {
           var z = -18 - i * 6.6;
           addFrame(T, scene, i % 2 ? "#ff5d8f" : "#4fd8eb", 5.5,
-            new T.Vector3(-2, 0, z), new T.Vector3(-2, 0, z + 5));
+            new T.Vector3(2, 0, z), new T.Vector3(2, 0, z + 5));
           if (i % 4 === 1) {
             markers.push(labelSprite(T, scene, (25 * ((i - 1) / 4 + 1)) + " m", "#8a96c2",
-              new T.Vector3(((i - 1) / 4) % 2 ? -4.8 : 0.8, 2.2, z), 0.7));
+              new T.Vector3(((i - 1) / 4) % 2 ? 4.8 : -0.8, 2.2, z), 0.7));
           }
         }
         addRails(T, scene, { n: 4, r: 2.4, z0: -14, z1: -115, color: LINE, opacity: 0.55 });
