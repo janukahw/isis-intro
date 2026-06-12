@@ -191,12 +191,12 @@
     /* ---- 01 ION SOURCE ---- */
     {
       loc: "01 · ION SOURCE", you: "H⁻", mass: "p", tint: TINT_H,
-      duration: 14, intensity: 0.22,
+      duration: 16, intensity: 0.22,
       energy: { from: 1e-6, to: 0.035 }, clock: { from: 0, to: 0.2 },
       captions: [[0.08, "you are one proton, holding two borrowed electrons"],
                  [0.45, "the field outside the aperture is pulling"],
                  [0.8, "extracted at 35 kV — the first push"]],
-      events: [],
+      events: [{ t: 0.31, flash: 0.5 }],   // the moment you become the ion
       build: function (T) {
         var scene = fogged(T, 0x070312, 0x12041c, 0.055);
         var rng = window.MESynth.mulberry32(7);
@@ -214,13 +214,33 @@
         var ap = addRing(T, scene, WHITE, 1.9, 0.1, -38, 1, true);
         addRing(T, scene, CYAN, 1.2, 0.05, -38.2, 0.9, true);
         labelSprite(T, scene, "PENNING H⁻ SOURCE", "#8a96c2", new T.Vector3(0, 4.6, -30), 1.4);
+        // the prologue: the ion you're about to become floats ahead — one
+        // proton, two borrowed electrons — and the camera dives in until
+        // you ARE it (the flash at t≈0.31)
+        var ion = new T.Group();
+        scene.add(ion);
+        function ionGlow(color, s) {
+          var sp = new T.Sprite(new T.SpriteMaterial({
+            map: dotTex(T), color: color, transparent: true, depthWrite: false
+          }));
+          sp.scale.set(s, s, 1);
+          ion.add(sp);
+          return sp;
+        }
+        var pCore = ionGlow(PINK, 0.6);
+        var eOrb = [ionGlow(CYAN, 0.24), ionGlow(CYAN, 0.24)];
+        var ionPos = new T.Vector3(0, 0, 0);
         var aperture = new T.Vector3(0, 0, -38);
         return {
           scene: scene,
-          path: straightPath(T, 36),
+          path: straightPath(T, 50, function (pts) {
+            // start outside the ion and dive in: you reach it at t≈0.31
+            for (var i = 0; i < pts.length; i++) pts[i].z += 14;
+          }),
           gaze: function (t) {
-            if (t < 0.35) {
-              var a = t * 9;
+            if (t < 0.3) return ionPos;          // eyes on the ion you'll become
+            if (t < 0.55) {
+              var a = (t - 0.3) * 12.6;          // then the look around the chamber
               return new T.Vector3(Math.cos(a) * 4, Math.sin(a * 0.7) * 2.5, -12 - t * 20);
             }
             return aperture;
@@ -228,6 +248,18 @@
           update: function (t, dt, st) {
             plasma.rotation.z += dt * 0.25;
             haze.rotation.z -= dt * 0.12;
+            // prologue: electrons circle the proton until you merge with it
+            var become = Math.min(1, Math.max(0, (t - 0.3) / 0.06));
+            ion.visible = become < 1;
+            if (ion.visible) {
+              var op = 1 - become;
+              pCore.material.opacity = op * (0.85 + Math.sin(st.time * 5) * 0.15);
+              for (var ei = 0; ei < 2; ei++) {
+                var ea = st.time * 2.6 + ei * Math.PI;
+                eOrb[ei].position.set(Math.cos(ea) * 0.8, Math.sin(ea * 1.4) * 0.3, Math.sin(ea) * 0.8);
+                eOrb[ei].material.opacity = op;
+              }
+            }
             // extraction: the plasma parts around you as the field wins
             var p = Math.min(1, Math.max(0, (-st.camPos.z - 22) / 11));
             plasma.scale.set(1 + p * 0.7, 1 + p * 0.7, 1);
@@ -284,7 +316,9 @@
           scene: scene,
           path: straightPath(T, L - 6),
           gaze: function (t) {
-            if (t > 0.25 && t < 0.42) return new T.Vector3(1.6, -1.6, -22);
+            // release while the vane is still well ahead — a late handoff
+            // drops the lookTarget beside the advancing camera
+            if (t > 0.24 && t < 0.38) return new T.Vector3(1.6, -1.6, -22);
             return null;
           },
           update: function (t, dt, st) {

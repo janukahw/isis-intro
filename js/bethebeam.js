@@ -391,9 +391,15 @@
       mapHalo.setAttribute("cx", mp[0]);
       mapHalo.setAttribute("cy", mp[1]);
 
-      // camera: position on the spline, gaze directed by the scene
+      // camera: position on the spline, gaze directed by the scene.
+      // The smoothed lookTarget trails a moving goal by speed/3.2 — the
+      // default look point must stay further ahead than that lag, or it
+      // falls behind the camera mid-chapter and lookAt flips 180°. So the
+      // lookahead scales with the live path speed (glide'(t)), 1.6× margin.
+      var pathLen = ctx.path.getLength();
+      var pathSpeed = pathLen * (0.35 + 3.9 * t * (1 - t)) / chapter.duration;
       var target = (ctx.gaze && ctx.gaze(t)) ||
-        ctx.path.getPointAt(Math.min(1, k + 0.03));
+        ctx.path.getPointAt(Math.min(1, k + Math.max(0.03, 0.5 * pathSpeed / pathLen)));
       if (!lookInit) { lookTarget = target.clone(); lookInit = true; }
       lookTarget.lerp(target, 1 - Math.exp(-3.2 * dt));
       shakeAmt *= Math.exp(-3.5 * dt);
