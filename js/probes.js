@@ -21,6 +21,12 @@
       if (!root) return;
       var W = 480, H = 240, CX = W / 2, CY = H / 2;
 
+      // small monospace caption baked into a layer (scales/fades with it)
+      function labelText(layer, str) {
+        var t = el("text", { x: CX, y: 228, fill: "#8a96c2", "text-anchor": "middle", "font-size": 10, "font-family": "IBM Plex Mono, monospace" }, layer);
+        t.textContent = str;
+      }
+
       /* layer 0: coin */
       var L0 = el("g", {}, root);
       el("circle", { cx: CX, cy: CY, r: 78, fill: "#2c3a6b", stroke: "#ffb84d", "stroke-width": 3 }, L0);
@@ -28,32 +34,76 @@
       var t0 = el("text", { x: CX, y: CY + 6, fill: "#c0c9e8", "text-anchor": "middle", "font-size": 22, "font-family": "Fraunces, serif" }, L0);
       t0.textContent = "£1";
 
-      /* layer 1: metal grains */
+      /* layer 1: amoeba — a giant single cell, just eye-visible */
       var L1 = el("g", {}, root);
-      var grains = [[120,70,46],[210,52,38],[300,80,52],[150,150,55],[255,160,48],[345,150,40],[80,180,30],[390,60,26]];
-      grains.forEach(function (g) {
-        el("circle", { cx: g[0] + 20, cy: g[1] + 10, r: g[2], fill: "none", stroke: "#5fd8c8", "stroke-width": 1.4, opacity: 0.8 }, L1);
-      });
-      var t1 = el("text", { x: CX, y: 228, fill: "#8a96c2", "text-anchor": "middle", "font-size": 10, "font-family": "IBM Plex Mono, monospace" }, L1);
-      t1.textContent = "metal grains";
+      el("path", { d: "M150,118 C150,90 170,68 200,60 C224,54 236,72 262,66 C304,56 346,80 352,118 C357,150 344,182 306,192 C282,199 260,184 234,190 C202,198 168,186 156,160 C146,142 150,140 150,118 Z", fill: "#0f2238", stroke: "#5fd8c8", "stroke-width": 1.6, opacity: 0.9 }, L1);
+      el("circle", { cx: 252, cy: 120, r: 24, fill: "#13203e", stroke: "#5fd8c8", "stroke-width": 1.4 }, L1);   // nucleus
+      el("circle", { cx: 252, cy: 120, r: 8, fill: "#5fd8c8", opacity: 0.5 }, L1);                              // nucleolus
+      el("circle", { cx: 200, cy: 152, r: 11, fill: "none", stroke: "#5fd8c8", opacity: 0.55 }, L1);           // vacuoles
+      el("circle", { cx: 305, cy: 98, r: 7, fill: "none", stroke: "#5fd8c8", opacity: 0.5 }, L1);
+      labelText(L1, "amoeba — a single cell");
 
-      /* layer 2: molecules */
+      /* layer 2: a human hair (its width) */
       var L2 = el("g", {}, root);
-      for (var m = 0; m < 5; m++) {
-        var y = 50 + m * 36;
-        var path = "M40," + y;
-        for (var s = 1; s <= 10; s++) path += " L" + (40 + s * 40) + "," + (y + (s % 2 ? 16 : -16));
-        el("path", { d: path, fill: "none", stroke: "#b8e986", "stroke-width": 2, opacity: 0.7 }, L2);
-      }
-      var t2 = el("text", { x: CX, y: 228, fill: "#8a96c2", "text-anchor": "middle", "font-size": 10, "font-family": "IBM Plex Mono, monospace" }, L2);
-      t2.textContent = "molecular chains";
+      el("path", { d: "M64,40 L104,30 L452,196 L412,208 Z", fill: "#3a2a16", stroke: "#d8a35a", "stroke-width": 1.6, opacity: 0.92 }, L2);
+      el("path", { d: "M84,35 L432,202", fill: "none", stroke: "#d8a35a", "stroke-width": 1, opacity: 0.5 }, L2);   // shaft highlight
+      [0.18, 0.34, 0.5, 0.66, 0.82].forEach(function (f) {                                                          // cuticle scales
+        var x = 84 + (432 - 84) * f, y = 35 + (202 - 35) * f;
+        el("line", { x1: x - 14, y1: y - 8, x2: x + 14, y2: y + 8, stroke: "#d8a35a", "stroke-width": 1, opacity: 0.4 }, L2);
+      });
+      labelText(L2, "a human hair (its width)");
 
-      /* layer 3: atomic lattice + wavelength ruler */
+      /* layer 3: bacteria — rod-shaped cells with flagella */
       var L3 = el("g", {}, root);
+      [
+        { x: 120, y: 96, w: 124, h: 40, rot: -16, fx: "M120,116 q-22,-14 -40,2 q-16,16 -36,4" },
+        { x: 256, y: 58, w: 104, h: 34, rot: 13, fx: "M360,75 q22,-12 40,4 q16,14 34,2" },
+        { x: 206, y: 150, w: 112, h: 36, rot: -5, fx: "M206,168 q-20,10 -38,-2" }
+      ].forEach(function (b) {
+        var g = el("g", { transform: "rotate(" + b.rot + " " + (b.x + b.w / 2) + " " + (b.y + b.h / 2) + ")" }, L3);
+        el("rect", { x: b.x, y: b.y, width: b.w, height: b.h, rx: b.h / 2, fill: "#16241a", stroke: "#b8e986", "stroke-width": 1.6 }, g);
+        el("circle", { cx: b.x + b.w * 0.36, cy: b.y + b.h / 2, r: b.h * 0.18, fill: "#b8e986", opacity: 0.4 }, g);
+        el("path", { d: b.fx, fill: "none", stroke: "#b8e986", "stroke-width": 1.3, opacity: 0.65 }, g);
+      });
+      labelText(L3, "bacteria — rod-shaped cells");
+
+      /* layer 4: viruses — spiky protein shells */
+      var L4 = el("g", {}, root);
+      [{ cx: 178, cy: 108, r: 34, n: 14 }, { cx: 320, cy: 140, r: 26, n: 12 }].forEach(function (v) {
+        el("circle", { cx: v.cx, cy: v.cy, r: v.r, fill: "#2a1a12", stroke: "#ff8a5c", "stroke-width": 1.6, opacity: 0.92 }, L4);
+        el("circle", { cx: v.cx, cy: v.cy, r: v.r * 0.45, fill: "none", stroke: "#ff8a5c", "stroke-width": 1, opacity: 0.4 }, L4);
+        for (var i = 0; i < v.n; i++) {
+          var a = (i / v.n) * Math.PI * 2;
+          var sx = v.cx + Math.cos(a) * v.r, sy = v.cy + Math.sin(a) * v.r;
+          var ex = v.cx + Math.cos(a) * (v.r + 12), ey = v.cy + Math.sin(a) * (v.r + 12);
+          el("line", { x1: sx, y1: sy, x2: ex, y2: ey, stroke: "#ff8a5c", "stroke-width": 1.3, opacity: 0.7 }, L4);
+          el("circle", { cx: ex, cy: ey, r: 3, fill: "#ff8a5c", opacity: 0.8 }, L4);
+        }
+      });
+      labelText(L4, "a virus — a spiky protein shell");
+
+      /* layer 5: a DNA double helix */
+      var L5 = el("g", {}, root);
+      var x0 = 56, xEnd = 424, amp = 34, period = 86, strandA = "", strandB = "", x;
+      for (x = x0; x <= xEnd; x += 6) {
+        var ph = (x - x0) / period * Math.PI * 2;
+        strandA += (x === x0 ? "M" : "L") + x + "," + (CY + amp * Math.sin(ph)).toFixed(1) + " ";
+        strandB += (x === x0 ? "M" : "L") + x + "," + (CY - amp * Math.sin(ph)).toFixed(1) + " ";
+      }
+      el("path", { d: strandA, fill: "none", stroke: "#5fe8a0", "stroke-width": 2.4 }, L5);
+      el("path", { d: strandB, fill: "none", stroke: "#b8e986", "stroke-width": 2.4 }, L5);
+      for (x = x0 + 14; x < xEnd; x += 22) {                                                                       // base-pair rungs
+        var pr = (x - x0) / period * Math.PI * 2;
+        el("line", { x1: x, y1: CY + amp * Math.sin(pr), x2: x, y2: CY - amp * Math.sin(pr), stroke: "#3a4d85", "stroke-width": 1.4 }, L5);
+      }
+      labelText(L5, "a strand of DNA");
+
+      /* layer 6: atomic lattice + wavelength ruler */
+      var L6 = el("g", {}, root);
       var SPACING = 56;
       for (var r = 0; r < 4; r++) {
         for (var c = 0; c < 8; c++) {
-          el("circle", { cx: 44 + c * SPACING, cy: 40 + r * SPACING, r: 9, fill: "#1f2a4f", stroke: "#6aa8ff" }, L3);
+          el("circle", { cx: 44 + c * SPACING, cy: 40 + r * SPACING, r: 9, fill: "#1f2a4f", stroke: "#6aa8ff" }, L6);
         }
       }
       // neutron wave matched to the lattice spacing
@@ -61,13 +111,15 @@
       for (var w = 0; w < 7; w++) {
         wave += " q" + (SPACING / 2) + ",-34 " + SPACING + ",0";
       }
-      el("path", { d: wave, fill: "none", stroke: "#4fd8eb", "stroke-width": 2.4 }, L3);
-      var t3 = el("text", { x: CX, y: 232, fill: "#4fd8eb", "text-anchor": "middle", "font-size": 10, "font-family": "IBM Plex Mono, monospace" }, L3);
-      t3.textContent = "neutron wavelength ≈ atom spacing ✓";
+      el("path", { d: wave, fill: "none", stroke: "#4fd8eb", "stroke-width": 2.4 }, L6);
+      var t6 = el("text", { x: CX, y: 232, fill: "#4fd8eb", "text-anchor": "middle", "font-size": 10, "font-family": "IBM Plex Mono, monospace" }, L6);
+      t6.textContent = "neutron wavelength ≈ atom spacing ✓";
 
-      var layers = [L0, L1, L2, L3];
-      var centers = [8, 38, 66, 95];      // slider position where each layer peaks
-      var WIDTH = 26;
+      // large → small; centre = slider position where each layer peaks, chosen so
+      // the size readout below roughly matches each object's real scale
+      var layers = [L0, L1, L2, L3, L4, L5, L6];
+      var centers = [0, 18, 33, 50, 66, 82, 96];
+      var WIDTH = 14;
 
       var slider = document.getElementById("zoom");
       var out = document.getElementById("zoom-out");
@@ -75,9 +127,12 @@
       var svg = document.getElementById("zoom-svg");
       var captions = [
         "a £1 coin — about 2 cm across",
-        "zoom ×1,000: crystal grains — a metal is a patchwork of tiny ordered crystals",
-        "zoom ×1,000,000: molecules and chains",
-        "zoom ×100,000,000: atoms — and a slow neutron’s wave fits the spacing exactly"
+        "an amoeba — a single cell, roughly half a millimetre across and just visible to the naked eye",
+        "a human hair — about 50 µm, a twentieth of a millimetre, thick",
+        "a bacterium (like E. coli) — a rod-shaped cell about 2 µm long",
+        "a virus — a spiky protein shell, around 100 nm across",
+        "a strand of DNA — molecules just a few nanometres wide",
+        "atoms — a few ångströms apart, and a slow neutron’s wave fits the spacing exactly"
       ];
 
       function fmtSize(z) {
